@@ -1,0 +1,46 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="Menu">
+        <Setter Property="Foreground" Value="{DynamicResource ResultMenuItemForeground}"/>
+        <Setter Property="Background" Value="{DynamicResource ResultkMenuItemBackground}"/>
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Menu">
+                    <Border x:Name="BD" Height="30" BorderThickness="1" BorderBrush="{DynamicResource ResultBorderBrush}">
+                        <StackPanel ClipToBounds="True" Orientation="Horizontal" Focusable="True" IsItemsHost="True"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="MenuItem">
+        <Setter Property="Margin" Value="2,2,2,2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    <Grid>
+                        <Border x:Name="BD" Padding="10,0,10,0" BorderThickness="1" Height="20">
+                            <ContentPresenter ContentSource="Header" x:Name="HeaderHost" RecognizesAccessKey="True" />
+                        </Border>
+                        <Popup Name="Popup" IsOpen="{TemplateBinding IsSubmenuOpen}" AllowsTransparency="True" PopupAnimation="Fade" MinWidth="200">
+                            <Border x:Name="SubBD" BorderThickness="1" BorderBrush="{DynamicResource ResultBorderBrush}">
+                                <StackPanel IsItemsHost="True" Background="{DynamicResource ResultBackground}" Focusable="True"/>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="true">
+                            <Setter Property="Background" TargetName="BD" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="BD" Value="{DynamicResource ResultBorderBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>  
+
+</ResourceDictionary>

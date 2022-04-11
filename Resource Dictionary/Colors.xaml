@@ -1,0 +1,39 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--BalckTheames-->
+    <SolidColorBrush x:Key="BlackBackground" Color="Black"></SolidColorBrush>
+    <SolidColorBrush x:Key="BlackForeground" Color="White"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="BlackMenuItemBackground" Color="Black"></SolidColorBrush>
+    <SolidColorBrush x:Key="BlackMenuItemForeground" Color="DarkGray"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="BlackBorderBrush" Color="Gray"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="BlackTreeViewItemBackground" Color="DarkGray"></SolidColorBrush>
+    <SolidColorBrush x:Key="BlackTreeViewItemForeground" Color="White"></SolidColorBrush>
+
+    <!--WhiteTheames-->
+    <SolidColorBrush x:Key="WhiteBackground" Color="White"></SolidColorBrush>
+    <SolidColorBrush x:Key="WhiteForeground" Color="Black"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="WhitekMenuItemBackground" Color="White"></SolidColorBrush>
+    <SolidColorBrush x:Key="WhiteMenuItemForeground" Color="Black"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="WhiteBorderBrush" Color="DarkSlateBlue"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="WhiteTreeViewItemBackground" Color="DarkSlateBlue"></SolidColorBrush>
+    <SolidColorBrush x:Key="WhiteTreeViewItemForeground" Color="White"></SolidColorBrush>
+
+    <!--ResultTheames-->
+    <SolidColorBrush x:Key="ResultBackground" Color="White"></SolidColorBrush>
+    <SolidColorBrush x:Key="ResultForeground" Color="Black"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="ResultkMenuItemBackground" Color="White"></SolidColorBrush>
+    <SolidColorBrush x:Key="ResultMenuItemForeground" Color="Black"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="ResultBorderBrush" Color="Black"></SolidColorBrush>
+
+    <SolidColorBrush x:Key="ResultTreeViewItemBackground" Color="DarkBlue"></SolidColorBrush>
+    <SolidColorBrush x:Key="ResultTreeViewItemForeground" Color="Black"></SolidColorBrush>
+
+</ResourceDictionary>
