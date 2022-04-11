@@ -114,10 +114,5 @@ namespace Project_Settings
             //    }
             //}
         }
-
-        private void Button_SpawnColl_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
     }
 }

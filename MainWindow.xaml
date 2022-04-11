@@ -54,7 +54,6 @@
             <MenuItem Header="Формат">
 
             </MenuItem>
-            <Button Content="Объеденить" Click="Button_SpawnColl_Click"/>
         </Menu>
         
         <TreeView Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="10" Name="myTreeView">
