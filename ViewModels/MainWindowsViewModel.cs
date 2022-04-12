@@ -15,13 +15,21 @@ namespace Project_Settings.ViewModels
 
         private readonly Application CurrApp = Application.Current;
 
-        #region Контроль версии
+        #region Контроль состояний
         private string _myVersion = "Версия: 0.0.0";
 
         public string MyVersion
         {
             get => _myVersion;
             set => Set(ref _myVersion, value);
+        }
+
+        private string _myTitle = "Конфигуратор проекта";
+
+        public string MyTitle
+        {
+            get => _myTitle;
+            set => Set(ref _myTitle, value);
         }
         #endregion
 
@@ -115,6 +123,10 @@ namespace Project_Settings.ViewModels
         #endregion
 
         #region Команды
+
+        /// <summary>
+        /// Команда на смену светлой темы
+        /// </summary>
         public ICommand CmdSetBlackTheames { get; }
 
         private bool CanCmdSetBlackTheamesExecute(object p) => true;
@@ -126,6 +138,9 @@ namespace Project_Settings.ViewModels
             ChangeTheames();
         }
 
+        /// <summary>
+        /// Команда на смену темной темы
+        /// </summary>
         public ICommand CmdSetWhiteTheames { get; }
 
         private bool CanCmdSetWhiteTheamesExecute(object p) => true;
@@ -137,20 +152,48 @@ namespace Project_Settings.ViewModels
             ChangeTheames();
         }
 
+        /// <summary>
+        /// Команда на закрытие приложения
+        /// </summary>
+        public ICommand CmdCloseApp { get; }
+        private bool CanCmdCloseAppExecute(object p) => true;
 
+        private void OnCmdCloseAppExecuted(object p)
+        {
+            if (MessageBox.Show("Вы действительно хотите выйти?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+            CurrApp.Shutdown();
+        }
 
+        /// <summary>
+        /// Коамнда развернуть приложение
+        /// </summary>
+        public ICommand CmdMaximized { get; }
+        private bool CanCmdMaximizedExecute(object p) => true;
 
+        private void OnCmdMaximizedExecuted(object p)
+        {
+            if (CurrApp.MainWindow.WindowState == WindowState.Maximized)
+            {
+                CurrApp.MainWindow.WindowState = WindowState.Normal;
+                return;
+            }
+            CurrApp.MainWindow.WindowState = WindowState.Maximized;
+        }
 
-        //public ICommand CmdCloseApp { get; }
+        /// <summary>
+        /// Коамнда свернуть приложение
+        /// </summary>
+        public ICommand CmdMinimized { get; }
+        private bool CanCmdMinimizedExecute(object p) => true;
 
-        //private void OnCmdCloseAppExecuted(object p)
-        //{
-        //    if (MessageBox.Show("Вы действительно хотите выйти?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-        //    {
-        //        return;
-        //    }
-        //    Application.Current.Shutdown();
-        //}
+        private void OnCmdMinimizedExecuted(object p)
+        {
+            CurrApp.MainWindow.WindowState = WindowState.Minimized;
+        }
+
 
         //private bool CanCmdCloseAppExecute(object p) => true;
 
@@ -169,7 +212,7 @@ namespace Project_Settings.ViewModels
 
         #region Набор данных для TreeView
         public object[] TreeViewItemSource { get; }
-        public object[] TreeViewSource { get; }
+        //public object[] TreeViewSource { get; }
 
         private static MappingConfigTreeView ReadMappingFile(string fileName)
         {
@@ -186,6 +229,9 @@ namespace Project_Settings.ViewModels
             flWhiteTheames = true;
             CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
             CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
+            CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
+            CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
+            CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
             ChangeTheames();
 
             var ioMap = ReadMappingFile(Path.Combine(Directory.GetCurrentDirectory(), "ResourceDictionary/Jsons/TreeViewList.json"));
