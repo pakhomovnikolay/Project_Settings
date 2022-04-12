@@ -212,8 +212,9 @@ namespace Project_Settings.ViewModels
 
         #region Набор данных для TreeView
         public object[] TreeViewItemSource { get; }
-        //public object[] TreeViewSource { get; }
 
+        public object[] TreeViewItemMsgSource { get; }
+        
         private static MappingConfigTreeView ReadMappingFile(string fileName)
         {
             byte[] jsonUtf8Bytes = File.ReadAllBytes(fileName);
@@ -236,19 +237,23 @@ namespace Project_Settings.ViewModels
 
             var ioMap = ReadMappingFile(Path.Combine(Directory.GetCurrentDirectory(), "ResourceDictionary/Jsons/TreeViewList.json"));
 
-            var data_list = new List<object>();
+            var _TreeViewItemSource = new List<object>();
+            var _TreeViewItemMsgSource = new List<object>();
 
             foreach (var io in ioMap.Lists)
             {
-                data_list.Add(io.Item);
+                _TreeViewItemSource.Add(io.Item);
             }
+
+            TreeViewItemSource = _TreeViewItemSource.ToArray();
 
             foreach (var io in ioMap.ListsMsg)
             {
-                data_list.Add(io.Item);
+                _TreeViewItemMsgSource.Add(io.Item);
             }
 
-            TreeViewItemSource = data_list.ToArray();
+            TreeViewItemMsgSource = _TreeViewItemMsgSource.ToArray();
+
         }
     }
 }

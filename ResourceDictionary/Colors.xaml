@@ -19,7 +19,7 @@
     <SolidColorBrush x:Key="WhitekMenuItemBackground" Color="White"></SolidColorBrush>
     <SolidColorBrush x:Key="WhiteMenuItemForeground" Color="Black"></SolidColorBrush>
 
-    <SolidColorBrush x:Key="WhiteBorderBrush" Color="DarkSlateBlue"></SolidColorBrush>
+    <SolidColorBrush x:Key="WhiteBorderBrush" Color="Black"></SolidColorBrush>
 
     <SolidColorBrush x:Key="WhiteTreeViewItemBackground" Color="DarkSlateBlue"></SolidColorBrush>
     <SolidColorBrush x:Key="WhiteTreeViewItemForeground" Color="White"></SolidColorBrush>
