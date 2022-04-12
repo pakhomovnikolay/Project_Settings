@@ -768,7 +768,7 @@ namespace Project_Settings
         public string ZY { get { return _ZY; } set { _ZY = value; OnPropertyChanged(); } }
         public string ZZ { get { return _ZZ; } set { _ZZ = value; OnPropertyChanged(); } }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

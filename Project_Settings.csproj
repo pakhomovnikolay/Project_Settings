@@ -13,14 +13,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resource Dictionary\Grid.json">
+    <None Update="ResourceDictionary\Jsons\Grid.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resource Dictionary\List.json">
+    <None Update="ResourceDictionary\Jsons\List.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resource Dictionary\TreeViewList.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="ResourceDictionary\Jsons\TreeViewList.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

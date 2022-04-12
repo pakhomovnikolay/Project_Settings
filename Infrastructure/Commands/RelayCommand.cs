@@ -11,7 +11,7 @@ namespace Project_Settings.Infrastructure.Commands
     {
         private readonly Action<object> _Execute;
         private readonly Func<object, bool> _CanExecute;
-        public RelayCommand(Action<object> Execute, Func<object, bool> CanExecute)
+        public RelayCommand(Action<object> Execute, Func<object, bool> CanExecute = null)
         {
             _Execute = Execute ?? throw new ArgumentNullException(nameof(Execute));
             _CanExecute = CanExecute;

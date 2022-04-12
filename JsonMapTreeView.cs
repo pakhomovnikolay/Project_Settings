@@ -1,13 +1,17 @@
-﻿namespace Project_Settings
-{
-    public class MappingConfigTreeView
-    {
-        public SignalMap[] Lists { get; set; }
-        public SignalMap[] ListMsg { get; set; }
-    }
+﻿using System.Collections.Generic;
 
-    public class SignalMap
+namespace Project_Settings
+{
+    public class SignalMapTreeView
     {
         public string Item { get; set; }
     }
+
+    public class MappingConfigTreeView
+    {
+        public IList<SignalMapTreeView> Lists { get; set; }
+        public IList<SignalMapTreeView> ListsMsg { get; set; }
+    }
+
+    
 }

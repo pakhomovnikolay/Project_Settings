@@ -33,7 +33,7 @@
                         </Popup>
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsHighlighted" Value="true">
+                        <Trigger Property="IsHighlighted" Value="True">
                             <Setter Property="Background" TargetName="BD" Value="Transparent"/>
                             <Setter Property="BorderBrush" TargetName="BD" Value="{DynamicResource ResultBorderBrush}"/>
                         </Trigger>
