@@ -77,6 +77,10 @@
                 <TreeViewItem Header="Листы" ItemsSource="{Binding Path=TreeViewItemSource}"/>
                 <TreeViewItem Header="Сообщения листов" ItemsSource="{Binding Path=TreeViewItemMsgSource}"/>
             </TreeView>
+
+            <DataGrid Grid.Column="1">
+                
+            </DataGrid>
         </Grid>
     </DockPanel>
 </Window>
