@@ -9,6 +9,8 @@ namespace Project_Settings
             InitializeComponent();
         }
 
+        
+
         //private void Window_Closing(object Sender, CancelEventArgs E)
         //{
         //    if (MessageBox.Show("Вы действительно хотите выйти?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)

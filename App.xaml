@@ -6,9 +6,11 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="\ResourceDictionary\Colors.xaml"/>
-                <ResourceDictionary Source="\ResourceDictionary\Menu.xaml"/>
-                <ResourceDictionary Source="\ResourceDictionary\TreeView.xaml"/>
+                <ResourceDictionary Source="\MyResource\Colors.xaml"/>
+                <ResourceDictionary Source="\MyResource\Menu.xaml"/>
+                <ResourceDictionary Source="\MyResource\TreeView.xaml"/>
+                <ResourceDictionary Source="\MyResource\ListBox.xaml"/>
+                <!--<ResourceDictionary Source="\ResourceDictionary\GroupBox.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

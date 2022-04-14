@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Project_Settings"
         xmlns:vm="clr-namespace:Project_Settings.ViewModels"
-        
         Title="{Binding Path=MyTitle}"
         Background="{DynamicResource ResultBackground}"
         Foreground="{DynamicResource ResultForeground}"
@@ -73,14 +72,89 @@
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TreeView Grid.Column="0">
-                <TreeViewItem Header="Листы" ItemsSource="{Binding Path=TreeViewItemSource}"/>
-                <TreeViewItem Header="Сообщения листов" ItemsSource="{Binding Path=TreeViewItemMsgSource}"/>
-            </TreeView>
+            <!--<ListBox Grid.Column="0" ItemsSource="{Binding Path=MyDataGridItems}" SelectedItem="{Binding Path=SelectedSheets}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="l:Group">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=Name}" Name="TextView"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>-->
 
-            <DataGrid Grid.Column="1">
-                
-            </DataGrid>
+            <!--ItemsSource="{Binding Path=MyDataGridItems}" Selector.IsSelected="{Binding Path=SelectedSheets}"-->
+            <GroupBox Header="Список листов" Grid.Column="0" BorderBrush="{DynamicResource ResultBorderBrush}">
+                <ListBox ItemsSource="{Binding Path=MyDataGridItems.Sheet}" SelectedItem="{Binding Path=SelectedSheets}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Name}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <!--<TreeView ItemsSource="{Binding Path=MyDataGridItems}">
+                    --><!--<ListBox  SelectedItem="{Binding Path=SelectedSheets}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="l:Group">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Path=Name}" Name="TextView"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>--><!--
+                    <TreeView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Name}"/>
+                        </DataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>-->
+            </GroupBox>
+            <!--<TreeView Grid.Column="0" ItemsSource="{Binding Path=MyDataGridItems}">
+                <TreeView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Name}"/>
+                    </DataTemplate>
+                </TreeView.ItemTemplate>
+                --><!--<TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="IsSelected" Value="{Binding SelectedSheets, Mode=OneWay}"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>-->
+                <!--<TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Path=}"></HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>-->
+                  <!--<TreeView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Name}" Name="TextView"/>
+                    </DataTemplate>
+                </TreeView.ItemTemplate>-->
+                <!--<TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="IsSelected" Value="{Binding Path=}"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>-->
+                <!--<TreeViewItem Header="Листы" BindingGroup="{Bi}" ItemTemplateSelector="{Binding Path=SelectedSheets}"/>
+                <TreeViewItem Header="Сообщения листов" ItemsSource="{Binding Path=TreeViewItemMsgSource}"/>--><!--
+            </TreeView>-->
+            <GroupBox Grid.Column="1" BorderBrush="{DynamicResource ResultBorderBrush}">
+                <GroupBox.Header>
+                    <TextBlock Text="{Binding Path=SelectedSheets.Name, StringFormat=Выбраный лист - {0}, FallbackValue='Данные листа', TargetNullValue='Группа не выбрана'}"/>
+                </GroupBox.Header>
+                <DataGrid
+                    
+                    BorderBrush="{DynamicResource ResultBorderBrush}"
+                    ItemsSource="{Binding Path=MyDataTable.ItemsSource}">
+                    
+                    <!--<DataGrid.Columns>
+                        <DataGridTextColumn Header="{Binding Path=MyDataTable.Items}"/>
+                    </DataGrid.Columns>-->
+                    <!--<DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType=""
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+                </DataGrid>
+            </GroupBox>
+            
         </Grid>
     </DockPanel>
 </Window>

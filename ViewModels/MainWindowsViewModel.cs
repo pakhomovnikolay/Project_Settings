@@ -2,9 +2,14 @@
 using Project_Settings.ViewModels.Default;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -59,6 +64,10 @@ namespace Project_Settings.ViewModels
         private SolidColorBrush _ResultTreeViewItemBackground = (SolidColorBrush)Application.Current.TryFindResource("ResultTreeViewItemBackground");
         private SolidColorBrush _ResultTreeViewItemForeground = (SolidColorBrush)Application.Current.TryFindResource("ResultTreeViewItemForeground");
 
+        private Color _ResultBackgroundListBox = (Color)Application.Current.TryFindResource("ResultBackgroundListBox");
+        private Color _ResultForegroundListBox = (Color)Application.Current.TryFindResource("ResultForegroundListBox");
+        private Color _ResultBorderBrushListBox = (Color)Application.Current.TryFindResource("ResultBorderBrushListBox");
+
         public SolidColorBrush ResultBackground
         {
             get => _ResultBackground;
@@ -101,6 +110,24 @@ namespace Project_Settings.ViewModels
             set => Set(ref _ResultTreeViewItemForeground, value);
         }
 
+        public Color ResultBackgroundListBox
+        {
+            get => _ResultBackgroundListBox;
+            set => Set(ref _ResultBackgroundListBox, value);
+        }
+
+        public Color ResultForegroundListBox
+        {
+            get => _ResultForegroundListBox;
+            set => Set(ref _ResultForegroundListBox, value);
+        }
+
+        public Color ResultBorderBrushListBox
+        {
+            get => _ResultBorderBrushListBox;
+            set => Set(ref _ResultBorderBrushListBox, value);
+        }
+
         private void ChangeTheames()
         {
 
@@ -111,6 +138,9 @@ namespace Project_Settings.ViewModels
             ResultBorderBrush = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackBorderBrush") : CurrApp.TryFindResource("WhiteBorderBrush"));
             ResultTreeViewItemBackground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackTreeViewItemBackground") : CurrApp.TryFindResource("WhiteTreeViewItemBackground"));
             ResultTreeViewItemForeground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackTreeViewItemForeground") : CurrApp.TryFindResource("WhiteTreeViewItemForeground"));
+            ResultBackgroundListBox = (Color)(flBlackTheames ? CurrApp.TryFindResource("BlackBackgroundListBox") : CurrApp.TryFindResource("WhiteBackgroundListBox"));
+            ResultForegroundListBox = (Color)(flBlackTheames ? CurrApp.TryFindResource("BlackForegroundListBox") : CurrApp.TryFindResource("WhiteForegroundListBox"));
+            ResultBorderBrushListBox = (Color)(flBlackTheames ? CurrApp.TryFindResource("BlackBorderBrushListBox") : CurrApp.TryFindResource("WhiteBorderBrushListBox"));
 
             CurrApp.Resources["ResultBackground"] = ResultBackground;
             CurrApp.Resources["ResultForeground"] = ResultForeground;
@@ -119,11 +149,13 @@ namespace Project_Settings.ViewModels
             CurrApp.Resources["ResultBorderBrush"] = ResultBorderBrush;
             CurrApp.Resources["ResultTreeViewItemBackground"] = ResultTreeViewItemBackground;
             CurrApp.Resources["ResultTreeViewItemForeground"] = ResultTreeViewItemForeground;
+            CurrApp.Resources["ResultBackgroundListBox"] = ResultBackgroundListBox;
+            CurrApp.Resources["ResultForegroundListBox"] = ResultForegroundListBox;
+            CurrApp.Resources["ResultBorderBrushListBox"] = ResultBorderBrushListBox;
         }
         #endregion
 
         #region Команды
-
         /// <summary>
         /// Команда на смену светлой темы
         /// </summary>
@@ -210,25 +242,54 @@ namespace Project_Settings.ViewModels
         //}
         #endregion
 
-        #region Набор данных для TreeView
-        public object[] TreeViewItemSource { get; }
+        //#region Набор данных для TreeView
+        //public object[] TreeViewItemSource { get; }
 
-        public object[] TreeViewItemMsgSource { get; }
+        //public object[] TreeViewItemMsgSource { get; }
         
-        private static MappingConfigTreeView ReadMappingFile(string fileName)
+        //private static MapTreeView ReadMappingFileTreeView(string fileName)
+        //{
+        //    byte[] jsonUtf8Bytes = File.ReadAllBytes(fileName);
+        //    var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
+        //    var mapping = JsonSerializer.Deserialize<MapTreeView>(readOnlySpan);
+        //    return mapping;
+        //}
+        //#endregion
+
+        #region Набор данных для DataGrid
+
+        /// <summary>Выбранный лист</summary>
+        private MapSheet _SelectedSheets = new();
+
+        /// <summary>Выбранный лист</summary>
+        public MapSheet SelectedSheets
+        {
+            get => _SelectedSheets;
+            set => Set(ref _SelectedSheets, value);
+        }
+
+        //public ObservableCollection<MapSheet> MyDataGridItems { get; }
+
+        private static Sheets ReadMappingFileGridSheets(string fileName)
         {
             byte[] jsonUtf8Bytes = File.ReadAllBytes(fileName);
             var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
-            var mapping = JsonSerializer.Deserialize<MappingConfigTreeView>(readOnlySpan);
+            var mapping = JsonSerializer.Deserialize<Sheets>(readOnlySpan);
             return mapping;
         }
         #endregion
 
-        
+        public Sheets MyDataGridItems { get; }
+
+        //public DataGrid MyDataTable { get; }
+        public DataGrid MyDataTable { get; set; }
+
+
+        //private IList<DataGrid> DG { get; }
+        //public ObservableCollection<DataGrid> MyDataGrid { get; }
 
         public MainWindowsViewModel()
         {
-
             flWhiteTheames = true;
             CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
             CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
@@ -237,24 +298,351 @@ namespace Project_Settings.ViewModels
             CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
             ChangeTheames();
 
-            var ioMap = ReadMappingFile(Path.Combine(Directory.GetCurrentDirectory(), "ResourceDictionary/Jsons/TreeViewList.json"));
+            var path = Path.Combine("MyResource/Jsons/Grid.json");
+            Sheets JsonData = ReadMappingFileGridSheets(path);
 
-            var _TreeViewItemSource = new List<object>();
-            var _TreeViewItemMsgSource = new List<object>();
-
-            foreach (var io in ioMap.Lists)
+            DataTable dt = new();
+            MyDataTable = new();
+            int index_row = 1;
+            foreach (MapSheet GridItems in JsonData.Sheet)
             {
-                _TreeViewItemSource.Add(io.Item);
+                //MyDataTable.ItemsSource = GridItems.Columns.ToList();
+                MyDataTable.AutoGenerateColumns = false;
+                MyDataTable.ColumnWidth = 70;
+                MyDataTable.RowHeaderWidth = 30;
+                MyDataTable.VerticalGridLinesBrush = Brushes.DarkGray;
+                MyDataTable.AlternatingRowBackground = Brushes.LightGray;
+                foreach (var io in GridItems.Columns)
+                {
+                    
+                    MyDataTable.Columns.Add(new DataGridTextColumn
+                    {
+                        Header = io.Col.ToString()
+                        
+                    });
+
+                    MyDataTable.Items.Add(new DataGridRow
+                    {
+                        Header = index_row++
+                    });
+                }
+
+                //foreach (MapColumn Items in GridItems.Columns)
+                //{
+                //    //dt.Columns.Add(Items.Col);
+                //    dt.Columns.Add(Items.Col);
+                //    dt.Rows.Add(index_row);
+                //    index_row++;
+                //}
+
             }
+            //MyDataTable.ItemsSource = dt.Columns.to;
+            MyDataGridItems = JsonData;
 
-            TreeViewItemSource = _TreeViewItemSource.ToArray();
 
-            foreach (var io in ioMap.ListsMsg)
-            {
-                _TreeViewItemMsgSource.Add(io.Item);
-            }
 
-            TreeViewItemMsgSource = _TreeViewItemMsgSource.ToArray();
+
+            //var groups = Enumerable.Range(1, JsonData.Sheet.Count).Select(i => new MapSheet
+            //{
+            //    DataTables = new ObservableCollection<DataTable>((IEnumerable<DataTable>)MyDataTable)
+            //});
+
+
+            //MyDataGridItems.Sheet.Add((MapSheet)groups);
+
+
+
+
+
+            //MyDataGridItems.Sheet= (IList<DataGrid>)MyDataGrid;
+
+            //int index = 1;
+            //foreach (var ioMap in ioMapData.Sheet)
+            //{
+            //    foreach (var io in ioMap.Column)
+            //    {
+            //        var _MapColumn = Enumerable.Range(1, index).Select(i => new MapColumn
+            //        {
+            //            Item = io.Item
+
+            //        });
+
+            //        var _MapSheet = Enumerable.Range(1, index).Select(i => new MapSheet
+            //        {
+            //            Column = new ObservableCollection<MapColumn>(_MapColumn),
+            //            CountRow = ioMap.CountRow,
+            //            NameMsg = ioMap.NameMsg,
+            //            Name = ioMap.Name
+            //        });
+
+
+            //    }
+
+            //    index++;
+            //}
+
+            //MyDataGridItems = new ObservableCollection<MapSheet>(ioMapData.Sheet);
+
+
+            //IEnumerable<MapSheet> _MapColumn;
+            //var _MapColumn = new List<MapColumn>();
+            //var _MapSheet = new List<MapSheet>();
+            //foreach (var ioMap in ioMapData.Sheet)
+            //{
+            //    foreach (var io in ioMap.Column)
+            //    {
+            //        var _MapColumn = Enumerable.Range(1, ioMap.Column.Count).Select(i => new MapColumn
+            //        {
+            //            Item = io.Item
+            //        });
+
+            //        var _MapSheet = Enumerable.Range(1, ioMapData.Sheet.Count).Select(i => new MapSheet
+            //        {
+            //            Column = new ObservableCollection<MapColumn>(_MapColumn),
+            //            CountRow = ioMap.CountRow,
+            //            NameMsg = ioMap.NameMsg,
+            //            Name = ioMap.Name
+            //        });
+
+            //        MyDataGridItems = new ObservableCollection<MapSheet>(_MapSheet);
+            //    }
+            //}
+
+
+            //
+            //{
+            //    Name = $"Name {student_index}",
+            //    Surname = $"Surname {student_index}",
+            //    Patronymic = $"Patronymic {student_index++}",
+            //    Birthday = DateTime.Now,
+            //    Rating = 0
+            //});
+
+
+
+            //var _TreeViewItemSource = new List<object>();
+            //var _TreeViewItemMsgSource = new List<object>();
+
+            //foreach (var io in ioMapData.Sheet)
+            //{
+            //    _TreeViewItemSource.Add(io.Name);
+            //}
+            //TreeViewItemSource = _TreeViewItemSource.ToArray();
+
+            //foreach (var io in ioMapData.Sheet)
+            //{
+            //    if (!string.IsNullOrEmpty(io.NameMsg))
+            //    {
+            //        _TreeViewItemMsgSource.Add(io.NameMsg);
+            //    }
+            //}
+            //TreeViewItemMsgSource = _TreeViewItemMsgSource.ToArray();
+
+            // ------------------------------------------------------------------------------------------------------------- //
+            //var data_list = new List<object>();
+            //foreach (var ioMap in ioMapData.Sheet)
+            //{
+            //    foreach (var io in ioMap.Column)
+            //    {
+            //        data_list.Add(io.Item);
+            //    }
+            //}
+
+
+
+
+            //MyDataGridItems = data_list.ToArray();
+
+            //var students = Enumerable.Range(1, 10).Select(i => new Student
+            //{
+            //    Name = $"Name {student_index}",
+            //    Surname = $"Surname {student_index}",
+            //    Patronymic = $"Patronymic {student_index++}",
+            //    Birthday = DateTime.Now,
+            //    Rating = 0
+            //});
+
+
+
+
+
+
+            //DataGrid _DataGridItems = new();
+            //DataGrid _DataGridItems = new();
+            //foreach (var ioMap in ioMapDataGrid.Columns)
+            //{
+
+            //    var col = new DataGridTextColumn
+            //    {
+            //        Header = ioMap.Item
+            //    };
+
+            //    _DataGridItems.Columns.Add(col);
+
+            //    //MyDataGridItems = new ObservableCollection<MapDataGrid>(groups);
+            //}
+
+            ////var rowData = Enumerable.Range(0, ioMapDataGrid.Columns.Count).ToList();
+            //MyDataGridItems = _DataGridItems.ItemsSource;
+
+            //for (int i = 0; i < N; i++)
+            //{
+            //    var col = new DataGridTextColumn
+            //    {
+            //        Header = i.ToString(),
+            //        Binding = new Binding("[" + i + "]"),
+            //        IsReadOnly = true,
+            //        Width = new DataGridLength(1, DataGridLengthUnitType.Star)
+            //    };
+
+            //    dataGrid.Columns.Add(col);
+            //}
+
+            //var rowData = Enumerable.Range(0, N).ToList();
+            //dataGrid.Items.Add(rowData);
+
+            ////
+
+
+
+
+
+            //MyDataGridItems = _DataGridItems.ToArray();
+
+            //var student_index = 1;
+            //var students = Enumerable.Range(1, 10).Select(i => new Student
+            //{
+            //    Name = $"Name {student_index}",
+            //    Surname = $"Surname {student_index}",
+            //    Patronymic = $"Patronymic {student_index++}",
+            //    Birthday = DateTime.Now,
+            //    Rating = 0
+            //});
+
+
+
+            // DataGrid DataList = new();
+
+
+
+
+
+            //DataGridTextColumn textColumn = new DataGridTextColumn();
+            //textColumn.Header = "First Name";
+            //textColumn.Binding = new Binding("FirstName");
+            //DataList.Columns.Add(textColumn);
+
+
+            //DataGrid data_list = new();
+            //foreach (var ioMap in ioMapDataGrid.Columns)
+            //{
+            //    DataGridTextColumn textColumn = new DataGridTextColumn();
+            //    textColumn.Header = ioMap.Item;
+            //    data_list.Columns.Add(textColumn);
+            //}
+
+            //MyDataGridItems = data_list.Columns.ToList();
+            //data_list.Add(ioMapDataGrid);
+
+
+            //var _DataGridItems = new List<MapDataGrid>();
+
+            //var dgItems = new MapDataGrid
+            //{
+            //    Columns = ioMapDataGrid.Columns
+            //};
+
+            //_DataGridItems.Add(dgItems);
+
+            //DataList.Items.Add(_TreeViewItemSource);
+
+
+            //DataList.ItemsSource = data_list.ItemsSource;
+
+            //DataList = new ()data_list
+
+            //DataList.ItemsSource = data_list.ItemsSource;
+
+            //int numCol = 0;
+            //foreach (var ioMap in ioMapDataGrid.Columns)
+            //{
+            //    //data_list.Add(numCol.ToString());
+
+
+            //    //data_list.Add(numCol);
+            //    //numCol++;
+
+            //    //var groups = Enumerable.Range(1, 20).Select(i => new MapDataGrid
+            //    //{
+            //    //    Columns = (IList<ConfigDataGrid>)ioMap
+            //    //});
+
+
+
+            //    //data_list.Columns.Add();
+
+            //    //var groups = new DataGrid
+            //    //{
+            //    //    Column = ObservableCollection<DataGridColumn>(ioMap.Item)
+            //    //    //Columns = (IList<ConfigDataGrid>)ioMap
+            //    //};
+
+            //    //
+
+            //    //    var groups = new MapDataGrid
+            //    //{
+            //    //    Columns = ioMap.Item
+            //    //    });
+
+            //    //    data_list.Add(ioMap.Item);
+
+
+            //    //data_list.Add(io.Value);
+
+            //    //var dgItems = new ConfigDataGrid
+            //    //{
+            //    //    Value = io.Value,
+            //    //    Item = io.Item,
+            //    //    ColumnSpawn = io.ColumnSpawn
+            //    //};
+            //    //data_list.Add(dgItems);
+            //}
+            //Groups = new ObservableCollection<DataGrid>(groups);
+            //MyDataGridItems.Add
+            //MyDataGridItems.Add(numCol);
+
+            //DataGrid data_list = new();
+
+            //MyDataGridItems = new ObservableCollection<DataGrid>((IEnumerable<DataGrid>)data_list);
+
+
+            //_DataGridItems.Add(ioMapDataGrid);
+
+            //var _DataGridItems = new List<GridSheets>();
+
+
+            //_DataGridItems.Add(ioMapDataGrid);
+            //MyDataGridItems = new ObservableCollection<GridSheets>(_DataGridItems);
+
+
+            //_DataGridItems.Add(ioMapDataGrid.Sheet);
+
+
+
+
+
+
+
+            //var groups => new GridSheets
+            //{
+            //    Sheet = new ObservableCollection<GridSheets>(ioMapDataGrid.Sheet)
+            //});
+
+            //MyDataGridItems = new ObservableCollection<GridSheets>();
+
+
+            //_DataGridItems.Add((GridSheets)ioMapDataGrid.Sheet);
+            //MyDataGridItems = new ObservableCollection<GridSheets>(_DataGridItems);
 
         }
     }

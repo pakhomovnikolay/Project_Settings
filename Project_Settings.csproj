@@ -13,15 +13,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ResourceDictionary\Jsons\Grid.json">
+    <None Update="MyResource\Jsons\Grid.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ResourceDictionary\Jsons\List.json">
+    <None Update="MyResource\Jsons\List.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ResourceDictionary\Jsons\TreeViewList.json">
+    <None Update="MyResource\Jsons\TreeViewList.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\Generated\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="MyResource\GroupBox.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MyResource\ListBox.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>
