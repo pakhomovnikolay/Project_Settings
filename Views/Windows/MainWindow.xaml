@@ -9,34 +9,24 @@
         Background="{DynamicResource ResultBackground}"
         Foreground="{DynamicResource ResultForeground}"
         Height="auto" Width="auto" MinHeight="400" MinWidth="800"
-        WindowState="Maximized" WindowStartupLocation="CenterScreen">
-
-    <!--Closing="Window_Closing"-->
-    
+        WindowState="Maximized" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
 
     <Window.DataContext>
         <vm:MainWindowsViewModel/>
     </Window.DataContext>
 
     <DockPanel>
-        <!--<Grid DockPanel.Dock="Top" Height="20">
-            <DockPanel Height="20">
 
-                <Button DockPanel.Dock="Right" Command="{Binding Path=CmdCloseApp}" Foreground="{Binding Path=ResultForeground}" Background="{Binding Path=ResultBackground}" BorderThickness="0" Width="25" Content="X"/>
-                <Button DockPanel.Dock="Right" Command="{Binding Path=CmdMaximized}" Foreground="{Binding Path=ResultForeground}" Background="{Binding Path=ResultBackground}" BorderThickness="0" Width="25" Content="[___]"/>
-                <Button DockPanel.Dock="Right" Command="{Binding Path=CmdMinimized}" Foreground="{Binding Path=ResultForeground}" Background="{Binding Path=ResultBackground}" BorderThickness="0" Width="25" Content="___"/>
-                <TextBlock Text="{Binding Path=MyTitle}"/>
-            </DockPanel>
-            
-        </Grid>-->
-
+        <!-- ===================================================== Меню ===================================================== -->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
                 <MenuItem Header="Создать"/>
                 <MenuItem Header="Открыть"/>
-                <MenuItem Header="Сохранить"/>
+                <MenuItem Header="Сохранить" Command="{Binding Path=CmdSaveProject}"/>
                 <MenuItem Header="Сохранить как"/>
                 <MenuItem Header="Настройки"/>
+                <MenuItem Header="Добавить строку" Command="{Binding Path=CmdAddRow}"/>
             </MenuItem>
             <MenuItem Header="Надстройки">
             </MenuItem>
@@ -61,97 +51,73 @@
                   Command="{Binding CmdSetWhiteTheames}"/>
         </Menu>
 
+        <!-- ===================================================== Панель инструментов ===================================================== -->
         <ToolBarPanel DockPanel.Dock="Bottom" Height="30">
             <DockPanel>
-                <TextBlock x:Name="myVersion" DockPanel.Dock="Left" Text="{Binding MyVersion}" Margin="5,0,0,0"/>
+                <TextBlock DockPanel.Dock="Left" Text="{Binding MyVersion}" Margin="5,0,0,0"/>
             </DockPanel>
         </ToolBarPanel>
 
+        <!-- ===================================================== Данные ===================================================== -->
         <Grid DockPanel.Dock="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <!--<ListBox Grid.Column="0" ItemsSource="{Binding Path=MyDataGridItems}" SelectedItem="{Binding Path=SelectedSheets}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="l:Group">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Path=Name}" Name="TextView"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>-->
-
-            <!--ItemsSource="{Binding Path=MyDataGridItems}" Selector.IsSelected="{Binding Path=SelectedSheets}"-->
             <GroupBox Header="Список листов" Grid.Column="0" BorderBrush="{DynamicResource ResultBorderBrush}">
-                <ListBox ItemsSource="{Binding Path=MyDataGridItems.Sheet}" SelectedItem="{Binding Path=SelectedSheets}">
+                <ListBox ItemsSource="{Binding Path=MyDataGridItems}" SelectedItem="{Binding Path=SelectedSheets}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Name}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <!--<TreeView ItemsSource="{Binding Path=MyDataGridItems}">
-                    --><!--<ListBox  SelectedItem="{Binding Path=SelectedSheets}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="l:Group">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=Name}" Name="TextView"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>--><!--
-                    <TreeView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=Name}"/>
-                        </DataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>-->
             </GroupBox>
-            <!--<TreeView Grid.Column="0" ItemsSource="{Binding Path=MyDataGridItems}">
-                <TreeView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Path=Name}"/>
-                    </DataTemplate>
-                </TreeView.ItemTemplate>
-                --><!--<TreeView.ItemContainerStyle>
-                    <Style TargetType="TreeViewItem">
-                        <Setter Property="IsSelected" Value="{Binding SelectedSheets, Mode=OneWay}"/>
-                    </Style>
-                </TreeView.ItemContainerStyle>-->
-                <!--<TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding Path=}"></HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>-->
-                  <!--<TreeView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Path=Name}" Name="TextView"/>
-                    </DataTemplate>
-                </TreeView.ItemTemplate>-->
-                <!--<TreeView.ItemContainerStyle>
-                    <Style TargetType="TreeViewItem">
-                        <Setter Property="IsSelected" Value="{Binding Path=}"/>
-                    </Style>
-                </TreeView.ItemContainerStyle>-->
-                <!--<TreeViewItem Header="Листы" BindingGroup="{Bi}" ItemTemplateSelector="{Binding Path=SelectedSheets}"/>
-                <TreeViewItem Header="Сообщения листов" ItemsSource="{Binding Path=TreeViewItemMsgSource}"/>--><!--
-            </TreeView>-->
             <GroupBox Grid.Column="1" BorderBrush="{DynamicResource ResultBorderBrush}">
                 <GroupBox.Header>
                     <TextBlock Text="{Binding Path=SelectedSheets.Name, StringFormat=Выбраный лист - {0}, FallbackValue='Данные листа', TargetNullValue='Группа не выбрана'}"/>
                 </GroupBox.Header>
-                <DataGrid
-                    
+                <DataGrid x:Name="MyDataGrid" IsReadOnly="False"
                     BorderBrush="{DynamicResource ResultBorderBrush}"
-                    ItemsSource="{Binding Path=MyDataTable.ItemsSource}">
-                    
-                    <!--<DataGrid.Columns>
-                        <DataGridTextColumn Header="{Binding Path=MyDataTable.Items}"/>
-                    </DataGrid.Columns>-->
+                    ItemsSource="{Binding Path=SelectedSheets.DataTables}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="A" MinWidth="50"/>
+                        <DataGridTextColumn Header="B" MinWidth="50"/>
+                        <DataGridTextColumn Header="C" MinWidth="50"/>
+                        <DataGridTextColumn Header="D" MinWidth="50"/>
+                        <DataGridTextColumn Header="E" MinWidth="50"/>
+                        <DataGridTextColumn Header="F" MinWidth="50"/>
+                        <DataGridTextColumn Header="G" MinWidth="50"/>
+                        <DataGridTextColumn Header="H" MinWidth="50"/>
+                        <DataGridTextColumn Header="I" MinWidth="50"/>
+                        <DataGridTextColumn Header="J" MinWidth="50"/>
+                        <DataGridTextColumn Header="K" MinWidth="50"/>
+                        <DataGridTextColumn Header="L" MinWidth="50"/>
+                        <DataGridTextColumn Header="M" MinWidth="50"/>
+                        <DataGridTextColumn Header="N" MinWidth="50"/>
+                        <DataGridTextColumn Header="O" MinWidth="50"/>
+                        <DataGridTextColumn Header="P" MinWidth="50"/>
+                        <DataGridTextColumn Header="Q" MinWidth="50"/>
+                        <DataGridTextColumn Header="R" MinWidth="50"/>
+                        <DataGridTextColumn Header="S" MinWidth="50"/>
+                        <DataGridTextColumn Header="T" MinWidth="50"/>
+                        <DataGridTextColumn Header="U" MinWidth="50"/>
+                        <DataGridTextColumn Header="V" MinWidth="50"/>
+                        <DataGridTextColumn Header="W" MinWidth="50"/>
+                        <DataGridTextColumn Header="X" MinWidth="50"/>
+                        <DataGridTextColumn Header="Y" MinWidth="50"/>
+                        <DataGridTextColumn Header="Z" MinWidth="50"/>
+                    </DataGrid.Columns>
                     <!--<DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType=""
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                    </DataGridTemplateColumn>-->
+                    <!--<Style TargetType="DataGridColumnHeader">
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    </Style>-->
                 </DataGrid>
             </GroupBox>
             

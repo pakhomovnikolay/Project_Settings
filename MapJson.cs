@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -10,20 +11,22 @@ namespace Project_Settings
 {
     public class Sheets
     {
-        public IList<MapSheet> Sheet { get; set; }
+        public int CountSheets { get; set; }
+        public IList<MapSheets> Sheet { get; set; }
     }
-    public class MapSheet
+    public class MapSheets
     {
         public string Name { get; set; }
         public string NameMsg { get; set; }
-        public int CountRow { get; set; }
-        public IList<MapColumn> Columns { get; set; }
-        public IList<DataTable> DataTables { get; set; }
+        public string CountRow { get; set; }
+        public DataTable DataTables { get; set; }
+        //public IList<MapColumns> Columns { get; set; }
+        
     }
-    public class MapColumn
-    {
-        public string Col { get; set; }
-    }
+    //public class MapColumns
+    //{
+    //    public string Col { get; set; }
+    //}
 
     //public class MapColumn
     //{

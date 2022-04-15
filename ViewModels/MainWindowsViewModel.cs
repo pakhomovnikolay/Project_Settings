@@ -3,9 +3,11 @@ using Project_Settings.ViewModels.Default;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +23,24 @@ namespace Project_Settings.ViewModels
         private readonly Application CurrApp = Application.Current;
 
         #region Контроль состояний
+
+
+        private bool _ChangeApllication;
+        public bool ChangeApllication
+        {
+            get => _ChangeApllication;
+            set => Set(ref _ChangeApllication, value);
+        }
+
+
+        private string _myPath = "MyResource/Jsons/Grid.json";
+
+        public string MyPath
+        {
+            get => _myPath;
+            set => Set(ref _myPath, value);
+        }
+
         private string _myVersion = "Версия: 0.0.0";
 
         public string MyVersion
@@ -157,6 +177,59 @@ namespace Project_Settings.ViewModels
 
         #region Команды
         /// <summary>
+        /// Команда добавить строку
+        /// </summary>
+        public ICommand CmdAddRow{ get; }
+
+        private bool CanCmdAddRowExecute(object p) => true;
+
+        private void OnCmdAddRowExecuted(object p)
+        {
+            DataTable dt = SelectedSheets.DataTables;
+            if (dt == null)
+            {
+                dt = new();
+                dt.Columns.Add();
+                dt.Columns.Add();
+                dt.Columns.Add();
+
+
+                dt.Rows.Add();
+                dt.Rows.Add();
+                dt.Rows.Add();
+                SelectedSheets.DataTables = dt;
+                return;
+            }
+            dt.NewRow();
+            dt.NewRow();
+            dt.NewRow();
+
+            SelectedSheets.DataTables = dt;
+
+            //SelectedSheets.DataTables.re
+
+
+            MySheetsConfig.Sheet.Add(SelectedSheets);
+
+
+
+
+        }
+
+        /// <summary>
+        /// Команда сохранить проект
+        /// </summary>
+        public ICommand CmdSaveProject { get; }
+
+        private bool CanCmdSaveProjectExecute(object p) => true;
+
+        private void OnCmdSaveProjectExecuted(object p)
+        {
+            WriteMappingFileGridSheets(MyPath, MySheetsConfig);
+        }
+
+
+        /// <summary>
         /// Команда на смену светлой темы
         /// </summary>
         public ICommand CmdSetBlackTheames { get; }
@@ -242,103 +315,162 @@ namespace Project_Settings.ViewModels
         //}
         #endregion
 
-        //#region Набор данных для TreeView
-        //public object[] TreeViewItemSource { get; }
-
-        //public object[] TreeViewItemMsgSource { get; }
-        
-        //private static MapTreeView ReadMappingFileTreeView(string fileName)
-        //{
-        //    byte[] jsonUtf8Bytes = File.ReadAllBytes(fileName);
-        //    var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
-        //    var mapping = JsonSerializer.Deserialize<MapTreeView>(readOnlySpan);
-        //    return mapping;
-        //}
-        //#endregion
-
         #region Набор данных для DataGrid
 
         /// <summary>Выбранный лист</summary>
-        private MapSheet _SelectedSheets = new();
+        private MapSheets _SelectedSheets = new();
 
         /// <summary>Выбранный лист</summary>
-        public MapSheet SelectedSheets
+        public MapSheets SelectedSheets
         {
             get => _SelectedSheets;
             set => Set(ref _SelectedSheets, value);
         }
 
-        //public ObservableCollection<MapSheet> MyDataGridItems { get; }
+        public ObservableCollection<MapSheets> MyDataGridItems { get; }
+        public Sheets MySheetsConfig { get; }
 
+        /// <summary>
+        /// Сохраняем данные
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="dt"></param>
+        private void WriteMappingFileGridSheets(string fileName, Sheets dt)
+        {
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                //IgnoreReadOnlyProperties = false,
+                //Encoder = Utf8JsonReader,
+                WriteIndented = true
+            };
+
+            byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(dt, options);
+            File.WriteAllBytes(fileName, jsonUtf8Bytes);
+        }
+
+        /// <summary>
+        /// Получаем данные
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         private static Sheets ReadMappingFileGridSheets(string fileName)
         {
             byte[] jsonUtf8Bytes = File.ReadAllBytes(fileName);
             var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
-            var mapping = JsonSerializer.Deserialize<Sheets>(readOnlySpan);
+            Sheets? mapping = JsonSerializer.Deserialize<Sheets>(readOnlySpan);
             return mapping;
         }
         #endregion
 
-        public Sheets MyDataGridItems { get; }
-
-        //public DataGrid MyDataTable { get; }
-        public DataGrid MyDataTable { get; set; }
-
-
-        //private IList<DataGrid> DG { get; }
-        //public ObservableCollection<DataGrid> MyDataGrid { get; }
-
+        #region Инициализация данных
         public MainWindowsViewModel()
         {
+            MyDataGridItems = new();
+            MySheetsConfig = new();
             flWhiteTheames = true;
             CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
             CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
             CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
             CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
             CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
+            CmdSaveProject = new RelayCommand(OnCmdSaveProjectExecuted, CanCmdSaveProjectExecute);
+            CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
+
             ChangeTheames();
 
-            var path = Path.Combine("MyResource/Jsons/Grid.json");
-            Sheets JsonData = ReadMappingFileGridSheets(path);
-
-            DataTable dt = new();
-            MyDataTable = new();
-            int index_row = 1;
-            foreach (MapSheet GridItems in JsonData.Sheet)
+            var JsonData = ReadMappingFileGridSheets(MyPath);
+            List<MapSheets> _MapSheets;
+            _MapSheets = new List<MapSheets>();
+            foreach (var item in JsonData.Sheet)
             {
-                //MyDataTable.ItemsSource = GridItems.Columns.ToList();
-                MyDataTable.AutoGenerateColumns = false;
-                MyDataTable.ColumnWidth = 70;
-                MyDataTable.RowHeaderWidth = 30;
-                MyDataTable.VerticalGridLinesBrush = Brushes.DarkGray;
-                MyDataTable.AlternatingRowBackground = Brushes.LightGray;
-                foreach (var io in GridItems.Columns)
+                var ItemMapSheets = new MapSheets
                 {
-                    
-                    MyDataTable.Columns.Add(new DataGridTextColumn
-                    {
-                        Header = io.Col.ToString()
-                        
-                    });
-
-                    MyDataTable.Items.Add(new DataGridRow
-                    {
-                        Header = index_row++
-                    });
-                }
-
-                //foreach (MapColumn Items in GridItems.Columns)
-                //{
-                //    //dt.Columns.Add(Items.Col);
-                //    dt.Columns.Add(Items.Col);
-                //    dt.Rows.Add(index_row);
-                //    index_row++;
-                //}
-
+                    //Columns = item.Columns,
+                    CountRow = item.CountRow,
+                    DataTables = item.DataTables,
+                    Name = item.Name,
+                    NameMsg = item.NameMsg,
+                };
+                _MapSheets.Add(ItemMapSheets);
             }
-            //MyDataTable.ItemsSource = dt.Columns.to;
-            MyDataGridItems = JsonData;
+            var groups = new Sheets
+            {
+                CountSheets = JsonData.CountSheets,
+                Sheet = JsonData.Sheet,
+            };
+            MySheetsConfig = groups;
+            MyDataGridItems = new ObservableCollection<MapSheets>(_MapSheets);
+            #endregion
 
+
+
+            ////Groups = new ObservableCollection<Group>(groups);
+
+            ////MyDataGridItems.Add(JsonData);
+
+            //
+
+
+
+
+
+            //GridItems.NameMsg = "";
+            //GridItems.Name = "";
+            //GridItems.Columns = new string[] { "Name" };
+            //GridItems.DataTables = new();
+            //GridItems.CountRow
+
+
+
+
+            //MyDataTable = new();
+            //MyDataTable.ItemsSource = GridItems.Columns.ToList();
+            //MyDataTable.AutoGenerateColumns = false;
+            //MyDataTable.ColumnWidth = 70;
+            //MyDataTable.RowHeaderWidth = 30;
+            //MyDataTable.VerticalGridLinesBrush = Brushes.DarkGray;
+            //MyDataTable.AlternatingRowBackground = Brushes.LightGray;
+            //foreach (var io in GridItems.Columns)
+            //{
+            //    MyDataTable.Columns.Add(io.Col);
+
+            //    MyDataTable.Rows.Add(io.Col);
+
+
+            //    //MyDataTable.Columns.Add(new DataGridTextColumn
+            //    //{
+            //    //    Header = io.Col.ToString()
+
+            //    //});
+
+            //    //MyDataTable.Items.Add(new DataGridRow
+            //    //{
+            //    //    Header = index_row++
+            //    //});
+            //}
+
+            //MyDataGridItems = new ObservableCollection<Sheets>(JsonData);
+
+            //GridItems.DataTables = new(MyDataTable);
+
+            //foreach (MapColumn Items in GridItems.Columns)
+            //{
+            //    //dt.Columns.Add(Items.Col);
+            //    dt.Columns.Add(Items.Col);
+            //    dt.Rows.Add(index_row);
+            //    index_row++;
+            //}
+
+            //foreach (var DGridItems in MyDataGridItems)
+            //{
+            //    DGridItems.DataTables = (IList<DataTable>)MyDataTable.ItemsSource;
+            //}
+
+
+
+            //MyDataTable.ItemsSource = dt.Columns.to;
+            //MyDataGridItems = JsonData;
 
 
 
