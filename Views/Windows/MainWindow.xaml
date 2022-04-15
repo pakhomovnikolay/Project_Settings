@@ -65,7 +65,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <GroupBox Header="Список листов" Grid.Column="0" BorderBrush="{DynamicResource ResultBorderBrush}">
-                <ListBox ItemsSource="{Binding Path=MyDataGridItems}" SelectedItem="{Binding Path=SelectedSheets}">
+                <ListBox ItemsSource="{Binding Path=MyDataGridItems}" SelectedItem="{Binding Path=SelectedSheets}" SelectedIndex="{Binding Path=MySheetsConfig.LastSelectIntex}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Name}"/>
@@ -79,8 +79,8 @@
                 </GroupBox.Header>
                 <DataGrid x:Name="MyDataGrid" IsReadOnly="False"
                     BorderBrush="{DynamicResource ResultBorderBrush}"
-                    ItemsSource="{Binding Path=SelectedSheets.DataTables}">
-                    <DataGrid.Columns>
+                    ItemsSource="{Binding Path=SelectedSheets.DataTables, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                    <!--<DataGrid.Columns>
                         <DataGridTextColumn Header="A" MinWidth="50"/>
                         <DataGridTextColumn Header="B" MinWidth="50"/>
                         <DataGridTextColumn Header="C" MinWidth="50"/>
@@ -107,7 +107,7 @@
                         <DataGridTextColumn Header="X" MinWidth="50"/>
                         <DataGridTextColumn Header="Y" MinWidth="50"/>
                         <DataGridTextColumn Header="Z" MinWidth="50"/>
-                    </DataGrid.Columns>
+                    </DataGrid.Columns>-->
                     <!--<DataGridTemplateColumn>
                         <DataGridTemplateColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">

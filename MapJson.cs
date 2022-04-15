@@ -11,7 +11,7 @@ namespace Project_Settings
 {
     public class Sheets
     {
-        public int CountSheets { get; set; }
+        public int LastSelectIntex { get; set; }
         public IList<MapSheets> Sheet { get; set; }
     }
     public class MapSheets
@@ -20,13 +20,16 @@ namespace Project_Settings
         public string NameMsg { get; set; }
         public string CountRow { get; set; }
         public DataTable DataTables { get; set; }
+        public IList<MapColumns> Columns { get; set; }
+
         //public IList<MapColumns> Columns { get; set; }
-        
+
     }
-    //public class MapColumns
-    //{
-    //    public string Col { get; set; }
-    //}
+    public class MapColumns
+    {
+        public string Col { get; set; }
+        public string Row { get; set; }
+    }
 
     //public class MapColumn
     //{
