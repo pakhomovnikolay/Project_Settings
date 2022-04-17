@@ -1,12 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using Project_Settings.ViewModels;
 using System.ComponentModel;
-using System.Data;
-using System.IO;
-using System.Text.Json;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Project_Settings
 {
@@ -15,6 +9,8 @@ namespace Project_Settings
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = new MainWindowsViewModel();
         }
         private void Window_Closing(object Sender, CancelEventArgs E)
         {

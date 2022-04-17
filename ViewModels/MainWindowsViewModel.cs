@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Windows;
@@ -187,20 +188,29 @@ namespace Project_Settings.ViewModels
         {
             var index = MyDataGridItems.IndexOf(SelectedSheets);
 
-            for (int i = 0; i < 3; i++)
+
+            if (SelectedSheets.DataTables == null)
             {
-                if (SelectedSheets.DataTables == null)
-                {
-                    SelectedSheets.DataTables = new();
-                    SelectedSheets.DataTables.Columns.Add();
-                    SelectedSheets.DataTables.NewRow();
-                }
-                else
-                {
-                    SelectedSheets.DataTables.Columns.Add();
-                    SelectedSheets.DataTables.Rows.Add();
-                }
+                SelectedSheets.DataTables = new();
             }
+            SelectedSheets.DataTables.Columns.Add("A");
+
+            
+
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    if (SelectedSheets.DataTables == null)
+            //    {
+            //        SelectedSheets.DataTables = new();
+            //        SelectedSheets.DataTables.Columns.Add();
+            //        SelectedSheets.DataTables.NewRow();
+            //    }
+            //    else
+            //    {
+            //        SelectedSheets.DataTables.Columns.Add();
+            //        SelectedSheets.DataTables.Rows.Add();
+            //    }
+            //}
             MyDataGridItems[index] = SelectedSheets;
             SelectedSheets = MyDataGridItems[index];
             MySheetsConfig.Sheet[index] = SelectedSheets;
@@ -326,27 +336,46 @@ namespace Project_Settings.ViewModels
         /// <param name="dt"></param>
         private void WriteMappingFileGridSheets(string fileName, Sheets dt)
         {
+            
+
             Sheets _Sheets = new();
             List<MapSheets> _MapSheets = new();
             List<MapColumns> _MapColumns = new();
 
-            foreach (var item in dt.Sheet)
+            
+
+            foreach (var _Sheet in dt.Sheet)
             {
 
-                var ItemMapColumns = new MapColumns
-                {
-                    Col = item.DataTables.Locale.Name,
-                    Row = item.DataTables.Locale.ToString()
-                };
+                SelectedSheets.DataTables.WriteXml("people.xml");
 
-                _MapColumns.Add(ItemMapColumns);
+
+
+                //dataGrid.ItemsSource = IList<_Sheet.DataTables>;
+
+                //dataTable.
+
+                //using FileStream fs = new("people.xml", FileMode.OpenOrCreate);
+
+                //    dataTable.WriteXml(fs);
+
+
+
+
+                //var ItemMapColumns = new MapColumns
+                //{
+                //    Col = item.DataTables.Locale.Name,
+                //    Row = item.DataTables.Locale.ToString()
+                //};
+
+                //_MapColumns.Add(ItemMapColumns);
 
                 var ItemMapSheets = new MapSheets
                 {
                     Columns = _MapColumns,
-                    CountRow = item.CountRow,
-                    Name = item.Name,
-                    NameMsg = item.NameMsg,
+                    CountRow = _Sheet.CountRow,
+                    Name = _Sheet.Name,
+                    NameMsg = _Sheet.NameMsg,
                 };
                 _MapSheets.Add(ItemMapSheets);
             }
@@ -524,6 +553,8 @@ namespace Project_Settings.ViewModels
             CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
             CmdSaveProject = new RelayCommand(OnCmdSaveProjectExecuted, CanCmdSaveProjectExecute);
             CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
+
+            MyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             ChangeTheames();
 
