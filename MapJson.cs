@@ -13,23 +13,28 @@ namespace Project_Settings
     {
         public int LastSelectIntex { get; set; }
         public IList<MapSheets> Sheet { get; set; }
-    }
-    public class MapSheets
-    {
-        public string Name { get; set; }
-        public string NameMsg { get; set; }
-        public string CountRow { get; set; }
-        public DataTable DataTables { get; set; }
-        public IList<MapColumns> Columns { get; set; }
 
-        //public IList<MapColumns> Columns { get; set; }
 
+
+
+        //public IList<MapSheets> Sheet { get; set; }
     }
-    public class MapColumns
-    {
-        public string Col { get; set; }
-        public string Row { get; set; }
-    }
+    //public class MapSheets
+    //{
+    //    public string Name { get; set; }
+    //    public string NameMsg { get; set; }
+    //    public string CountRow { get; set; }
+    //    public DataTable DataTables { get; set; }
+    //    public IList<MapColumns> Columns { get; set; }
+
+    //    //public IList<MapColumns> Columns { get; set; }
+
+    //}
+    //public class MapColumns
+    //{
+    //    public string Col { get; set; }
+    //    public string Row { get; set; }
+    //}
 
     //public class MapColumn
     //{

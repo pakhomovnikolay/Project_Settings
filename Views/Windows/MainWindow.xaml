@@ -12,6 +12,9 @@
         Height="auto" Width="auto" MinHeight="400" MinWidth="800"
         WindowState="Maximized" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
+    <Window.DataContext>
+        <vm:MainWindowsViewModel/>
+    </Window.DataContext>
 
     <!--<Window.DataContext x:Class="Project_Settings.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -102,8 +105,9 @@
                             <TextBlock Text="{Binding Path=SelectedSheets.Name, StringFormat=Выбраный лист - {0}, FallbackValue='Данные листа', TargetNullValue='Группа не выбрана'}"/>
                         </GroupBox.Header>
                         <DataGrid x:Name="MyDataGrid" IsReadOnly="False"
-                              BorderBrush="{DynamicResource ResultBorderBrush}" Background="{DynamicResource ResultBackground}"
-                              ItemsSource="{Binding Path=SelectedSheets.DataTables, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                  BorderBrush="{DynamicResource ResultBorderBrush}"
+                                  Background="{DynamicResource ResultBackground}"
+                                  ItemsSource="{Binding Path=SelectedSheets, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                         </DataGrid>
                     </GroupBox>
                 </DockPanel>
