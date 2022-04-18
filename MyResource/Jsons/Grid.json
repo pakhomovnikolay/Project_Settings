@@ -7,51 +7,40 @@
       "CountRow": "",
       "DataTables": null,
       "Columns": [
-        {
-          "Item": "A",
-          "Rows": [
-            { "Item": "1" },
-            { "Item": "2" },
-            { "Item": "3" }
-          ]
-
-        },
-        {
-          "Item": "B",
-          "Rows": [
-            {
-              "Item": "2"
-            }
-          ]
-
-        }
-      ]
-    },
-
-    {
-      "Name": "LIST2",
-      "NameMsg": "",
-      "CountRow": "",
-      "DataTables": null,
-      "Columns": [
-        {
-          "Item": "A",
-          "Rows": [
-            {
-              "Item": "1"
-            }
-          ]
-
-        },
-        {
-          "Item": "B",
-          "Rows": [
-            {
-              "Item": "2"
-            }
-          ]
-
-        }
+        { "Item": "A" },
+        { "Item": "B" },
+        { "Item": "C" },
+        { "Item": "D" },
+        { "Item": "E" },
+        { "Item": "F" },
+        { "Item": "G" },
+        { "Item": "H" },
+        { "Item": "I" },
+        { "Item": "J" },
+        { "Item": "K" },
+        { "Item": "L" },
+        { "Item": "M" },
+        { "Item": "N" },
+        { "Item": "O" },
+        { "Item": "P" },
+        { "Item": "Q" },
+        { "Item": "R" },
+        { "Item": "S" },
+        { "Item": "T" },
+        { "Item": "U" },
+        { "Item": "V" },
+        { "Item": "W" },
+        { "Item": "X" },
+        { "Item": "Y" },
+        { "Item": "Z" }
+      ],
+      "Rows": [
+        { "Item": "A", "Value": "123" },
+        { "Item": "A", "Value": "123" },
+        { "Item": "A", "Value": "123" },
+        { "Item": "B", "Value": "123" },
+        { "Item": "B", "Value": "123" },
+        { "Item": "C", "Value": "123" }
       ]
     }
   ]

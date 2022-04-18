@@ -5,7 +5,7 @@ namespace Project_Settings.ViewModels.Default
 {
     public abstract class ViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null)
         {

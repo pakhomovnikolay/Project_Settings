@@ -323,21 +323,6 @@ namespace Project_Settings.ViewModels
         {
             CurrApp.MainWindow.WindowState = WindowState.Minimized;
         }
-
-
-        //private bool CanCmdCloseAppExecute(object p) => true;
-
-        //public ContentControl CmdCloseApp  { get; }
-
-        //private void Window_Closing(object Sender, CancelEventArgs E)
-        //{
-        //    if (MessageBox.Show("Вы действительно хотите выйти?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-        //    {
-        //        E.Cancel = true;
-        //        return;
-        //    }
-        //    Application.Current.Shutdown();
-        //}
         #endregion
 
         #region Набор данных для DataGrid
@@ -560,7 +545,7 @@ namespace Project_Settings.ViewModels
         {
             byte[] jsonUtf8Bytes = File.ReadAllBytes(fileName);
             var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
-            Sheets? mapping = JsonSerializer.Deserialize<Sheets>(readOnlySpan);
+            Sheets mapping = JsonSerializer.Deserialize<Sheets>(readOnlySpan);
             return mapping;
         }
         #endregion
@@ -583,52 +568,23 @@ namespace Project_Settings.ViewModels
 
             var JsonData = ReadMappingFileGridSheets(MyPath);
             List<MapSheets> _MapSheets = new();
-            
 
             foreach (var item in JsonData.Sheet)
             {
-                int counRow = 0;
                 DataTable _DataTable = new();
-                DataRow _row = _DataTable.NewRow();
+                //DataRow _row = _DataTable.NewRow();
+                //List<DataRow> _Row = new();
                 foreach (var Column in item.Columns)
                 {
                     _DataTable.Columns.Add(Column.Item);
                 }
 
-                foreach (var Column in item.Columns)
+                foreach (var Row in item.Rows)
                 {
-                    _row = _DataTable.NewRow();
-                    foreach (var Row in Column.Rows)
-                    {
-                        _row[Column.Item] = Row.Item;
-                    }
+                    DataRow _row = _DataTable.NewRow();
+                    _row[Row.Item] = Row.Value;
                     _DataTable.Rows.Add(_row);
                 }
-                
-
-
-                //    string NameColumn = Column.Item;
-                //int RowCount = Column.Rows.Count;
-
-
-
-                //{
-
-
-                //    _DataTable.Rows.Add(_row);
-                //}
-                //counRow++;
-
-
-
-
-
-
-
-
-
-
-
 
                 var ItemMapSheets = new MapSheets
                 {
@@ -636,7 +592,8 @@ namespace Project_Settings.ViewModels
                     DataTables = _DataTable,
                     Name = item.Name,
                     NameMsg = item.NameMsg,
-                    Columns = item.Columns
+                    Columns = item.Columns,
+                    Rows = item.Rows
                 };
                 _MapSheets.Add(ItemMapSheets);
             }
@@ -649,380 +606,6 @@ namespace Project_Settings.ViewModels
             MyDataGridItems = new ObservableCollection<MapSheets>(_MapSheets);
             SelectedSheets = MyDataGridItems[MySheetsConfig.LastSelectIntex];
             #endregion
-
-
-
-            ////Groups = new ObservableCollection<Group>(groups);
-
-            ////MyDataGridItems.Add(JsonData);
-
-            //
-
-
-
-
-
-            //GridItems.NameMsg = "";
-            //GridItems.Name = "";
-            //GridItems.Columns = new string[] { "Name" };
-            //GridItems.DataTables = new();
-            //GridItems.CountRow
-
-
-
-
-            //MyDataTable = new();
-            //MyDataTable.ItemsSource = GridItems.Columns.ToList();
-            //MyDataTable.AutoGenerateColumns = false;
-            //MyDataTable.ColumnWidth = 70;
-            //MyDataTable.RowHeaderWidth = 30;
-            //MyDataTable.VerticalGridLinesBrush = Brushes.DarkGray;
-            //MyDataTable.AlternatingRowBackground = Brushes.LightGray;
-            //foreach (var io in GridItems.Columns)
-            //{
-            //    MyDataTable.Columns.Add(io.Col);
-
-            //    MyDataTable.Rows.Add(io.Col);
-
-
-            //    //MyDataTable.Columns.Add(new DataGridTextColumn
-            //    //{
-            //    //    Header = io.Col.ToString()
-
-            //    //});
-
-            //    //MyDataTable.Items.Add(new DataGridRow
-            //    //{
-            //    //    Header = index_row++
-            //    //});
-            //}
-
-            //MyDataGridItems = new ObservableCollection<Sheets>(JsonData);
-
-            //GridItems.DataTables = new(MyDataTable);
-
-            //foreach (MapColumn Items in GridItems.Columns)
-            //{
-            //    //dt.Columns.Add(Items.Col);
-            //    dt.Columns.Add(Items.Col);
-            //    dt.Rows.Add(index_row);
-            //    index_row++;
-            //}
-
-            //foreach (var DGridItems in MyDataGridItems)
-            //{
-            //    DGridItems.DataTables = (IList<DataTable>)MyDataTable.ItemsSource;
-            //}
-
-
-
-            //MyDataTable.ItemsSource = dt.Columns.to;
-            //MyDataGridItems = JsonData;
-
-
-
-            //var groups = Enumerable.Range(1, JsonData.Sheet.Count).Select(i => new MapSheet
-            //{
-            //    DataTables = new ObservableCollection<DataTable>((IEnumerable<DataTable>)MyDataTable)
-            //});
-
-
-            //MyDataGridItems.Sheet.Add((MapSheet)groups);
-
-
-
-
-
-            //MyDataGridItems.Sheet= (IList<DataGrid>)MyDataGrid;
-
-            //int index = 1;
-            //foreach (var ioMap in ioMapData.Sheet)
-            //{
-            //    foreach (var io in ioMap.Column)
-            //    {
-            //        var _MapColumn = Enumerable.Range(1, index).Select(i => new MapColumn
-            //        {
-            //            Item = io.Item
-
-            //        });
-
-            //        var _MapSheet = Enumerable.Range(1, index).Select(i => new MapSheet
-            //        {
-            //            Column = new ObservableCollection<MapColumn>(_MapColumn),
-            //            CountRow = ioMap.CountRow,
-            //            NameMsg = ioMap.NameMsg,
-            //            Name = ioMap.Name
-            //        });
-
-
-            //    }
-
-            //    index++;
-            //}
-
-            //MyDataGridItems = new ObservableCollection<MapSheet>(ioMapData.Sheet);
-
-
-            //IEnumerable<MapSheet> _MapColumn;
-            //var _MapColumn = new List<MapColumn>();
-            //var _MapSheet = new List<MapSheet>();
-            //foreach (var ioMap in ioMapData.Sheet)
-            //{
-            //    foreach (var io in ioMap.Column)
-            //    {
-            //        var _MapColumn = Enumerable.Range(1, ioMap.Column.Count).Select(i => new MapColumn
-            //        {
-            //            Item = io.Item
-            //        });
-
-            //        var _MapSheet = Enumerable.Range(1, ioMapData.Sheet.Count).Select(i => new MapSheet
-            //        {
-            //            Column = new ObservableCollection<MapColumn>(_MapColumn),
-            //            CountRow = ioMap.CountRow,
-            //            NameMsg = ioMap.NameMsg,
-            //            Name = ioMap.Name
-            //        });
-
-            //        MyDataGridItems = new ObservableCollection<MapSheet>(_MapSheet);
-            //    }
-            //}
-
-
-            //
-            //{
-            //    Name = $"Name {student_index}",
-            //    Surname = $"Surname {student_index}",
-            //    Patronymic = $"Patronymic {student_index++}",
-            //    Birthday = DateTime.Now,
-            //    Rating = 0
-            //});
-
-
-
-            //var _TreeViewItemSource = new List<object>();
-            //var _TreeViewItemMsgSource = new List<object>();
-
-            //foreach (var io in ioMapData.Sheet)
-            //{
-            //    _TreeViewItemSource.Add(io.Name);
-            //}
-            //TreeViewItemSource = _TreeViewItemSource.ToArray();
-
-            //foreach (var io in ioMapData.Sheet)
-            //{
-            //    if (!string.IsNullOrEmpty(io.NameMsg))
-            //    {
-            //        _TreeViewItemMsgSource.Add(io.NameMsg);
-            //    }
-            //}
-            //TreeViewItemMsgSource = _TreeViewItemMsgSource.ToArray();
-
-            // ------------------------------------------------------------------------------------------------------------- //
-            //var data_list = new List<object>();
-            //foreach (var ioMap in ioMapData.Sheet)
-            //{
-            //    foreach (var io in ioMap.Column)
-            //    {
-            //        data_list.Add(io.Item);
-            //    }
-            //}
-
-
-
-
-            //MyDataGridItems = data_list.ToArray();
-
-            //var students = Enumerable.Range(1, 10).Select(i => new Student
-            //{
-            //    Name = $"Name {student_index}",
-            //    Surname = $"Surname {student_index}",
-            //    Patronymic = $"Patronymic {student_index++}",
-            //    Birthday = DateTime.Now,
-            //    Rating = 0
-            //});
-
-
-
-
-
-
-            //DataGrid _DataGridItems = new();
-            //DataGrid _DataGridItems = new();
-            //foreach (var ioMap in ioMapDataGrid.Columns)
-            //{
-
-            //    var col = new DataGridTextColumn
-            //    {
-            //        Header = ioMap.Item
-            //    };
-
-            //    _DataGridItems.Columns.Add(col);
-
-            //    //MyDataGridItems = new ObservableCollection<MapDataGrid>(groups);
-            //}
-
-            ////var rowData = Enumerable.Range(0, ioMapDataGrid.Columns.Count).ToList();
-            //MyDataGridItems = _DataGridItems.ItemsSource;
-
-            //for (int i = 0; i < N; i++)
-            //{
-            //    var col = new DataGridTextColumn
-            //    {
-            //        Header = i.ToString(),
-            //        Binding = new Binding("[" + i + "]"),
-            //        IsReadOnly = true,
-            //        Width = new DataGridLength(1, DataGridLengthUnitType.Star)
-            //    };
-
-            //    dataGrid.Columns.Add(col);
-            //}
-
-            //var rowData = Enumerable.Range(0, N).ToList();
-            //dataGrid.Items.Add(rowData);
-
-            ////
-
-
-
-
-
-            //MyDataGridItems = _DataGridItems.ToArray();
-
-            //var student_index = 1;
-            //var students = Enumerable.Range(1, 10).Select(i => new Student
-            //{
-            //    Name = $"Name {student_index}",
-            //    Surname = $"Surname {student_index}",
-            //    Patronymic = $"Patronymic {student_index++}",
-            //    Birthday = DateTime.Now,
-            //    Rating = 0
-            //});
-
-
-
-            // DataGrid DataList = new();
-
-
-
-
-
-            //DataGridTextColumn textColumn = new DataGridTextColumn();
-            //textColumn.Header = "First Name";
-            //textColumn.Binding = new Binding("FirstName");
-            //DataList.Columns.Add(textColumn);
-
-
-            //DataGrid data_list = new();
-            //foreach (var ioMap in ioMapDataGrid.Columns)
-            //{
-            //    DataGridTextColumn textColumn = new DataGridTextColumn();
-            //    textColumn.Header = ioMap.Item;
-            //    data_list.Columns.Add(textColumn);
-            //}
-
-            //MyDataGridItems = data_list.Columns.ToList();
-            //data_list.Add(ioMapDataGrid);
-
-
-            //var _DataGridItems = new List<MapDataGrid>();
-
-            //var dgItems = new MapDataGrid
-            //{
-            //    Columns = ioMapDataGrid.Columns
-            //};
-
-            //_DataGridItems.Add(dgItems);
-
-            //DataList.Items.Add(_TreeViewItemSource);
-
-
-            //DataList.ItemsSource = data_list.ItemsSource;
-
-            //DataList = new ()data_list
-
-            //DataList.ItemsSource = data_list.ItemsSource;
-
-            //int numCol = 0;
-            //foreach (var ioMap in ioMapDataGrid.Columns)
-            //{
-            //    //data_list.Add(numCol.ToString());
-
-
-            //    //data_list.Add(numCol);
-            //    //numCol++;
-
-            //    //var groups = Enumerable.Range(1, 20).Select(i => new MapDataGrid
-            //    //{
-            //    //    Columns = (IList<ConfigDataGrid>)ioMap
-            //    //});
-
-
-
-            //    //data_list.Columns.Add();
-
-            //    //var groups = new DataGrid
-            //    //{
-            //    //    Column = ObservableCollection<DataGridColumn>(ioMap.Item)
-            //    //    //Columns = (IList<ConfigDataGrid>)ioMap
-            //    //};
-
-            //    //
-
-            //    //    var groups = new MapDataGrid
-            //    //{
-            //    //    Columns = ioMap.Item
-            //    //    });
-
-            //    //    data_list.Add(ioMap.Item);
-
-
-            //    //data_list.Add(io.Value);
-
-            //    //var dgItems = new ConfigDataGrid
-            //    //{
-            //    //    Value = io.Value,
-            //    //    Item = io.Item,
-            //    //    ColumnSpawn = io.ColumnSpawn
-            //    //};
-            //    //data_list.Add(dgItems);
-            //}
-            //Groups = new ObservableCollection<DataGrid>(groups);
-            //MyDataGridItems.Add
-            //MyDataGridItems.Add(numCol);
-
-            //DataGrid data_list = new();
-
-            //MyDataGridItems = new ObservableCollection<DataGrid>((IEnumerable<DataGrid>)data_list);
-
-
-            //_DataGridItems.Add(ioMapDataGrid);
-
-            //var _DataGridItems = new List<GridSheets>();
-
-
-            //_DataGridItems.Add(ioMapDataGrid);
-            //MyDataGridItems = new ObservableCollection<GridSheets>(_DataGridItems);
-
-
-            //_DataGridItems.Add(ioMapDataGrid.Sheet);
-
-
-
-
-
-
-
-            //var groups => new GridSheets
-            //{
-            //    Sheet = new ObservableCollection<GridSheets>(ioMapDataGrid.Sheet)
-            //});
-
-            //MyDataGridItems = new ObservableCollection<GridSheets>();
-
-
-            //_DataGridItems.Add((GridSheets)ioMapDataGrid.Sheet);
-            //MyDataGridItems = new ObservableCollection<GridSheets>(_DataGridItems);
-
         }
     }
 }

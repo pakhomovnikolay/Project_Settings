@@ -21,19 +21,18 @@ namespace Project_Settings
         public string CountRow { get; set; }
         public DataTable DataTables { get; set; }
         public IList<MapColumns> Columns { get; set; }
-
-        //public IList<MapColumns> Columns { get; set; }
+        public IList<MapRow> Rows { get; set; }
 
     }
     public class MapColumns
     {
         public string Item { get; set; }
-        public IList<ListRow> Rows { get; set; }
     }
 
-    public class ListRow
+    public class MapRow
     {
         public string Item { get; set; }
+        public string Value { get; set; }
     }
 
 
