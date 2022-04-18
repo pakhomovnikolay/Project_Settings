@@ -107,7 +107,8 @@
                         <DataGrid x:Name="MyDataGrid" IsReadOnly="False"
                                   BorderBrush="{DynamicResource ResultBorderBrush}"
                                   Background="{DynamicResource ResultBackground}"
-                                  ItemsSource="{Binding Path=SelectedSheets, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                  AutoGenerateColumns="True"
+                                  ItemsSource="{Binding Path=SelectedSheets.DataTables}">
                         </DataGrid>
                     </GroupBox>
                 </DockPanel>

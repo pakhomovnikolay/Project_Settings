@@ -187,6 +187,27 @@ namespace Project_Settings.ViewModels
 
         private void OnCmdAddRowExecuted(object p)
         {
+
+            var index = MyDataGridItems.IndexOf(SelectedSheets);
+            if (SelectedSheets.DataTables == null)
+            {
+                SelectedSheets.DataTables = new();
+            }
+
+            SelectedSheets.DataTables.Columns.Add("Номер\nкоризны");
+            SelectedSheets.DataTables.Columns.Add("Название шкафа\nНомер шкафа");
+            SelectedSheets.DataTables.Columns.Add("Номер\nкорзины\nв шкафу");
+            SelectedSheets.DataTables.Columns.Add("Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным.");
+
+            DataRow row = SelectedSheets.DataTables.NewRow();
+            row["Номер\nкоризны"] = "A";
+            row["Название шкафа\nНомер шкафа"] = "A";
+            row["Номер\nкорзины\nв шкафу"] = "A";
+            row["Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным."] = "B";
+
+            SelectedSheets.DataTables.Rows.Add(row);
+
+
             //var index = MyDataGridItems.IndexOf(SelectedSheets);
 
 
@@ -215,9 +236,9 @@ namespace Project_Settings.ViewModels
             ////        SelectedSheets.DataTables.Rows.Add();
             ////    }
             ////}
-            //MyDataGridItems[index] = SelectedSheets;
-            //SelectedSheets = MyDataGridItems[index];
-            //MySheetsConfig.Sheet[index] = SelectedSheets;
+            MyDataGridItems[index] = SelectedSheets;
+            SelectedSheets = MyDataGridItems[index];
+            MySheetsConfig.Sheet[index] = SelectedSheets;
         }
 
         /// <summary>
@@ -326,8 +347,8 @@ namespace Project_Settings.ViewModels
         /// <summary>
         /// Данные выбранного листа
         /// </summary>
-        private Rack _SelectedSheets = new();
-        public Rack SelectedSheets
+        private MapSheets _SelectedSheets = new();
+        public MapSheets SelectedSheets
         {
             get => _SelectedSheets;
             set => Set(ref _SelectedSheets, value);
@@ -560,32 +581,73 @@ namespace Project_Settings.ViewModels
 
             ChangeTheames();
 
+            var JsonData = ReadMappingFileGridSheets(MyPath);
+            List<MapSheets> _MapSheets = new();
+            
+
+            foreach (var item in JsonData.Sheet)
+            {
+                int counRow = 0;
+                DataTable _DataTable = new();
+                DataRow _row = _DataTable.NewRow();
+                foreach (var Column in item.Columns)
+                {
+                    _DataTable.Columns.Add(Column.Item);
+                }
+
+                foreach (var Column in item.Columns)
+                {
+                    _row = _DataTable.NewRow();
+                    foreach (var Row in Column.Rows)
+                    {
+                        _row[Column.Item] = Row.Item;
+                    }
+                    _DataTable.Rows.Add(_row);
+                }
+                
+
+
+                //    string NameColumn = Column.Item;
+                //int RowCount = Column.Rows.Count;
 
 
 
-            //var JsonData = ReadMappingFileGridSheets(MyPath);
-            //List<MapSheets> _MapSheets;
-            //_MapSheets = new List<MapSheets>();
-            //foreach (var item in JsonData.Sheet)
-            //{
-            //    var ItemMapSheets = new MapSheets
-            //    {
-            //        CountRow = item.CountRow,
-            //        DataTables = item.DataTables,
-            //        Name = item.Name,
-            //        NameMsg = item.NameMsg,
-            //        Columns = item.Columns
-            //    };
-            //    _MapSheets.Add(ItemMapSheets);
-            //}
-            //var groups = new Sheets
-            //{
-            //    LastSelectIntex = JsonData.LastSelectIntex,
-            //    Sheet = _MapSheets
-            //};
-            //MySheetsConfig = groups;
-            //MyDataGridItems = new ObservableCollection<MapSheets>(_MapSheets);
-            //SelectedSheets = MyDataGridItems[MySheetsConfig.LastSelectIntex];
+                //{
+
+
+                //    _DataTable.Rows.Add(_row);
+                //}
+                //counRow++;
+
+
+
+
+
+
+
+
+
+
+
+
+                var ItemMapSheets = new MapSheets
+                {
+                    CountRow = item.CountRow,
+                    DataTables = _DataTable,
+                    Name = item.Name,
+                    NameMsg = item.NameMsg,
+                    Columns = item.Columns
+                };
+                _MapSheets.Add(ItemMapSheets);
+            }
+            var groups = new Sheets
+            {
+                LastSelectIntex = JsonData.LastSelectIntex,
+                Sheet = _MapSheets
+            };
+            MySheetsConfig = groups;
+            MyDataGridItems = new ObservableCollection<MapSheets>(_MapSheets);
+            SelectedSheets = MyDataGridItems[MySheetsConfig.LastSelectIntex];
             #endregion
 
 

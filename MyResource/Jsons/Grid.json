@@ -7,32 +7,24 @@
       "CountRow": "",
       "DataTables": null,
       "Columns": [
-        { "Col": "A" },
-        { "Col": "B" },
-        { "Col": "C" },
-        { "Col": "D" },
-        { "Col": "E" },
-        { "Row": "asdf" },
-        { "Row": "asdf" },
-        { "Row": "asdf" },
-        { "Row": "asdf" },
-        { "Row": "asdf" },
-        { "Col": "K", "Row": "asdf" },
-        { "Col": "L", "Row": "asdf" },
-        { "Col": "M", "Row": "asdf" },
-        { "Col": "N", "Row": "asdf" },
-        { "Col": "O", "Row": "asdf" },
-        { "Col": "P", "Row": "asdf" },
-        { "Col": "Q", "Row": "asdf" },
-        { "Col": "R", "Row": "asdf" },
-        { "Col": "S", "Row": "asdf" },
-        { "Col": "T", "Row": "asdf" },
-        { "Col": "U", "Row": "asdf" },
-        { "Col": "V", "Row": "asdf" },
-        { "Col": "W", "Row": "asdf" },
-        { "Col": "X", "Row": "asdf" },
-        { "Col": "Y", "Row": "asdf" },
-        { "Col": "Z", "Row": "asdf" }
+        {
+          "Item": "A",
+          "Rows": [
+            { "Item": "1" },
+            { "Item": "2" },
+            { "Item": "3" }
+          ]
+
+        },
+        {
+          "Item": "B",
+          "Rows": [
+            {
+              "Item": "2"
+            }
+          ]
+
+        }
       ]
     },
 
@@ -42,32 +34,24 @@
       "CountRow": "",
       "DataTables": null,
       "Columns": [
-        { "Col": "A", "Row": "asdf" },
-        { "Col": "B", "Row": "asdf" },
-        { "Col": "C", "Row": "asdf" },
-        { "Col": "D", "Row": "asdf" },
-        { "Col": "E", "Row": "asdf" },
-        { "Col": "F", "Row": "asdf" },
-        { "Col": "G", "Row": "asdf" },
-        { "Col": "H", "Row": "asdf" },
-        { "Col": "I", "Row": "asdf" },
-        { "Col": "J", "Row": "asdf" },
-        { "Col": "K", "Row": "asdf" },
-        { "Col": "L", "Row": "asdf" },
-        { "Col": "M", "Row": "asdf" },
-        { "Col": "N", "Row": "asdf" },
-        { "Col": "O", "Row": "asdf" },
-        { "Col": "P", "Row": "asdf" },
-        { "Col": "Q", "Row": "asdf" },
-        { "Col": "R", "Row": "asdf" },
-        { "Col": "S", "Row": "asdf" },
-        { "Col": "T", "Row": "asdf" },
-        { "Col": "U", "Row": "asdf" },
-        { "Col": "V", "Row": "asdf" },
-        { "Col": "W", "Row": "asdf" },
-        { "Col": "X", "Row": "asdf" },
-        { "Col": "Y", "Row": "asdf" },
-        { "Col": "Z", "Row": "asdf" }
+        {
+          "Item": "A",
+          "Rows": [
+            {
+              "Item": "1"
+            }
+          ]
+
+        },
+        {
+          "Item": "B",
+          "Rows": [
+            {
+              "Item": "2"
+            }
+          ]
+
+        }
       ]
     }
   ]
