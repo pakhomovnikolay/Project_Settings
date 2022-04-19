@@ -9,6 +9,40 @@ using System.Windows.Controls;
 
 namespace Project_Settings
 {
+    //public class DataProject
+    //{
+    //    public MapData Project { get; set; }
+    //}
+
+    //public class MapData
+    //{
+    //    public int SheetLastSelectIntex { get; set; }
+    //    public ObservableCollection<MapSheets> Project { get; set; }
+    //}
+
+    //public class MapSheets
+    //{
+    //    public string Sheet { get; set; }
+    //    public string SheetMsg { get; set; }
+    //    public int CountRow { get; set; }
+    //    public DataTable DataTables { get; set; }
+    //    public IList<MapColumns> Columns { get; set; }
+    //    public IList<MapRow> Rows { get; set; }
+
+    //}
+    //public class MapColumns
+    //{
+    //    public string Item { get; set; }
+    //}
+    //public class MapRow
+    //{
+    //    public string Column { get; set; }
+    //    public string Value { get; set; }
+    //}
+
+
+
+
     public class Sheets
     {
         public int LastSelectIntex { get; set; }
@@ -16,9 +50,10 @@ namespace Project_Settings
     }
     public class MapSheets
     {
+        public string NewName { get; set; }
         public string Name { get; set; }
         public string NameMsg { get; set; }
-        public string CountRow { get; set; }
+        public int CountRow { get; set; }
         public DataTable DataTables { get; set; }
         public IList<MapColumns> Columns { get; set; }
         public IList<MapRow> Rows { get; set; }
@@ -31,7 +66,7 @@ namespace Project_Settings
 
     public class MapRow
     {
-        public string Item { get; set; }
+        public string Column { get; set; }
         public string Value { get; set; }
     }
 

@@ -27,6 +27,14 @@ namespace Project_Settings.ViewModels
         #region Контроль состояний
 
 
+        private string _NewSelectedSheetName;
+        public string NewSelectedSheetName
+        {
+            get => _NewSelectedSheetName;
+            set => Set(ref _NewSelectedSheetName, value);
+        }
+
+
         private bool _ChangeApllication;
         public bool ChangeApllication
         {
@@ -178,6 +186,21 @@ namespace Project_Settings.ViewModels
         #endregion
 
         #region Команды
+
+        /// <summary>
+        /// Команда добавить строку
+        /// </summary>
+        public ICommand CmdChangeSelectedSheetName { get; }
+
+        private bool CanCmdChangeSelectedSheetNameExecute(object p) => true;
+
+        private void OnCmdChangeSelectedSheetNameExecuted(object p)
+        {
+            //SelectedSheets.Name = NewSelectedSheetName;
+        }
+
+
+
         /// <summary>
         /// Команда добавить строку
         /// </summary>
@@ -188,24 +211,24 @@ namespace Project_Settings.ViewModels
         private void OnCmdAddRowExecuted(object p)
         {
 
-            var index = MyDataGridItems.IndexOf(SelectedSheets);
-            if (SelectedSheets.DataTables == null)
-            {
-                SelectedSheets.DataTables = new();
-            }
+            //var index = MyDataGridItems.IndexOf(SelectedSheets);
+            //if (SelectedSheets.DataTables == null)
+            //{
+            //    SelectedSheets.DataTables = new();
+            //}
 
-            SelectedSheets.DataTables.Columns.Add("Номер\nкоризны");
-            SelectedSheets.DataTables.Columns.Add("Название шкафа\nНомер шкафа");
-            SelectedSheets.DataTables.Columns.Add("Номер\nкорзины\nв шкафу");
-            SelectedSheets.DataTables.Columns.Add("Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным.");
+            //SelectedSheets.DataTables.Columns.Add("Номер\nкоризны");
+            //SelectedSheets.DataTables.Columns.Add("Название шкафа\nНомер шкафа");
+            //SelectedSheets.DataTables.Columns.Add("Номер\nкорзины\nв шкафу");
+            //SelectedSheets.DataTables.Columns.Add("Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным.");
 
-            DataRow row = SelectedSheets.DataTables.NewRow();
-            row["Номер\nкоризны"] = "A";
-            row["Название шкафа\nНомер шкафа"] = "A";
-            row["Номер\nкорзины\nв шкафу"] = "A";
-            row["Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным."] = "B";
+            //DataRow row = SelectedSheets.DataTables.NewRow();
+            //row["Номер\nкоризны"] = "A";
+            //row["Название шкафа\nНомер шкафа"] = "A";
+            //row["Номер\nкорзины\nв шкафу"] = "A";
+            //row["Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным."] = "B";
 
-            SelectedSheets.DataTables.Rows.Add(row);
+            //SelectedSheets.DataTables.Rows.Add(row);
 
 
             //var index = MyDataGridItems.IndexOf(SelectedSheets);
@@ -236,9 +259,9 @@ namespace Project_Settings.ViewModels
             ////        SelectedSheets.DataTables.Rows.Add();
             ////    }
             ////}
-            MyDataGridItems[index] = SelectedSheets;
-            SelectedSheets = MyDataGridItems[index];
-            MySheetsConfig.Sheet[index] = SelectedSheets;
+            //MyDataGridItems[index] = SelectedSheets;
+            //SelectedSheets = MyDataGridItems[index];
+            //MySheetsConfig.Sheet[index] = SelectedSheets;
         }
 
         /// <summary>
@@ -250,7 +273,19 @@ namespace Project_Settings.ViewModels
 
         private void OnCmdSaveProjectExecuted(object p)
         {
-            WriteMappingFileGridSheets(MyPath, MySheetsConfig);
+            //WriteMappingFileGridSheets(MyPath, MySheetsConfig);
+        }
+
+        /// <summary>
+        /// Команда октрыть проект
+        /// </summary>
+        public ICommand CmdOpenFile { get; }
+
+        private bool CanCmdOpenFileExecute(object p) => true;
+
+        private void OnCmdOpenFileExecuted(object p)
+        {
+            ReadMappingFileGridSheets(MyPath);
         }
 
 
@@ -329,6 +364,9 @@ namespace Project_Settings.ViewModels
         public ObservableCollection<MapSheets> MyDataGridItems { get; }
         public Sheets MySheetsConfig { get; }
 
+        Sheets groups = new();
+        List<MapSheets> _MapSheets = new();
+
         /// <summary>
         /// Данные выбранного листа
         /// </summary>
@@ -346,194 +384,66 @@ namespace Project_Settings.ViewModels
         /// <param name="dt"></param>
         private void WriteMappingFileGridSheets(string fileName, Sheets dt)
         {
-            
 
-            //Sheets _Sheets = new();
-            //List<MapSheets> _MapSheets = new();
-            //List<MapColumns> _MapColumns = new();
-
-            
-
-            //foreach (var _Sheet in dt.Sheet)
-            //{
-
-            //    SelectedSheets.DataTables.WriteXml("people.xml");
-
-
-
-            //    //dataGrid.ItemsSource = IList<_Sheet.DataTables>;
-
-            //    //dataTable.
-
-            //    //using FileStream fs = new("people.xml", FileMode.OpenOrCreate);
-
-            //    //    dataTable.WriteXml(fs);
-
-
-
-
-            //    //var ItemMapColumns = new MapColumns
-            //    //{
-            //    //    Col = item.DataTables.Locale.Name,
-            //    //    Row = item.DataTables.Locale.ToString()
-            //    //};
-
-            //    //_MapColumns.Add(ItemMapColumns);
-
-            //    var ItemMapSheets = new MapSheets
-            //    {
-            //        Columns = _MapColumns,
-            //        CountRow = _Sheet.CountRow,
-            //        Name = _Sheet.Name,
-            //        NameMsg = _Sheet.NameMsg,
-            //    };
-            //    _MapSheets.Add(ItemMapSheets);
-            //}
-
-            //_Sheets.Sheet = _MapSheets;
-            //_Sheets.LastSelectIntex = dt.LastSelectIntex;
-
-            //Sheets _Sheets;
-            //List<MapSheets> _MapSheets;
-            //_MapSheets = new List<MapSheets>();
-            //_Sheets = new();
-
-            //foreach (var item in dt.Sheet)
-            //{
-            //    var io = item.DataTables.Rows[0].ItemArray;
-
-
-            //    //foreach (var io in item.DataTables.ImportRow())
-            //    //{
-            //    //    io.
-            //    //}
-            //}
-
-
-
-            //foreach (var item in dt.Sheet)
-            //{
-            //    var ItemMapSheets = new MapSheets
-            //    {
-            //        CountRow = item.CountRow,
-            //        Name = item.Name,
-            //        NameMsg = item.NameMsg,
-            //        Columns = item.Columns,
-
-            //    };
-
-
-
-
-
-            //    _MapSheets.Add(ItemMapSheets);
-            //}
-            //var groups = new Sheets
-            //{
-            //    LastSelectIntex = JsonData.LastSelectIntex,
-            //    Sheet = _MapSheets
-            //};
-
-
-
-
-
-
-            //DataGrid _DataGrid = new();
-            ////MapSheets _MapSheets = new;
-            //Sheets _Sheets;
-            //_Sheets = new Sheets();
-            //MapSheets _MapSheets = new List<MapSheets>();
-
-
-            //foreach (var item in dt.Sheet)
-            //{
-            //    var _MapSheets = new MapSheets
-            //    {
-            //        CountRow = item.CountRow,
-            //        DataTables = item.DataTables,
-            //        Name = item.Name,
-            //        NameMsg = item.NameMsg,
-            //    };
-            //    _Sheets.Sheet.Add(_MapSheets);
-
-
-            //    ////_DataGrid.ItemsSource = item.DataTables.Rows;
-            //    //_MapSheets.Name = item.Name;
-            //    //_MapSheets.NameMsg = item.NameMsg;
-            //    //_MapSheets.CountRow = item.CountRow;
-
-
-
-            //    //item.Columns.Add();
-
-
-
-            //}
-
-            //_Sheets.LastSelectIntex = dt.LastSelectIntex;
-
-
-            //foreach (var item in _DataGrid.ItemsSource)
-            //{
-
-            //}
-
-
-            //Sheets _Sheets = new();
-            //
-            //MapColumns _MapColumns = new();
-
-            //_Sheets.LastSelectIntex = dt.LastSelectIntex;
-
-            //foreach (var item in dt.Sheet)
-            //{
-            //    for (int i = 0; i < item.DataTables.Rows.Count; i++)
-            //    {
-            //        _MapColumns.Row = item.DataTables.Rows[i].ToString();
-
-            //    }
-
-
-
-
-            //    //foreach (var it in )
-            //    //{
-
-            //    //}
-            //}
-
-
-
-
-            //_Sheets.Sheet
-
-
-
-
-            //Sheets _Sheets = new();
-            //MapSheets _MapSheets = new();
-            //MapColumns _MapColumns = new();
-
-            //_Sheets.LastSelectIntex = dt.LastSelectIntex;
-            //foreach (var item in dt.Sheet)
-            //{
-            //    _MapSheets.NameMsg = item.NameMsg;
-            //    _MapSheets.Name = item.Name;
-            //    foreach (var Rows in item.DataTables.Columns)
-            //    {
-            //        _MapColumns.Col = Rows.ToString();
-            //    }
-            //}
-
-
-            //var options = new JsonSerializerOptions
-            //{
-            //    AllowTrailingCommas = true,
-            //    WriteIndented = true
-            //};
-            //byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(_Sheets, options);
-            //File.WriteAllBytes(fileName, jsonUtf8Bytes);
+            List<MapSheets> _MapSheets = new();
+            List<MapColumns> _MapColumn = new();
+            List<MapRow> _MapRow = new();
+            string column = "";
+
+            foreach (MapSheets _Sheet in dt.Sheet)
+            {
+                for (int i = 0; i < _Sheet.DataTables.Columns.Count; i++)
+                {
+                    column = _Sheet.DataTables.Columns[i].ColumnName;
+                    var mapColumns = new MapColumns
+                    {
+                        Item = column
+                    };
+                    _MapColumn.Add(mapColumns);
+                }
+                for (int i = 0; i < _Sheet.DataTables.Rows.Count; i++)
+                {
+                    int countRow = 0;
+                    foreach (var ItemArray in _Sheet.DataTables.Rows[i].ItemArray)
+                    {
+                        string value = "";
+                        if (!string.IsNullOrEmpty(ItemArray.ToString())) value = ItemArray.ToString();
+                        var mapRow = new MapRow
+                        {
+                            Column = _Sheet.DataTables.Columns[countRow].ColumnName,
+                            Value = value
+                        };
+                        countRow++;
+                        _MapRow.Add(mapRow);
+                    }
+                }
+
+                var mapSheets = new MapSheets
+                {
+                    Columns = _MapColumn,
+                    CountRow = _Sheet.DataTables.Rows.Count,
+                    DataTables = null,
+                    Rows = _MapRow,
+                    Name = _Sheet.Name,
+                    NameMsg = _Sheet.NameMsg
+                };
+                _MapSheets.Add(mapSheets);
+            }
+
+            var groups = new Sheets
+            {
+                LastSelectIntex = dt.LastSelectIntex,
+                Sheet = _MapSheets
+            };
+            Sheets sheets = groups;
+
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                WriteIndented = true
+            };
+            byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(sheets, options);
+            File.WriteAllBytes(fileName, jsonUtf8Bytes);
         }
 
         /// <summary>
@@ -541,49 +451,38 @@ namespace Project_Settings.ViewModels
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        private static Sheets ReadMappingFileGridSheets(string fileName)
+        //private static Sheets ReadMappingFileGridSheets(string fileName)
+        //{
+        //    byte[] jsonUtf8Bytes = File.ReadAllBytes(fileName);
+        //    var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
+        //    Sheets mapping = JsonSerializer.Deserialize<Sheets>(readOnlySpan);
+        //    return mapping;
+        //}
+        private void ReadMappingFileGridSheets(string fileName)
         {
             byte[] jsonUtf8Bytes = File.ReadAllBytes(fileName);
             var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
-            Sheets mapping = JsonSerializer.Deserialize<Sheets>(readOnlySpan);
-            return mapping;
-        }
-        #endregion
+            Sheets JsonData = JsonSerializer.Deserialize<Sheets>(readOnlySpan);
 
-        #region Инициализация данных
-        public MainWindowsViewModel()
-        {
-            MyDataGridItems = new();
-            MySheetsConfig = new();
-            flWhiteTheames = true;
-            CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
-            CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
-            CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
-            CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
-            CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
-            CmdSaveProject = new RelayCommand(OnCmdSaveProjectExecuted, CanCmdSaveProjectExecute);
-            CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
-
-            ChangeTheames();
-
-            var JsonData = ReadMappingFileGridSheets(MyPath);
-            List<MapSheets> _MapSheets = new();
-
+            DataRow _row;
             foreach (var item in JsonData.Sheet)
             {
                 DataTable _DataTable = new();
-                //DataRow _row = _DataTable.NewRow();
-                //List<DataRow> _Row = new();
+
                 foreach (var Column in item.Columns)
                 {
                     _DataTable.Columns.Add(Column.Item);
                 }
 
-                foreach (var Row in item.Rows)
+                for (int i = 0; i < item.CountRow; i++)
                 {
-                    DataRow _row = _DataTable.NewRow();
-                    _row[Row.Item] = Row.Value;
+                    _row = _DataTable.NewRow();
                     _DataTable.Rows.Add(_row);
+                    foreach (var Row in item.Rows)
+                    {
+                        _row = _DataTable.Rows[i];
+                        _row[Row.Column] = Row.Value;
+                    }
                 }
 
                 var ItemMapSheets = new MapSheets
@@ -597,14 +496,91 @@ namespace Project_Settings.ViewModels
                 };
                 _MapSheets.Add(ItemMapSheets);
             }
-            var groups = new Sheets
+            groups = new Sheets
             {
                 LastSelectIntex = JsonData.LastSelectIntex,
                 Sheet = _MapSheets
             };
+
+        }
+
+
+        #endregion
+
+        #region Инициализация данных
+        public MainWindowsViewModel()
+        {
+            //MyDataGridItems = new();
+            //MySheetsConfig = new();
+            flWhiteTheames = true;
+            CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
+            CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
+            CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
+            CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
+            CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
+            CmdSaveProject = new RelayCommand(OnCmdSaveProjectExecuted, CanCmdSaveProjectExecute);
+            CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
+            CmdOpenFile = new RelayCommand(OnCmdOpenFileExecuted, CanCmdOpenFileExecute);
+            CmdChangeSelectedSheetName = new RelayCommand(OnCmdChangeSelectedSheetNameExecuted, CanCmdChangeSelectedSheetNameExecute);
+
+            ChangeTheames();
+            ReadMappingFileGridSheets(MyPath);
+
             MySheetsConfig = groups;
             MyDataGridItems = new ObservableCollection<MapSheets>(_MapSheets);
             SelectedSheets = MyDataGridItems[MySheetsConfig.LastSelectIntex];
+
+            //var JsonData = ReadMappingFileGridSheets(MyPath);
+            //List<MapSheets> _MapSheets = new();
+            //int countRow = 0;
+            //string column = "";
+
+            //foreach (var item in JsonData.Sheet)
+            //{
+            //    DataTable _DataTable = new();
+            //    DataRow _row;
+            //    foreach (var Column in item.Columns)
+            //    {
+            //        _DataTable.Columns.Add(Column.Item);
+            //    }
+
+            //    for (int i = 0; i < item.CountRow; i++)
+            //    {
+            //        _row = _DataTable.NewRow();
+            //        _DataTable.Rows.Add(_row);
+            //    }
+
+            //    foreach (var Row in item.Rows)
+            //    {
+            //        if (Row.Column != column)
+            //        {
+            //            countRow = 0;
+            //            column = Row.Column;
+            //        }
+            //        _row = _DataTable.Rows[countRow];
+            //        _row[Row.Column] = Row.Value;
+            //        countRow++;
+            //    }
+
+            //    var ItemMapSheets = new MapSheets
+            //    {
+            //        CountRow = item.CountRow,
+            //        DataTables = _DataTable,
+            //        Name = item.Name,
+            //        NameMsg = item.NameMsg,
+            //        Columns = item.Columns,
+            //        Rows = item.Rows
+            //    };
+            //    _MapSheets.Add(ItemMapSheets);
+            //}
+            //var groups = new Sheets
+            //{
+            //    LastSelectIntex = JsonData.LastSelectIntex,
+            //    Sheet = _MapSheets
+            //};
+            //MySheetsConfig = groups;
+            //MyDataGridItems = new ObservableCollection<MapSheets>(_MapSheets);
+            //SelectedSheets = MyDataGridItems[MySheetsConfig.LastSelectIntex];
             #endregion
         }
     }

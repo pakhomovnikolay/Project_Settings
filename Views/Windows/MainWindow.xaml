@@ -45,7 +45,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
                 <MenuItem Header="Создать"/>
-                <MenuItem Header="Открыть"/>
+                <MenuItem Header="Открыть" Command="{Binding Path=CmdOpenFile}"/>
                 <MenuItem Header="Сохранить" Command="{Binding Path=CmdSaveProject}"/>
                 <MenuItem Header="Сохранить как"/>
                 <MenuItem Header="Настройки"/>
@@ -84,22 +84,29 @@
         <!-- ===================================================== Данные ===================================================== -->
         <DockPanel DockPanel.Dock="Left">
             <Button DockPanel.Dock="Bottom" Command="{Binding Path=CmdAddRow}" Content="Создать столбец" Width="120" Height="20"></Button>
-
+            
             <Grid DockPanel.Dock="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="250"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+                
                 <DockPanel Grid.ColumnSpan="2">
                     <GroupBox DockPanel.Dock="Left" Width="250" Header="Список листов" BorderBrush="{DynamicResource ResultBorderBrush}">
                         <ListBox ItemsSource="{Binding Path=MyDataGridItems}" SelectedItem="{Binding Path=SelectedSheets}" SelectedIndex="{Binding Path=MySheetsConfig.LastSelectIntex}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}"/>
+                                    <TextBlock Text="{Binding Path=Name}">
+                                        <!--<TextBlock.InputBindings>
+                                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding CmdChangeSelectedSheetName}"/>
+                                        </TextBlock.InputBindings>
+                                        <TextBox Text="{Binding Path=NewName}" Visibility="Hidden"/>-->
+                                    </TextBlock>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </GroupBox>
+                    
                     <GroupBox BorderBrush="{DynamicResource ResultBorderBrush}">
                         <GroupBox.Header>
                             <TextBlock Text="{Binding Path=SelectedSheets.Name, StringFormat=Выбраный лист - {0}, FallbackValue='Данные листа', TargetNullValue='Группа не выбрана'}"/>
@@ -114,7 +121,6 @@
                 </DockPanel>
             </Grid>
         </DockPanel>
-        
         <!---->
     </DockPanel>
 </Window>

@@ -2,9 +2,10 @@
   "LastSelectIntex": 0,
   "Sheet": [
     {
+      "NewName": "LIST1",
       "Name": "LIST1",
       "NameMsg": "",
-      "CountRow": "",
+      "CountRow": 3,
       "DataTables": null,
       "Columns": [
         { "Item": "A" },
@@ -35,12 +36,30 @@
         { "Item": "Z" }
       ],
       "Rows": [
-        { "Item": "A", "Value": "123" },
-        { "Item": "A", "Value": "123" },
-        { "Item": "A", "Value": "123" },
-        { "Item": "B", "Value": "123" },
-        { "Item": "B", "Value": "123" },
-        { "Item": "C", "Value": "123" }
+        {
+          "Column": "A",
+          "Value": "123"
+        },
+        {
+          "Column": "A",
+          "Value": "123"
+        },
+        {
+          "Column": "A",
+          "Value": "123"
+        },
+        {
+          "Column": "B",
+          "Value": "123"
+        },
+        {
+          "Column": "B",
+          "Value": "123"
+        },
+        {
+          "Column": "C",
+          "Value": "123"
+        }
       ]
     }
   ]
