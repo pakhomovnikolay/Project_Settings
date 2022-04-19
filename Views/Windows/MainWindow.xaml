@@ -90,10 +90,9 @@
                     <ColumnDefinition Width="250"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                
                 <DockPanel Grid.ColumnSpan="2">
                     <GroupBox DockPanel.Dock="Left" Width="250" Header="Список листов" BorderBrush="{DynamicResource ResultBorderBrush}">
-                        <ListBox ItemsSource="{Binding Path=MyDataGridItems}" SelectedItem="{Binding Path=SelectedSheets}" SelectedIndex="{Binding Path=MySheetsConfig.LastSelectIntex}">
+                        <ListBox ItemsSource="{Binding Path=MyMapSheets}" SelectedItem="{Binding Path=SelectedSheets}" SelectedIndex="{Binding Path=MyDataProject.SheetLastSelectedIntex}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=Name}">
