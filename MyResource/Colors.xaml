@@ -34,19 +34,19 @@
     <Color x:Key="WhiteBorderBrushListBox">Black</Color>
 
     <!--ResultTheames-->
-    <SolidColorBrush x:Key="ResultBackground" Color="Black"></SolidColorBrush>
-    <SolidColorBrush x:Key="ResultForeground" Color="White"></SolidColorBrush>
+    <SolidColorBrush x:Key="ResultBackground" Color="White"></SolidColorBrush>
+    <SolidColorBrush x:Key="ResultForeground" Color="Black"></SolidColorBrush>
 
-    <SolidColorBrush x:Key="ResultkMenuItemBackground" Color="Black"></SolidColorBrush>
-    <SolidColorBrush x:Key="ResultMenuItemForeground" Color="DarkGray"></SolidColorBrush>
+    <SolidColorBrush x:Key="ResultkMenuItemBackground" Color="White"></SolidColorBrush>
+    <SolidColorBrush x:Key="ResultMenuItemForeground" Color="Black"></SolidColorBrush>
 
-    <SolidColorBrush x:Key="ResultBorderBrush" Color="Gray"></SolidColorBrush>
+    <SolidColorBrush x:Key="ResultBorderBrush" Color="Black"></SolidColorBrush>
 
-    <SolidColorBrush x:Key="ResultTreeViewItemBackground" Color="DarkGray"></SolidColorBrush>
+    <SolidColorBrush x:Key="ResultTreeViewItemBackground" Color="DarkSlateBlue"></SolidColorBrush>
     <SolidColorBrush x:Key="ResultTreeViewItemForeground" Color="White"></SolidColorBrush>
 
-    <Color x:Key="ResultBackgroundListBox">DarkBlue</Color>
-    <Color x:Key="ResultForegroundListBox">Black</Color>
+    <Color x:Key="ResultBackgroundListBox">DarkSlateBlue</Color>
+    <Color x:Key="ResultForegroundListBox">White</Color>
     <Color x:Key="ResultBorderBrushListBox">Black</Color>
 
 </ResourceDictionary>

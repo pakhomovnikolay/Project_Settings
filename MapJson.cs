@@ -11,6 +11,8 @@ namespace Project_Settings
 {
     public class DataProject
     {
+        public bool flWhiteTheames { get; set; }
+        public bool flBlackTheames { get; set; }
         public int SheetLastSelectedIntex { get; set; }
         public IList<MapData> Project { get; set; }
     }

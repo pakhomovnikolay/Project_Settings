@@ -1,12 +1,15 @@
-﻿using Project_Settings.Infrastructure.Commands;
+﻿using Microsoft.Win32;
+using Project_Settings.Infrastructure.Commands;
 using Project_Settings.ViewModels.Default;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -18,7 +21,26 @@ namespace Project_Settings.ViewModels
         private readonly Application CurrApp = Application.Current;
 
         #region Контроль состояний
+        private MapSheets _SelectedSheets = new();
+        public MapSheets SelectedSheets
+        {
+            get => _SelectedSheets;
+            set => Set(ref _SelectedSheets, value);
+        }
 
+        private ObservableCollection<MapSheets> _MyMapSheets = new();
+        public ObservableCollection<MapSheets> MyMapSheets
+        {
+            get => _MyMapSheets;
+            set => Set(ref _MyMapSheets, value);
+        }
+
+        private DataProject _MyDataProject = new();
+        public DataProject MyDataProject
+        {
+            get => _MyDataProject;
+            set => Set(ref _MyDataProject, value);
+        }
 
         private string _NewSelectedSheetName;
         public string NewSelectedSheetName
@@ -36,8 +58,7 @@ namespace Project_Settings.ViewModels
         }
 
 
-        private string _myPath = Environment.CurrentDirectory + "/MyResource/Jsons/Grid.json";
-
+        private string _myPath = Environment.CurrentDirectory;
         public string MyPath
         {
             get => _myPath;
@@ -69,14 +90,26 @@ namespace Project_Settings.ViewModels
         public bool flBlackTheames
         {
             get => _flBlackTheames;
-            set => Set(ref _flBlackTheames, value);
+            set
+            {
+                if (Set(ref _flBlackTheames, value))
+                {
+                    ChangeTheames();
+                }
+            }
         }
 
         /// <summary>Установить светлую тему для приложения</summary>
         public bool flWhiteTheames
         {
             get => _flWhiteTheames;
-            set => Set(ref _flWhiteTheames, value);
+            set
+            {
+                if (Set(ref _flWhiteTheames, value))
+                {
+                    ChangeTheames();
+                }
+            }
         }
 
         private SolidColorBrush _ResultBackground = (SolidColorBrush)Application.Current.TryFindResource("ResultBackground");
@@ -260,26 +293,32 @@ namespace Project_Settings.ViewModels
         /// <summary>
         /// Команда сохранить проект
         /// </summary>
-        public ICommand CmdSaveProject { get; }
+        //public ICommand CmdSaveProject { get; }
 
-        private bool CanCmdSaveProjectExecute(object p) => true;
+        //private bool CanCmdSaveProjectExecute(object p) => !string.IsNullOrEmpty(MyPath);
 
-        private void OnCmdSaveProjectExecuted(object p)
-        {
-            //WriteMappingFileGridSheets(MyPath, MySheetsConfig);
-        }
+        //private void OnCmdSaveProjectExecuted(object p)
+        //{
+        //    WriteMappingFileGridSheets(MyPath, MyDataProject);
+        //}
 
         /// <summary>
         /// Команда октрыть проект
         /// </summary>
-        public ICommand CmdOpenFile { get; }
+        //public ICommand CmdOpenFile { get; }
 
-        private bool CanCmdOpenFileExecute(object p) => true;
+        //private bool CanCmdOpenFileExecute(object p) => true;
 
-        private void OnCmdOpenFileExecuted(object p)
-        {
-            ReadMappingFileGridSheets(MyPath);
-        }
+        //private void OnCmdOpenFileExecuted(object p)
+        //{
+        //    if (MyDataProject.Project != null)
+        //    {
+        //        MyDataProject.Project.Clear();
+        //        MyMapSheets.Clear();
+        //        MyMapData.Clear();
+        //    }
+        //    ReadMappingFileGridSheets(MyPath);
+        //}
 
 
         /// <summary>
@@ -293,7 +332,6 @@ namespace Project_Settings.ViewModels
         {
             flBlackTheames = true;
             flWhiteTheames = false;
-            ChangeTheames();
         }
 
         /// <summary>
@@ -307,7 +345,6 @@ namespace Project_Settings.ViewModels
         {
             flBlackTheames = false;
             flWhiteTheames = true;
-            ChangeTheames();
         }
 
         /// <summary>
@@ -358,227 +395,245 @@ namespace Project_Settings.ViewModels
         /// <summary>
         /// Данные проекта
         /// </summary>
-        public DataProject MyDataProject { get; }
-        public ObservableCollection<MapData> MyMapData { get; }
+       
+        //public ObservableCollection<MapData> MyMapData { get; }
 
         /// <summary>
         /// Коллекция данных листов
         /// </summary>
-        public ObservableCollection<MapSheets> MyMapSheets { get; }
-
+        //public ObservableCollection<MapSheets> MyMapSheets { get; set; }
+        
         /// <summary>
         /// Данные выбранного листа
         /// </summary>
-        private MapSheets _SelectedSheets = new();
-        public MapSheets SelectedSheets
-        {
-            get => _SelectedSheets;
-            set => Set(ref _SelectedSheets, value);
-        }
+        
 
-        /// <summary>
-        /// Сохраняем данные
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="dt"></param>
-        private void WriteMappingFileGridSheets(string fileName, DataProject _DataProject)
-        {
+        ///// <summary>
+        ///// Сохраняем данные
+        ///// </summary>
+        ///// <param name="fileName"></param>
+        ///// <param name="dt"></param>
+        //private async void WriteMappingFileGridSheets(string FilePath, DataProject _DataProject)
+        //{
+        //    if (string.IsNullOrEmpty(FilePath))
+        //    {
+        //        var dialog = new SaveFileDialog
+        //        {
+        //            Title = "Сохранение конфигурации",
+        //            Filter = "Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*",
+        //            InitialDirectory = Environment.CurrentDirectory,
+        //            RestoreDirectory = true
+        //        };
+        //        if (dialog.ShowDialog() != true) return;
+        //        FilePath = dialog.FileName;
+        //    }
+
+        //    if (!File.Exists(FilePath))
+        //    {
+        //        if (MessageBox.Show("Файл не найдет. Проверьте путь", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+        //    }
 
 
-            //List<MapSheets> _MapSheets = new();
-            //List<MapColumns> _MapColumn = new();
-            //List<MapRow> _MapRow = new();
+        //    DataProject dataProject = new();
+        //    ObservableCollection<MapData> myMapData = new();
+        //    ObservableCollection<MapSheets> myMapSheets = new();
 
-            //foreach (var _Project in _DataProject.Project)
-            //{
-            //    MapSheets _mapSheets = _Project.Sheet;
-            //    DataTable _DataTable = _mapSheets.DataTables;
-            //    int ColumnCount = _mapSheets.DataTables.Columns.Count;
-            //    int RowCount = _mapSheets.DataTables.Rows.Count;
-            //    _mapSheets.DataTables = null;
+        //    foreach (var _Project in _DataProject.Project)
+        //    {
+        //        foreach (var Sheet in _Project.Sheet)
+        //        {
+        //            List<MapColumns> myMapColumn = new();
+        //            List<MapRow> myMapRow = new();
+        //            int ColumnCount = Sheet.DataTables.Columns.Count;
+        //            int RowCount = Sheet.DataTables.Rows.Count;
 
-            //    for (int i = 0; i < ColumnCount; i++)
-            //    {
-            //        string column = _DataTable.Columns[i].ColumnName;
-            //        var mapColumns = new MapColumns
-            //        {
-            //            Item = column
-            //        };
-            //        _MapColumn.Add(mapColumns);
-            //    }
+        //            for (int i = 0; i < ColumnCount; i++)
+        //            {
+        //                string column = Sheet.DataTables.Columns[i].ColumnName;
+        //                var mapColumns = new MapColumns
+        //                {
+        //                    Item = column
+        //                };
+        //                myMapColumn.Add(mapColumns);
+        //                for (int j = 0; j < RowCount; j++)
+        //                {
+        //                    string value = Sheet.DataTables.Rows[j].ItemArray[i].ToString();
+        //                    var mapRow = new MapRow
+        //                    {
+        //                        Column = column,
+        //                        Value = value
+        //                    };
+        //                    myMapRow.Add(mapRow);
+        //                }
+        //            }
 
-            //    for (int i = 0; i < RowCount; i++)
-            //    {
-            //        int j = 0;
-            //        foreach (var ItemArray in _DataTable.Rows[i].ItemArray)
-            //        {
-            //            string value = ItemArray.ToString();
-            //            var mapRow = new MapRow
-            //            {
-            //                Column = _DataTable.Columns[j].ColumnName,
-            //                Value = value
-            //            };
-            //            j++;
-            //            _MapRow.Add(mapRow);
-            //        }
-            //    }
+        //            var _MapData = new MapSheets
+        //            {
+        //                Name = Sheet.Name,
+        //                NameMsg = Sheet.NameMsg,
+        //                DataTables = null,
+        //                CountRow = Sheet.DataTables.Rows.Count,
+        //                Columns = myMapColumn,
+        //                Rows = myMapRow
+        //            };
+        //            myMapSheets.Add(_MapData);
+        //        }
+        //    }
 
-            //    var mapSheets = new MapSheets
-            //    {
-            //        Columns = _MapColumn,
-            //        CountRow = RowCount,
-            //        DataTables = null,
-            //        Rows = _MapRow,
-            //        Name = _mapSheets.Name,
-            //        NameMsg = _mapSheets.NameMsg
-            //    };
-            //    _MapSheets.Add(mapSheets);
+        //    var _myMapData = new MapData
+        //    {
+        //        Sheet = new ObservableCollection<MapSheets>(myMapSheets)
+        //    };
+        //    myMapData.Add(_myMapData);
+        //    var _myDataProject = new DataProject
+        //    {
+        //        Project = new ObservableCollection<MapData>(myMapData)
+        //    };
+        //    dataProject.Project = _myDataProject.Project;
+        //    dataProject.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
 
-            //    MapData Data. = new ObservableCollection<MapData>(_MapSheets);
-            //    Data.
-            //    //for (int i = 0; i < _Project.Sheet.DataTables.Columns.Count; i++)
-            //    //{
-            //    //    column = _Sheet.DataTables.Columns[i].ColumnName;
-            //    //    var mapColumns = new MapColumns
-            //    //    {
-            //    //        Item = column
-            //    //    };
-            //    //    _MapColumn.Add(mapColumns);
-            //    //}
-            //    //for (int i = 0; i < _Sheet.DataTables.Rows.Count; i++)
-            //    //{
-            //    //    int countRow = 0;
-            //    //    foreach (var ItemArray in _Sheet.DataTables.Rows[i].ItemArray)
-            //    //    {
-            //    //        string value = "";
-            //    //        if (!string.IsNullOrEmpty(ItemArray.ToString())) value = ItemArray.ToString();
-            //    //        var mapRow = new MapRow
-            //    //        {
-            //    //            Column = _Sheet.DataTables.Columns[countRow].ColumnName,
-            //    //            Value = value
-            //    //        };
-            //    //        countRow++;
-            //    //        _MapRow.Add(mapRow);
-            //    //    }
-            //    //}
+        //    dataProject.flWhiteTheames = flWhiteTheames;
+        //    dataProject.flBlackTheames = flBlackTheames;
 
-            //    var Project = new DataProject
-            //    //{
-            //    //    Columns = _MapColumn,
-            //    //    CountRow = _Sheet.DataTables.Rows.Count,
-            //    //    DataTables = null,
-            //    //    Rows = _MapRow,
-            //    //    Name = _Sheet.Name,
-            //    //    NameMsg = _Sheet.NameMsg
-            //    //};
-            //    //_MapSheets.Add(mapSheets);
-            //}
+            
+        //    using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.Write))
+        //    {
+        //        byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(dataProject);
+        //        await fs.WriteAsync(jsonUtf8Bytes).ConfigureAwait(false);
+        //    }
+        //    //MyPath = FilePath;
 
-            //_DataProject.Project. = _MapSheets;
+        //    //var options = new JsonSerializerOptions
+        //    //{
+        //    //    AllowTrailingCommas = true,
+        //    //    WriteIndented = true
+        //    //};
+        //    //byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(dataProject);
+        //    //File.WriteAllBytesAsync(FilePath, jsonUtf8Bytes);
 
-            ////var groups = new MapData
-            ////{
-            ////    LastSelectIntex = dt.LastSelectIntex,
-            ////    Sheet = _MapSheets
-            ////};
-            ////MapData sheets = groups;
+        //}
 
-            //var options = new JsonSerializerOptions
-            //{
-            //    AllowTrailingCommas = true,
-            //    WriteIndented = true
-            //};
-            //byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(sheets, options);
-            //File.WriteAllBytes(fileName, jsonUtf8Bytes);
-        }
+        ///// <summary>
+        ///// Получаем данные
+        ///// </summary>
+        ///// <param name="fileName"></param>
+        ///// <returns></returns>
+        //private async void ReadMappingFileGridSheets(string FilePath)
+        //{
+        //    if (string.IsNullOrEmpty(FilePath)) return;
+        //    //if (!File.Exists(FilePath))
+        //    //{
+        //    //    var dialog = new OpenFileDialog
+        //    //    {
+        //    //        Title = "Загрузить конфигурацию",
+        //    //        Filter = "Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*",
+        //    //        InitialDirectory = Environment.CurrentDirectory,
+        //    //        RestoreDirectory = true
+        //    //    };
+        //    //    if (dialog.ShowDialog() != true) return;
+        //    //    FilePath = dialog.FileName;
+        //    //}
+        //    //MyPath = FilePath;
 
-        /// <summary>
-        /// Получаем данные
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        private void ReadMappingFileGridSheets(string fileName)
-        {
-            byte[] jsonUtf8Bytes = File.ReadAllBytes(fileName);
-            var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
-            DataProject JsonData = JsonSerializer.Deserialize<DataProject>(readOnlySpan);
-            DataRow _row;
 
-            foreach (var Project in JsonData.Project)
-            {
-                foreach (var Sheet in Project.Sheet)
-                {
-                    DataTable _DataTable = new();
-                    foreach (var Column in Sheet.Columns)
-                    {
-                        _DataTable.Columns.Add(Column.Item);
-                    }
+        //    using FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate);
+        //    DataProject JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
 
-                    for (int i = 0; i < Sheet.CountRow; i++)
-                    {
-                        _row = _DataTable.NewRow();
-                        _DataTable.Rows.Add(_row);
-                    }
+        //    //byte[] jsonUtf8Bytes = File.ReadAllBytes(FilePath);
+        //    //var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
+        //    //DataProject JsonData = JsonSerializer.Deserialize<DataProject>(readOnlySpan);
 
-                    int j = 0;
-                    string column = "";
-                    foreach (var Row in Sheet.Rows)
-                    {
-                        if (column != Row.Column) { j = 0; }
-                        column = Row.Column;
+        //    string[] subs = fs.Name.Split('\\');
+        //    MyTitle = subs[subs.Length-1];
 
-                        _row = _DataTable.Rows[j];
-                        _row[column] = Row.Value;
-                        j++;
-                    }
+        //    DataRow _row;
 
-                    var _MapSheets = new MapSheets
-                    {
-                        Columns = Sheet.Columns,
-                        CountRow = Sheet.CountRow,
-                        DataTables = _DataTable,
-                        Name = Sheet.Name,
-                        NameMsg = Sheet.NameMsg,
-                        Rows = Sheet.Rows
-                    };
-                    MyMapSheets.Add(_MapSheets);
+        //    foreach (var Project in JsonData.Project)
+        //    {
+        //        foreach (var Sheet in Project.Sheet)
+        //        {
+        //            DataTable _DataTable = new();
+        //            foreach (var Column in Sheet.Columns)
+        //            {
+        //                _DataTable.Columns.Add(Column.Item);
+        //            }
 
-                    var _MapData = new MapData
-                    {
-                        Sheet = MyMapSheets
-                    };
-                    MyMapData.Add(_MapData);
+        //            for (int i = 0; i < Sheet.CountRow; i++)
+        //            {
+        //                _row = _DataTable.NewRow();
+        //                _DataTable.Rows.Add(_row);
+        //            }
 
-                    var _DataProject = new DataProject
-                    {
-                        Project = new ObservableCollection<MapData>(MyMapData),
-                        SheetLastSelectedIntex = JsonData.SheetLastSelectedIntex
-                    };
-                    MyDataProject.Project = _DataProject.Project;
-                }
-            }
-        }
+        //            int j = 0;
+        //            string column = "";
+        //            foreach (var Row in Sheet.Rows)
+        //            {
+        //                if (column != Row.Column) { j = 0; }
+        //                column = Row.Column;
+
+        //                _row = _DataTable.Rows[j];
+        //                _row[column] = Row.Value;
+        //                j++;
+        //            }
+
+        //            var _MapSheets = new MapSheets
+        //            {
+        //                Columns = Sheet.Columns,
+        //                CountRow = Sheet.CountRow,
+        //                DataTables = _DataTable,
+        //                Name = Sheet.Name,
+        //                NameMsg = Sheet.NameMsg,
+        //                Rows = Sheet.Rows
+        //            };
+        //            MyMapSheets.Add(_MapSheets);
+        //        }
+        //    }
+        //    var _MapData = new MapData
+        //    {
+        //        Sheet = new ObservableCollection<MapSheets>(MyMapSheets)
+        //    };
+        //    MyMapData.Add(_MapData);
+        //    var _DataProject = new DataProject
+        //    {
+        //        Project = new ObservableCollection<MapData>(MyMapData),
+        //        SheetLastSelectedIntex = JsonData.SheetLastSelectedIntex,
+        //        flWhiteTheames = JsonData.flWhiteTheames,
+        //        flBlackTheames = JsonData.flBlackTheames
+
+        //    };
+        //    MyDataProject.Project = _DataProject.Project;
+        //    MyDataProject.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
+        //    MyDataProject.flWhiteTheames = _DataProject.flWhiteTheames;
+        //    MyDataProject.flBlackTheames = _DataProject.flBlackTheames;
+
+        //    SelectedSheets = MyMapSheets[MyDataProject.SheetLastSelectedIntex];
+
+        //    // Устновка темы в ссоотвествии с настройками
+        //    flWhiteTheames = MyDataProject.flWhiteTheames;
+        //    flBlackTheames = MyDataProject.flBlackTheames;
+        //    ChangeTheames();
+        //}
         #endregion
 
         #region Инициализация данных
         public MainWindowsViewModel()
         {
+            // Чтение данных
             MyMapSheets = new();
-            MyMapData = new();
+            //MyMapData = new();
             MyDataProject = new();
-            flWhiteTheames = true;
+            //ReadMappingFileGridSheets(MyPath);
+
+            // Создание команд
             CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
             CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
             CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
             CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
             CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
-            CmdSaveProject = new RelayCommand(OnCmdSaveProjectExecuted, CanCmdSaveProjectExecute);
+            //CmdSaveProject = new RelayCommand(OnCmdSaveProjectExecuted, CanCmdSaveProjectExecute);
             CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
-            CmdOpenFile = new RelayCommand(OnCmdOpenFileExecuted, CanCmdOpenFileExecute);
+            //CmdOpenFile = new RelayCommand(OnCmdOpenFileExecuted, CanCmdOpenFileExecute);
             CmdChangeSelectedSheetName = new RelayCommand(OnCmdChangeSelectedSheetNameExecuted, CanCmdChangeSelectedSheetNameExecute);
-
-            ChangeTheames();
-            ReadMappingFileGridSheets(MyPath);
             #endregion
         }
     }
