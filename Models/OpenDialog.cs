@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Project_Settings.Infrastructure.Commands;
+using Project_Settings.ViewModels.Default;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -26,11 +27,12 @@ namespace Project_Settings.Models
 
     public class OpenDialog : Freezable
     {
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            nameof(Title), typeof(string), typeof(OpenDialog), new PropertyMetadata(default(string)));
 
-        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(
-            nameof(Filter), typeof(string), typeof(OpenDialog), new PropertyMetadata("Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*"));
+        public static readonly DependencyProperty TitleOpenProperty = DependencyProperty.Register(
+            nameof(TitleOpen), typeof(string), typeof(OpenDialog), new PropertyMetadata(default(string)));
+
+        public static readonly DependencyProperty FilterOpenProperty = DependencyProperty.Register(
+            nameof(FilterOpen), typeof(string), typeof(OpenDialog), new PropertyMetadata("Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*"));
 
         public static readonly DependencyProperty SelectedFileProperty = DependencyProperty.Register(
             nameof(SelectedFile), typeof(string), typeof(OpenDialog), new PropertyMetadata(default(string)));
@@ -38,8 +40,8 @@ namespace Project_Settings.Models
         public static readonly DependencyProperty TitleWindowsProjectProperty = DependencyProperty.Register(
             nameof(TitleWindowsProject), typeof(string), typeof(OpenDialog), new PropertyMetadata(default(string)));
 
-        public static readonly DependencyProperty MyDataProjectProperty = DependencyProperty.Register(
-            nameof(MyDataProject), typeof(DataProject), typeof(OpenDialog), new PropertyMetadata(default(DataProject)));
+        public static readonly DependencyProperty MyDataProjectOpenProperty = DependencyProperty.Register(
+            nameof(MyDataProjectOpen), typeof(DataProject), typeof(OpenDialog), new PropertyMetadata(default(DataProject)));
 
         public static readonly DependencyProperty MyMapSheetsProperty = DependencyProperty.Register(
             nameof(MyMapSheets), typeof(ObservableCollection<MapSheets>), typeof(OpenDialog), new PropertyMetadata(default(ObservableCollection<MapSheets>)));
@@ -47,17 +49,17 @@ namespace Project_Settings.Models
         public static readonly DependencyProperty SelectedSheetsProperty = DependencyProperty.Register(
             nameof(SelectedSheets), typeof(MapSheets), typeof(OpenDialog), new PropertyMetadata(default(MapSheets)));
 
-        public static readonly DependencyProperty flBlackTheamesProperty = DependencyProperty.Register(
-           nameof(flBlackTheames), typeof(bool), typeof(OpenDialog), new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty flBlackTheamesOpenProperty = DependencyProperty.Register(
+           nameof(flBlackTheamesOpen), typeof(bool), typeof(OpenDialog), new PropertyMetadata(default(bool)));
 
-        public static readonly DependencyProperty flWhiteTheamesProperty = DependencyProperty.Register(
-           nameof(flWhiteTheames), typeof(bool), typeof(OpenDialog), new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty flWhiteTheamesOpenProperty = DependencyProperty.Register(
+           nameof(flWhiteTheamesOpen), typeof(bool), typeof(OpenDialog), new PropertyMetadata(default(bool)));
 
-        public string Title { get => (string)GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
-        public string Filter { get => (string)GetValue(FilterProperty); set => SetValue(FilterProperty, value); }
+        public string TitleOpen { get => (string)GetValue(TitleOpenProperty); set => SetValue(TitleOpenProperty, value); }
+        public string FilterOpen { get => (string)GetValue(FilterOpenProperty); set => SetValue(FilterOpenProperty, value); }
         public string SelectedFile { get => (string)GetValue(SelectedFileProperty); set => SetValue(SelectedFileProperty, value); }
         public string TitleWindowsProject { get => (string)GetValue(TitleWindowsProjectProperty); set => SetValue(TitleWindowsProjectProperty, value); }
-        public DataProject MyDataProject { get => (DataProject)GetValue(MyDataProjectProperty); set => SetValue(MyDataProjectProperty, value); }
+        public DataProject MyDataProjectOpen { get => (DataProject)GetValue(MyDataProjectOpenProperty); set => SetValue(MyDataProjectOpenProperty, value); }
 
         public ObservableCollection<MapSheets> MyMapSheets
         {
@@ -66,8 +68,8 @@ namespace Project_Settings.Models
         }
 
         public MapSheets SelectedSheets { get => (MapSheets)GetValue(SelectedSheetsProperty); set => SetValue(SelectedSheetsProperty, value); }
-        public bool flBlackTheames { get => (bool)GetValue(flBlackTheamesProperty); set => SetValue(flBlackTheamesProperty, value); }
-        public bool flWhiteTheames { get => (bool)GetValue(flWhiteTheamesProperty); set => SetValue(flWhiteTheamesProperty, value); }
+        public bool flBlackTheamesOpen { get => (bool)GetValue(flBlackTheamesOpenProperty); set => SetValue(flBlackTheamesOpenProperty, value); }
+        public bool flWhiteTheamesOpen { get => (bool)GetValue(flWhiteTheamesOpenProperty); set => SetValue(flWhiteTheamesOpenProperty, value); }
 
 
         public ICommand CmdOpenFileDialog { get; }
@@ -77,8 +79,8 @@ namespace Project_Settings.Models
         {
             var dialog = new OpenFileDialog
             {
-                Title = Title,
-                Filter = Filter,
+                Title = TitleOpen,
+                Filter = FilterOpen,
                 RestoreDirectory = true,
                 InitialDirectory = Environment.CurrentDirectory
             };
@@ -106,7 +108,7 @@ namespace Project_Settings.Models
         private async void ReadMappingFileGridSheets(string FilePath)
         {
             MyMapSheets = new();
-            MyDataProject = new();
+            MyDataProjectOpen = new();
             //MyMapData = new();
             if (string.IsNullOrEmpty(FilePath)) return;
 
@@ -172,13 +174,13 @@ namespace Project_Settings.Models
                 flBlackTheames = JsonData.flBlackTheames
 
             };
-            MyDataProject.Project = _DataProject.Project;
-            MyDataProject.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
-            MyDataProject.flWhiteTheames = _DataProject.flWhiteTheames;
-            MyDataProject.flBlackTheames = _DataProject.flBlackTheames;
-            SelectedSheets = MyMapSheets[MyDataProject.SheetLastSelectedIntex];
-            flWhiteTheames = MyDataProject.flWhiteTheames;
-            flBlackTheames = MyDataProject.flBlackTheames;
+            MyDataProjectOpen.Project = _DataProject.Project;
+            MyDataProjectOpen.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
+            MyDataProjectOpen.flWhiteTheames = _DataProject.flWhiteTheames;
+            MyDataProjectOpen.flBlackTheames = _DataProject.flBlackTheames;
+            SelectedSheets = MyMapSheets[MyDataProjectOpen.SheetLastSelectedIntex];
+            flWhiteTheamesOpen = MyDataProjectOpen.flWhiteTheames;
+            flBlackTheamesOpen = MyDataProjectOpen.flBlackTheames;
         }
     }
 }

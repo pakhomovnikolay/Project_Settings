@@ -15,21 +15,21 @@
         Closing="Window_Closing">
     <Window.Resources>
         <m:OpenDialog x:Key="OpenFileDialog"
-                      Title="Открыть файл"
+                      TitleOpen="Открыть файл"
                       SelectedFile="{Binding Path=MyPath, Mode=OneWayToSource}"
                       TitleWindowsProject="{Binding Path=MyTitle, Mode=OneWayToSource}"
-                      MyDataProject="{Binding Path=MyDataProject, Mode=OneWayToSource}"
+                      MyDataProjectOpen="{Binding Path=MyDataProject, Mode=OneWayToSource}"
                       MyMapSheets ="{Binding Path=MyMapSheets, Mode=OneWayToSource}"
                       SelectedSheets="{Binding Path=SelectedSheets, Mode=OneWayToSource}"
-                      flBlackTheames="{Binding Path=flBlackTheames, Mode=OneWayToSource}"
-                      flWhiteTheames="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"
+                      flBlackTheamesOpen="{Binding Path=flBlackTheames, Mode=OneWayToSource}"
+                      flWhiteTheamesOpen="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"
                       />
         <m:SaveDialog x:Key="SaveFileDialog"
-                      
-                      
-                      
-                      
-                      
+                      TitleClose="Сохранить файл"
+                      MyDataProjectClose="{Binding Path=MyDataProject, Mode=OneWay}"
+                      flBlackTheamesClose="{Binding Path=flBlackTheames, Mode=OneWay}"
+                      flWhiteTheamesClose="{Binding Path=flWhiteTheames, Mode=OneWay}"
+
                       />
     </Window.Resources>
     
@@ -39,8 +39,8 @@
 
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="Q" Command="{Binding Path=CmdCloseApp}"/>
-        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Path=CmdSaveProject}" CommandParameter="{Binding Path=MyPath}"/>
-        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding Path=CmdSaveProject}"/>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Source={StaticResource SaveFileDialog}, Path=CmdSaveFileDialog}"  CommandParameter="{Binding Path=MyPath}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding Source={StaticResource SaveFileDialog}, Path=CmdSaveFileDialog}" />
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Source={StaticResource OpenFileDialog}, Path=CmdOpenFileDialog}"/>
     </Window.InputBindings>
     
@@ -51,8 +51,9 @@
                 <MenuItem Header="Создать"/>
                 <Separator/>
                 <MenuItem Header="Открыть" Command="{Binding Source={StaticResource OpenFileDialog}, Path=CmdOpenFileDialog}"/>
-                <MenuItem Header="Сохранить" Command="{Binding Path=CmdSaveProject}" CommandParameter="{Binding Path=MyPath}"/>
-                <MenuItem Header="Сохранить как" Command="{Binding Path=CmdSaveProject}"/>
+                <MenuItem Header="Сохранить" Command="{Binding Source={StaticResource SaveFileDialog}, Path=CmdSaveFileDialog}" CommandParameter="{Binding Path=MyPath}"/>
+                <!--<MenuItem Header="Сохранить" Command="{Binding Path=CmdSaveProject}" CommandParameter="{Binding Path=MyPath}"/>-->
+                <MenuItem Header="Сохранить как" Command="{Binding Source={StaticResource SaveFileDialog}, Path=CmdSaveFileDialog}"/>
                 <MenuItem Header="Добавить строку" Command="{Binding Path=CmdAddRow}"/>
                 <Separator/>
                 <MenuItem Header="Настройки" IsEnabled="False"/>

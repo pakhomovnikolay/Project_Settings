@@ -15,47 +15,46 @@ namespace Project_Settings.Models
 {
     internal class SaveDialog : Freezable
     {
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            nameof(Title), typeof(string), typeof(OpenDialog), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty TitleCloseProperty = DependencyProperty.Register(
+            nameof(TitleClose), typeof(string), typeof(SaveDialog), new PropertyMetadata(default(string)));
 
-        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(
-            nameof(Filter), typeof(string), typeof(OpenDialog), new PropertyMetadata("Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*"));
+        public static readonly DependencyProperty FilterCloseProperty = DependencyProperty.Register(
+            nameof(FilterClose), typeof(string), typeof(SaveDialog), new PropertyMetadata("Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*"));
 
-        public static readonly DependencyProperty MyDataProjectProperty = DependencyProperty.Register(
-            nameof(MyDataProject), typeof(DataProject), typeof(OpenDialog), new PropertyMetadata(default(DataProject)));
+        public static readonly DependencyProperty MyDataProjectCloseProperty = DependencyProperty.Register(
+            nameof(MyDataProjectClose), typeof(DataProject), typeof(SaveDialog), new PropertyMetadata(default(DataProject)));
 
-        public static readonly DependencyProperty flBlackTheamesProperty = DependencyProperty.Register(
-           nameof(flBlackTheames), typeof(bool), typeof(OpenDialog), new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty flBlackTheamesCloseProperty = DependencyProperty.Register(
+           nameof(flBlackTheamesClose), typeof(bool), typeof(SaveDialog), new PropertyMetadata(default(bool)));
 
-        public static readonly DependencyProperty flWhiteTheamesProperty = DependencyProperty.Register(
-           nameof(flWhiteTheames), typeof(bool), typeof(OpenDialog), new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty flWhiteTheamesCloseProperty = DependencyProperty.Register(
+           nameof(flWhiteTheamesClose), typeof(bool), typeof(SaveDialog), new PropertyMetadata(default(bool)));
 
-        public string Title { get => (string)GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
-        public string Filter { get => (string)GetValue(FilterProperty); set => SetValue(FilterProperty, value); }
-        public DataProject MyDataProject { get => (DataProject)GetValue(MyDataProjectProperty); set => SetValue(MyDataProjectProperty, value); }
-        public bool flBlackTheames { get => (bool)GetValue(flBlackTheamesProperty); set => SetValue(flBlackTheamesProperty, value); }
-        public bool flWhiteTheames { get => (bool)GetValue(flWhiteTheamesProperty); set => SetValue(flWhiteTheamesProperty, value); }
+        public string TitleClose { get => (string)GetValue(TitleCloseProperty); set => SetValue(TitleCloseProperty, value); }
+        public string FilterClose { get => (string)GetValue(FilterCloseProperty); set => SetValue(FilterCloseProperty, value); }
+        public DataProject MyDataProjectClose { get => (DataProject)GetValue(MyDataProjectCloseProperty); set => SetValue(MyDataProjectCloseProperty, value); }
+        public bool flBlackTheamesClose { get => (bool)GetValue(flBlackTheamesCloseProperty); set => SetValue(flBlackTheamesCloseProperty, value); }
+        public bool flWhiteTheamesClose { get => (bool)GetValue(flWhiteTheamesCloseProperty); set => SetValue(flWhiteTheamesCloseProperty, value); }
 
         public ICommand CmdSaveFileDialog { get; }
-        private bool CanCmdSaveFileDialogExecute(object p) => MyDataProject.Project != null;
+        private bool CanCmdSaveFileDialogExecute(object p) => true;
 
         private void OnCmdSaveFileDialogExecuted(object p)
         {
             var filePath = p as string;
             if (filePath == null)
             {
-                var dialog = new OpenFileDialog
+                var dialog = new SaveFileDialog
                 {
-                    Title = Title,
-                    Filter = Filter,
+                    Title = TitleClose,
+                    Filter = FilterClose,
                     RestoreDirectory = true,
                     InitialDirectory = Environment.CurrentDirectory
                 };
-                if (dialog.ShowDialog() != true) return;                
+                if (dialog.ShowDialog() != true) return;
+                filePath = dialog.FileName;
             }
-            WriteMappingFileGridSheets(filePath, MyDataProject);
-
-
+            WriteMappingFileGridSheets(filePath, MyDataProjectClose);
         }
 
         protected override Freezable CreateInstanceCore()
@@ -65,6 +64,7 @@ namespace Project_Settings.Models
 
         public SaveDialog()
         {
+            MyDataProjectClose = new();
             CmdSaveFileDialog = new RelayCommand(OnCmdSaveFileDialogExecuted, CanCmdSaveFileDialogExecute);
         }
 
@@ -152,8 +152,8 @@ namespace Project_Settings.Models
             dataProject.Project = _myDataProject.Project;
             dataProject.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
 
-            dataProject.flWhiteTheames = flWhiteTheames;
-            dataProject.flBlackTheames = flBlackTheames;
+            dataProject.flWhiteTheames = flWhiteTheamesClose;
+            dataProject.flBlackTheames = flBlackTheamesClose;
 
 
             using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.Write))
@@ -170,6 +170,7 @@ namespace Project_Settings.Models
             //};
             //byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(dataProject);
             //File.WriteAllBytesAsync(FilePath, jsonUtf8Bytes);
+
 
         }
     }
