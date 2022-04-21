@@ -8,11 +8,14 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
+using System.Threading;
 
 namespace Project_Settings.Models
 {
     public class OpenSaveDialog : Freezable
     {
+        public delegate void ThreadStart();
+
         protected override Freezable CreateInstanceCore()
         {
             return new OpenSaveDialog();
@@ -25,6 +28,7 @@ namespace Project_Settings.Models
             CmdCreateNewProject = new RelayCommand(OnCmdCreateNewProjectExecuted, CanCmdCreateNewProjectExecute);
         }
 
+        #region Свойства
         public static readonly DependencyProperty TitleOpenProperty = DependencyProperty.Register(
             nameof(TitleOpen), typeof(string), typeof(OpenSaveDialog), new PropertyMetadata(default(string)));
 
@@ -69,8 +73,9 @@ namespace Project_Settings.Models
         public MapSheets SelectedSheets { get => (MapSheets)GetValue(SelectedSheetsProperty); set => SetValue(SelectedSheetsProperty, value); }
         public bool flBlackTheames { get => (bool)GetValue(flBlackTheamesProperty); set => SetValue(flBlackTheamesProperty, value); }
         public bool flWhiteTheames { get => (bool)GetValue(flWhiteTheamesProperty); set => SetValue(flWhiteTheamesProperty, value); }
+        #endregion
 
-
+        #region Команды
         public ICommand CmdCreateNewProject { get; }
         private bool CanCmdCreateNewProjectExecute(object p) => true;
         private void OnCmdCreateNewProjectExecuted(object p)
@@ -91,7 +96,7 @@ namespace Project_Settings.Models
             };
             if (dialog.ShowDialog() != true) return;
             SelectedFile = dialog.FileName;
-            ReadMappingFileGridSheets(SelectedFile, false);
+            ReadMappingFileGridSheets(SelectedFile);
         }
 
         public ICommand CmdSaveFileDialog { get; }
@@ -114,15 +119,22 @@ namespace Project_Settings.Models
             }
             WriteMappingFileGridSheets(SelectedFile, MyDataProject, NeedOpenFileAfterSave);
         }
+        #endregion
 
+        #region Чтение\Сохранение\Создание конфига
 
+        #region Считываем конфиг
         /// <summary>
         /// Получаем данные
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public async void ReadMappingFileGridSheets(string FilePath, bool NeedOpenFileAfterSave)
+        private async void ReadMappingFileGridSheets(string FilePath)
         {
+            //string FilePath = _FilePath as string;
+            //Thread myThread1 = new(new ParameterizedThreadStart(ReadMappingFileGridSheets));
+            //myThread1.Start();
+
             MyMapSheets = new();
             MyDataProject = new();
             DataProject JsonData = new();
@@ -202,15 +214,22 @@ namespace Project_Settings.Models
             flWhiteTheames = MyDataProject.flWhiteTheames;
             flBlackTheames = MyDataProject.flBlackTheames;
         }
-
-
+        #endregion
+        #region Сохраняем конфиг
         /// <summary>
         /// Сохраняем данные
         /// </summary>
         /// <param name = "fileName" ></ param >
         /// < param name="dt"></param>
-        private async void WriteMappingFileGridSheets(string FilePath, DataProject _DataProject, bool NeedOpenFileAfterSave)
+        private async void WriteMappingFileGridSheets(object _FilePath, object _dataProject, bool NeedOpenFileAfterSave)
         {
+            DataProject _DataProject = _dataProject as DataProject;
+            string FilePath = _FilePath as string;
+            //Thread myThread2 = new(new ParameterizedThreadStart(WriteMappingFileGridSheets));
+            //myThread2.Start();
+
+
+
             DataProject dataProject = new();
             ObservableCollection<MapData> myMapData = new();
             ObservableCollection<MapSheets> myMapSheets = new();
@@ -282,30 +301,34 @@ namespace Project_Settings.Models
                 await fs.WriteAsync(jsonUtf8Bytes).ConfigureAwait(NeedOpenFileAfterSave);
             }
 
-            if (NeedOpenFileAfterSave) ReadMappingFileGridSheets(SelectedFile, NeedOpenFileAfterSave);
+            if (NeedOpenFileAfterSave) ReadMappingFileGridSheets(SelectedFile);
         }
-
-
+        #endregion
+        #region Создаем конфиг
         /// <summary>
         /// Создаем новую конфигурацию
         /// </summary>
         private async void CreateNewConfig()
         {
-            SelectedSheets = new();
-            MyMapSheets = new();
-            MyDataProject = new();
-            SelectedFile = "";
-            TitleWindowsProject = "";
-            flBlackTheames = false;
-            flWhiteTheames = false;
+            Thread myThread3 = new(CreateNewConfig);
+            myThread3.Start();
+            //SelectedSheets = new();
+            //MyMapSheets = new();
+            //MyDataProject = new();
+            //SelectedFile = "";
+            //TitleWindowsProject = "";
+            //flBlackTheames = false;
+            //flWhiteTheames = false;
 
             DataProject JsonData = new();
             string FilePath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
+            if (string.IsNullOrEmpty(FilePath)) return;
 
             using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate))
             {
                 JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
             };
+
             string[] subs = FilePath.Split('\\');
             TitleWindowsProject = subs[subs.Length - 1];
 
@@ -344,7 +367,7 @@ namespace Project_Settings.Models
                         Columns = Sheet.Columns,
                         CountRow = Sheet.CountRow,
                         DataTables = _DataTable,
-                        Name = Sheet.Name,
+                        Name = Sheet.Name + (MyMapSheets.Count + 1).ToString(),
                         NameMsg = Sheet.NameMsg,
                         Rows = Sheet.Rows
                     };
@@ -373,6 +396,8 @@ namespace Project_Settings.Models
             flWhiteTheames = MyDataProject.flWhiteTheames;
             flBlackTheames = MyDataProject.flBlackTheames;
         }
+        #endregion
 
+        #endregion
     }
 }

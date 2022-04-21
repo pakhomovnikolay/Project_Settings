@@ -12,7 +12,6 @@
         Foreground="{DynamicResource ResultForeground}"
         Height="auto" Width="auto" MinHeight="400" MinWidth="800"
         WindowState="Maximized" WindowStartupLocation="CenterScreen"
-        
         Closing="Window_Closing">
     <Window.Resources>
         <m:OpenSaveDialog x:Key="OpenSaveFileDialog"
@@ -85,15 +84,33 @@
 
         <!-- ===================================================== Данные ===================================================== -->
         <DockPanel DockPanel.Dock="Left">
-            <Button DockPanel.Dock="Bottom" Content="Создать столбец" Width="120" Height="20"></Button>
-            
             <Grid DockPanel.Dock="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition MinWidth="250" Width="250" MaxWidth="500"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <DockPanel Grid.ColumnSpan="2">
-                    <GroupBox DockPanel.Dock="Left" Width="250" Header="Список листов" BorderBrush="{DynamicResource ResultBorderBrush}">
+                <GroupBox Grid.Column="0" DockPanel.Dock="Left" Header="Список листов" BorderBrush="{DynamicResource ResultBorderBrush}">
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Bottom" Height="25">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="120"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Width="115" Content="Добавить вкладку" Command="{Binding Path=CmdCreateNewList}">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="2"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <Button Width="115" Grid.Column="1" Margin="0,0,5,0" Content="Удалить вкладку">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="2"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                        </Grid>
                         <ListBox ItemsSource="{Binding Path=MyMapSheets}" SelectedItem="{Binding Path=SelectedSheets}" SelectedIndex="{Binding Path=MyDataProject.SheetLastSelectedIntex}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -101,22 +118,21 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-                    </GroupBox>
-                    
-                    <GroupBox BorderBrush="{DynamicResource ResultBorderBrush}">
-                        <GroupBox.Header>
-                            <TextBlock Text="{Binding Path=SelectedSheets.Name, StringFormat=Выбраный лист - {0}, FallbackValue='Данные листа', TargetNullValue='Группа не выбрана'}"/>
-                        </GroupBox.Header>
-                        <DataGrid x:Name="MyDataGrid" IsReadOnly="False"
+                    </DockPanel>
+                </GroupBox>
+                <GridSplitter Width="2" Background="Transparent"/>
+                <GroupBox Grid.Column="1" BorderBrush="{DynamicResource ResultBorderBrush}">
+                    <GroupBox.Header>
+                        <TextBlock Text="{Binding Path=SelectedSheets.Name, StringFormat=Выбраный лист - {0}, FallbackValue='Данные листа', TargetNullValue='Группа не выбрана'}"/>
+                    </GroupBox.Header>
+                    <DataGrid x:Name="MyDataGrid" IsReadOnly="False"
                                   BorderBrush="{DynamicResource ResultBorderBrush}"
                                   Background="{DynamicResource ResultBackground}"
                                   AutoGenerateColumns="True"
                                   ItemsSource="{Binding Path=SelectedSheets.DataTables}">
-                        </DataGrid>
-                    </GroupBox>
-                </DockPanel>
+                    </DataGrid>
+                </GroupBox>
             </Grid>
         </DockPanel>
-        <!---->
     </DockPanel>
 </Window>

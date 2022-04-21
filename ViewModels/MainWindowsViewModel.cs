@@ -3,18 +3,25 @@ using Project_Settings.Models;
 using Project_Settings.ViewModels.Default;
 using System;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.IO;
 using System.Reflection;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Threading;
 
 namespace Project_Settings.ViewModels
 {
     public class MainWindowsViewModel : ViewModel
     {
         private readonly Application CurrApp = Application.Current;
+        public delegate void ThreadStart();
 
-        #region Контроль состояний
+        #region Параметры
+        
+
         private MapSheets _SelectedSheets = new();
         public MapSheets SelectedSheets
         {
@@ -25,6 +32,7 @@ namespace Project_Settings.ViewModels
         private ObservableCollection<MapSheets> _MyMapSheets = new();
         public ObservableCollection<MapSheets> MyMapSheets
         {
+
             get => _MyMapSheets;
             set => Set(ref _MyMapSheets, value);
         }
@@ -35,6 +43,13 @@ namespace Project_Settings.ViewModels
             get => _MyDataProject;
             set => Set(ref _MyDataProject, value);
         }
+
+        private DataProject DefaultConfig = new();
+        //public DataProject DefaultConfig
+        //{
+        //    get => _DefaultConfig;
+        //    set => Set(ref _DefaultConfig, value);
+        //}
 
         private string _myPath = Environment.CurrentDirectory;
         public string MyPath
@@ -184,17 +199,93 @@ namespace Project_Settings.ViewModels
 
         #region Команды
 
+        
+        public ICommand CmdCreateNewList { get; }
+        private bool CanCmdCreateNewListExecute(object p) => true;
+        private void OnCmdCreateNewListExecuted(object p)
+        {
+            //DefaultConfig = new();
 
-        //public ICommand CmdCreateNewProject { get; }
-        //private bool CanCmdCreateNewProjectExecute(object p) => true;
-        //private void OnCmdCreateNewProjectExecuted(object p)
-        //{
-        //    SelectedSheets = new();
-        //    MyMapSheets = new();
-        //    MyDataProject = new();
-        //    MyPath = "";
-        //    MyTitle = "";
-        //}
+
+            CreateNewList();
+            
+
+            //var _MapData = new MapData
+            //{
+            //    Sheet = new ObservableCollection<MapSheets>(MyMapSheets)
+            //};
+            //MyMapData.Add(_MapData);
+
+            //foreach (var Project in DefaultConfig.Project)
+            //{
+            //    foreach (var Sheet in Project.Sheet)
+            //    {
+            //        var _DataProject = new MapData
+            //        {
+            //            Sheet = Project.Sheet
+            //        };
+
+            //        MyDataProject.Project.Add(_DataProject);
+            //    }
+
+
+            //    //    var _DataProject = new DataProject
+            //    //{
+            //    //    Project = DefaultConfig.Project
+            //    //};
+
+                
+            //}
+
+                //DataProject _DataProject = DefaultConfig.Project;
+
+
+            //    var _DataProject = new DataProject
+            //{
+            //    Project = DefaultConfig.Project
+            //};
+
+
+            
+            //foreach (var Project in DefaultConfig.Project)
+            //{
+            //    foreach (var Sheet in Project.Sheet)
+            //    {
+            //        foreach (var Column in Sheet.Columns)
+            //        {
+            //            Sheet.DataTables.Columns.Add(Column.Item);
+            //        }
+
+
+
+
+            //        for (int i = 0; i < Sheet.Columns.Count; i++)
+            //        {
+                        
+            //        }
+
+
+
+            //        var _MapSheets = new MapSheets
+            //        {
+                        
+            //        };
+            //    }
+            //}
+
+            
+
+
+
+            //MyMapSheets.Add
+
+
+            //SelectedSheets = new();
+            //MyMapSheets = new();
+            //MyDataProject = new();
+            //MyPath = "";
+            //MyTitle = "";
+        }
 
 
 
@@ -378,22 +469,70 @@ namespace Project_Settings.ViewModels
         #region Инициализация данных
         public MainWindowsViewModel()
         {
-            // Данные проекта
-            //MyMapSheets = new();
-            //MyDataProject = new();
-
             // Команды
             CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
             CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
             CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
-            //CmdCreateNewProject = new RelayCommand(OnCmdCreateNewProjectExecuted, CanCmdCreateNewProjectExecute);
+            CmdCreateNewList = new RelayCommand(OnCmdCreateNewListExecuted, CanCmdCreateNewListExecute);
 
+            
+        }
 
-            //CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
-            //CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
-            //CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
-            //CmdChangeSelectedSheetName = new RelayCommand(OnCmdChangeSelectedSheetNameExecuted, CanCmdChangeSelectedSheetNameExecute);
+        async void CreateNewList()
+        {
+            Thread myThread100 = new(CreateNewList);
+            myThread100.Start();
+            DefaultConfig = new();
+            if (string.IsNullOrEmpty(Environment.CurrentDirectory)) return;
+            string FilePath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
 
+            //Thread myThread1 = new(Print);
+
+            using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate))
+            {
+                DefaultConfig = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
+            };
+
+            DataRow _row;
+            foreach (var Project in DefaultConfig.Project)
+            {
+                foreach (var Sheet in Project.Sheet)
+                {
+                    DataTable _DataTable = new();
+                    foreach (var Column in Sheet.Columns)
+                    {
+                        _DataTable.Columns.Add(Column.Item);
+                    }
+
+                    for (int i = 0; i < Sheet.CountRow; i++)
+                    {
+                        _row = _DataTable.NewRow();
+                        _DataTable.Rows.Add(_row);
+                    }
+
+                    int j = 0;
+                    string column = "";
+                    foreach (var Row in Sheet.Rows)
+                    {
+                        if (column != Row.Column) { j = 0; }
+                        column = Row.Column;
+                        _row = _DataTable.Rows[j];
+                        _row[column] = Row.Value;
+                        j++;
+                    }
+
+                    var _MapSheets = new MapSheets
+                    {
+                        Columns = Sheet.Columns,
+                        CountRow = Sheet.CountRow,
+                        DataTables = _DataTable,
+                        Name = Sheet.Name + (MyMapSheets.Count + 1).ToString(),
+                        NameMsg = Sheet.NameMsg,
+                        Rows = Sheet.Rows
+                    };
+                    MyMapSheets.Add(_MapSheets);
+                }
+            }
         }
         #endregion
     }
