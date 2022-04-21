@@ -14,23 +14,16 @@
         WindowState="Maximized" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
     <Window.Resources>
-        <m:OpenDialog x:Key="OpenFileDialog"
-                      TitleOpen="Открыть файл"
-                      SelectedFileOpen="{Binding Path=MyPath, Mode=OneWayToSource}"
-                      TitleWindowsProject="{Binding Path=MyTitle, Mode=OneWayToSource}"
-                      MyDataProjectOpen="{Binding Path=MyDataProject, Mode=OneWayToSource}"
-                      MyMapSheets ="{Binding Path=MyMapSheets, Mode=OneWayToSource}"
-                      SelectedSheets="{Binding Path=SelectedSheets, Mode=OneWayToSource}"
-                      flBlackTheamesOpen="{Binding Path=flBlackTheames, Mode=OneWayToSource}"
-                      flWhiteTheamesOpen="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"
-                      />
-        <m:SaveDialog x:Key="SaveFileDialog"
-                      TitleSave="Сохранить файл"
-                      MyDataProjectSave="{Binding Path=MyDataProject, Mode=OneWay}"
-                      flBlackTheamesSave="{Binding Path=flBlackTheames, Mode=OneWay}"
-                      flWhiteTheamesSave="{Binding Path=flWhiteTheames, Mode=OneWay}"
-                      SelectedFileSave="{Binding Path=MyPath, Mode=OneWay}"
-                      />
+        <m:OpenSaveDialog x:Key="OpenSaveFileDialog"
+                          TitleOpen="Открыть файл"
+                          TitleSave="Сохранить файл"
+                          SelectedFile="{Binding Path=MyPath, Mode=OneWayToSource}"
+                          TitleWindowsProject="{Binding Path=MyTitle, Mode=OneWayToSource}"
+                          MyDataProject="{Binding Path=MyDataProject, Mode=OneWayToSource}"
+                          MyMapSheets="{Binding Path=MyMapSheets, Mode=OneWayToSource}"
+                          SelectedSheets="{Binding Path=SelectedSheets, Mode=OneWayToSource}"
+                          flBlackTheames="{Binding Path=flBlackTheames, Mode=OneWayToSource}"
+                          flWhiteTheames="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"/>
     </Window.Resources>
     
     <Window.DataContext>
@@ -39,22 +32,22 @@
 
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="Q" Command="{Binding Path=CmdCloseApp}"/>
-        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Source={StaticResource SaveFileDialog}, Path=CmdSaveFileDialog}"  CommandParameter="{Binding Path=MyPath}"/>
-        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding Source={StaticResource SaveFileDialog}, Path=CmdSaveFileDialog}" />
-        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Source={StaticResource OpenFileDialog}, Path=CmdOpenFileDialog}"/>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}"  CommandParameter="{Binding Path=MyPath}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}" />
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdOpenFileDialog}"/>
     </Window.InputBindings>
     
     <DockPanel>
         <!-- ===================================================== Меню ===================================================== -->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
-                <MenuItem Header="Создать"/>
+                <MenuItem Header="Создать" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdCreateNewProject}"/>
                 <Separator/>
-                <MenuItem Header="Открыть" Command="{Binding Source={StaticResource OpenFileDialog}, Path=CmdOpenFileDialog}"/>
-                <MenuItem Header="Сохранить" Command="{Binding Source={StaticResource SaveFileDialog}, Path=CmdSaveFileDialog}" CommandParameter="{Binding Path=MyPath}"/>
+                <MenuItem Header="Открыть" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdOpenFileDialog}"/>
+                <MenuItem Header="Сохранить" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}" CommandParameter="{Binding Path=MyPath}"/>
                 <!--<MenuItem Header="Сохранить" Command="{Binding Path=CmdSaveProject}" CommandParameter="{Binding Path=MyPath}"/>-->
-                <MenuItem Header="Сохранить как" Command="{Binding Source={StaticResource SaveFileDialog}, Path=CmdSaveFileDialog}"/>
-                <MenuItem Header="Добавить строку" Command="{Binding Path=CmdAddRow}"/>
+                <MenuItem Header="Сохранить как" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}"/>
+                <MenuItem Header="Добавить строку" IsEnabled="False"/>
                 <Separator/>
                 <MenuItem Header="Настройки" IsEnabled="False"/>
             </MenuItem>
@@ -90,7 +83,7 @@
 
         <!-- ===================================================== Данные ===================================================== -->
         <DockPanel DockPanel.Dock="Left">
-            <Button DockPanel.Dock="Bottom" Command="{Binding Path=CmdAddRow}" Content="Создать столбец" Width="120" Height="20"></Button>
+            <Button DockPanel.Dock="Bottom" Content="Создать столбец" Width="120" Height="20"></Button>
             
             <Grid DockPanel.Dock="Left">
                 <Grid.ColumnDefinitions>

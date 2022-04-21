@@ -35,20 +35,6 @@ namespace Project_Settings.ViewModels
             set => Set(ref _MyDataProject, value);
         }
 
-        private string _NewSelectedSheetName;
-        public string NewSelectedSheetName
-        {
-            get => _NewSelectedSheetName;
-            set => Set(ref _NewSelectedSheetName, value);
-        }
-
-        private bool _ChangeApllication;
-        public bool ChangeApllication
-        {
-            get => _ChangeApllication;
-            set => Set(ref _ChangeApllication, value);
-        }
-
         private string _myPath = Environment.CurrentDirectory;
         public string MyPath
         {
@@ -75,7 +61,6 @@ namespace Project_Settings.ViewModels
 
         #region Смена темы
         private bool _flBlackTheames = false;
-        private bool _flWhiteTheames = false;
 
         /// <summary>Установить темную тему для приложения</summary>
         public bool flBlackTheames
@@ -90,17 +75,11 @@ namespace Project_Settings.ViewModels
             }
         }
 
-        /// <summary>Установить светлую тему для приложения</summary>
+        private bool _flWhiteTheames;
         public bool flWhiteTheames
         {
             get => _flWhiteTheames;
-            set
-            {
-                if (Set(ref _flWhiteTheames, value))
-                {
-                    ChangeTheames();
-                }
-            }
+            set => Set(ref _flWhiteTheames, value);
         }
 
         private SolidColorBrush _ResultBackground = (SolidColorBrush)Application.Current.TryFindResource("ResultBackground");
@@ -204,82 +183,96 @@ namespace Project_Settings.ViewModels
 
         #region Команды
 
+
+        //public ICommand CmdCreateNewProject { get; }
+        //private bool CanCmdCreateNewProjectExecute(object p) => true;
+        //private void OnCmdCreateNewProjectExecuted(object p)
+        //{
+        //    SelectedSheets = new();
+        //    MyMapSheets = new();
+        //    MyDataProject = new();
+        //    MyPath = "";
+        //    MyTitle = "";
+        //}
+
+
+
         /// <summary>
         /// Команда добавить строку
         /// </summary>
-        public ICommand CmdChangeSelectedSheetName { get; }
+        //public ICommand CmdChangeSelectedSheetName { get; }
 
-        private bool CanCmdChangeSelectedSheetNameExecute(object p) => true;
+        //private bool CanCmdChangeSelectedSheetNameExecute(object p) => true;
 
-        private void OnCmdChangeSelectedSheetNameExecuted(object p)
-        {
-            //SelectedSheets.Name = NewSelectedSheetName;
-        }
+        //private void OnCmdChangeSelectedSheetNameExecuted(object p)
+        //{
+        //    //SelectedSheets.Name = NewSelectedSheetName;
+        //}
 
 
 
         /// <summary>
         /// Команда добавить строку
         /// </summary>
-        public ICommand CmdAddRow { get; }
+        //public ICommand CmdAddRow { get; }
 
-        private bool CanCmdAddRowExecute(object p) => true;
+        //private bool CanCmdAddRowExecute(object p) => true;
 
-        private void OnCmdAddRowExecuted(object p)
-        {
+        //private void OnCmdAddRowExecuted(object p)
+        //{
 
-            //var index = MyDataGridItems.IndexOf(SelectedSheets);
-            //if (SelectedSheets.DataTables == null)
-            //{
-            //    SelectedSheets.DataTables = new();
-            //}
+        //    //var index = MyDataGridItems.IndexOf(SelectedSheets);
+        //    //if (SelectedSheets.DataTables == null)
+        //    //{
+        //    //    SelectedSheets.DataTables = new();
+        //    //}
 
-            //SelectedSheets.DataTables.Columns.Add("Номер\nкоризны");
-            //SelectedSheets.DataTables.Columns.Add("Название шкафа\nНомер шкафа");
-            //SelectedSheets.DataTables.Columns.Add("Номер\nкорзины\nв шкафу");
-            //SelectedSheets.DataTables.Columns.Add("Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным.");
+        //    //SelectedSheets.DataTables.Columns.Add("Номер\nкоризны");
+        //    //SelectedSheets.DataTables.Columns.Add("Название шкафа\nНомер шкафа");
+        //    //SelectedSheets.DataTables.Columns.Add("Номер\nкорзины\nв шкафу");
+        //    //SelectedSheets.DataTables.Columns.Add("Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным.");
 
-            //DataRow row = SelectedSheets.DataTables.NewRow();
-            //row["Номер\nкоризны"] = "A";
-            //row["Название шкафа\nНомер шкафа"] = "A";
-            //row["Номер\nкорзины\nв шкафу"] = "A";
-            //row["Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным."] = "B";
+        //    //DataRow row = SelectedSheets.DataTables.NewRow();
+        //    //row["Номер\nкоризны"] = "A";
+        //    //row["Название шкафа\nНомер шкафа"] = "A";
+        //    //row["Номер\nкорзины\nв шкафу"] = "A";
+        //    //row["Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным."] = "B";
 
-            //SelectedSheets.DataTables.Rows.Add(row);
-
-
-            //var index = MyDataGridItems.IndexOf(SelectedSheets);
+        //    //SelectedSheets.DataTables.Rows.Add(row);
 
 
-            //if (SelectedSheets.DataTables == null)
-            //{
-            //    SelectedSheets.DataTables = new();
-            //}
-            //SelectedSheets.DataTables.Columns.Add("Номер\nкоризны");
-            //SelectedSheets.DataTables.Columns.Add("Название шкафа\nНомер шкафа");
-            //SelectedSheets.DataTables.Columns.Add("Номер\nкорзины\nв шкафу");
-            //SelectedSheets.DataTables.Columns.Add("Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным.");
-            //SelectedSheets.DataTables.Rows.Add();
+        //    //var index = MyDataGridItems.IndexOf(SelectedSheets);
 
 
-            ////for (int i = 0; i < 3; i++)
-            ////{
-            ////    if (SelectedSheets.DataTables == null)
-            ////    {
-            ////        SelectedSheets.DataTables = new();
-            ////        SelectedSheets.DataTables.Columns.Add();
-            ////        SelectedSheets.DataTables.NewRow();
-            ////    }
-            ////    else
-            ////    {
-            ////        SelectedSheets.DataTables.Columns.Add();
-            ////        SelectedSheets.DataTables.Rows.Add();
-            ////    }
-            ////}
-            //MyDataGridItems[index] = SelectedSheets;
-            //SelectedSheets = MyDataGridItems[index];
-            //MySheetsConfig.Sheet[index] = SelectedSheets;
-        }
+        //    //if (SelectedSheets.DataTables == null)
+        //    //{
+        //    //    SelectedSheets.DataTables = new();
+        //    //}
+        //    //SelectedSheets.DataTables.Columns.Add("Номер\nкоризны");
+        //    //SelectedSheets.DataTables.Columns.Add("Название шкафа\nНомер шкафа");
+        //    //SelectedSheets.DataTables.Columns.Add("Номер\nкорзины\nв шкафу");
+        //    //SelectedSheets.DataTables.Columns.Add("Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным.");
+        //    //SelectedSheets.DataTables.Rows.Add();
+
+
+        //    ////for (int i = 0; i < 3; i++)
+        //    ////{
+        //    ////    if (SelectedSheets.DataTables == null)
+        //    ////    {
+        //    ////        SelectedSheets.DataTables = new();
+        //    ////        SelectedSheets.DataTables.Columns.Add();
+        //    ////        SelectedSheets.DataTables.NewRow();
+        //    ////    }
+        //    ////    else
+        //    ////    {
+        //    ////        SelectedSheets.DataTables.Columns.Add();
+        //    ////        SelectedSheets.DataTables.Rows.Add();
+        //    ////    }
+        //    ////}
+        //    //MyDataGridItems[index] = SelectedSheets;
+        //    //SelectedSheets = MyDataGridItems[index];
+        //    //MySheetsConfig.Sheet[index] = SelectedSheets;
+        //}
 
         /// <summary>
         /// Команда сохранить проект
@@ -356,46 +349,49 @@ namespace Project_Settings.ViewModels
         /// <summary>
         /// Коамнда развернуть приложение
         /// </summary>
-        public ICommand CmdMaximized { get; }
-        private bool CanCmdMaximizedExecute(object p) => true;
+        //public ICommand CmdMaximized { get; }
+        //private bool CanCmdMaximizedExecute(object p) => true;
 
-        private void OnCmdMaximizedExecuted(object p)
-        {
-            if (CurrApp.MainWindow.WindowState == WindowState.Maximized)
-            {
-                CurrApp.MainWindow.WindowState = WindowState.Normal;
-                return;
-            }
-            CurrApp.MainWindow.WindowState = WindowState.Maximized;
-        }
+        //private void OnCmdMaximizedExecuted(object p)
+        //{
+        //    if (CurrApp.MainWindow.WindowState == WindowState.Maximized)
+        //    {
+        //        CurrApp.MainWindow.WindowState = WindowState.Normal;
+        //        return;
+        //    }
+        //    CurrApp.MainWindow.WindowState = WindowState.Maximized;
+        //}
 
         /// <summary>
         /// Коамнда свернуть приложение
         /// </summary>
-        public ICommand CmdMinimized { get; }
-        private bool CanCmdMinimizedExecute(object p) => true;
+        //public ICommand CmdMinimized { get; }
+        //private bool CanCmdMinimizedExecute(object p) => true;
 
-        private void OnCmdMinimizedExecuted(object p)
-        {
-            CurrApp.MainWindow.WindowState = WindowState.Minimized;
-        }
+        //private void OnCmdMinimizedExecuted(object p)
+        //{
+        //    CurrApp.MainWindow.WindowState = WindowState.Minimized;
+        //}
         #endregion
 
         #region Инициализация данных
         public MainWindowsViewModel()
         {
             // Данные проекта
-            MyMapSheets = new();
-            MyDataProject = new();
+            //MyMapSheets = new();
+            //MyDataProject = new();
 
             // Команды
             CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
             CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
             CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
-            CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
-            CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
-            CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
-            CmdChangeSelectedSheetName = new RelayCommand(OnCmdChangeSelectedSheetNameExecuted, CanCmdChangeSelectedSheetNameExecute);
+            //CmdCreateNewProject = new RelayCommand(OnCmdCreateNewProjectExecuted, CanCmdCreateNewProjectExecute);
+
+            
+            //CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
+            //CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
+            //CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
+            //CmdChangeSelectedSheetName = new RelayCommand(OnCmdChangeSelectedSheetNameExecuted, CanCmdChangeSelectedSheetNameExecute);
         }
         #endregion
     }
