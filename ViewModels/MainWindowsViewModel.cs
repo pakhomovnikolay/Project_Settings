@@ -10,18 +10,23 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Threading;
 
 namespace Project_Settings.ViewModels
 {
     public class MainWindowsViewModel : ViewModel
     {
         private readonly Application CurrApp = Application.Current;
-        public delegate void ThreadStart();
+
+        public MainWindowsViewModel()
+        {
+            // Команды
+            CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
+            CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
+            CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
+            CmdCreateNewList = new RelayCommand(OnCmdCreateNewListExecuted, CanCmdCreateNewListExecute);
+        }
 
         #region Параметры
-        
-
         private MapSheets _SelectedSheets = new();
         public MapSheets SelectedSheets
         {
@@ -44,12 +49,13 @@ namespace Project_Settings.ViewModels
             set => Set(ref _MyDataProject, value);
         }
 
-        private DataProject DefaultConfig = new();
-        //public DataProject DefaultConfig
-        //{
-        //    get => _DefaultConfig;
-        //    set => Set(ref _DefaultConfig, value);
-        //}
+        private DataProject _JsonData = new();
+        public DataProject JsonData
+        {
+            get => _JsonData;
+            set => Set(ref _JsonData, value);
+        }
+
 
         private string _myPath = Environment.CurrentDirectory;
         public string MyPath
@@ -73,7 +79,6 @@ namespace Project_Settings.ViewModels
             get => _myTitle;
             set => Set(ref _myTitle, value);
         }
-        #endregion
 
         #region Смена темы
         private bool _flBlackTheames = false;
@@ -105,7 +110,6 @@ namespace Project_Settings.ViewModels
         private SolidColorBrush _ResultBorderBrush = (SolidColorBrush)Application.Current.TryFindResource("ResultBorderBrush");
         private SolidColorBrush _ResultTreeViewItemBackground = (SolidColorBrush)Application.Current.TryFindResource("ResultTreeViewItemBackground");
         private SolidColorBrush _ResultTreeViewItemForeground = (SolidColorBrush)Application.Current.TryFindResource("ResultTreeViewItemForeground");
-
         private Color _ResultBackgroundListBox = (Color)Application.Current.TryFindResource("ResultBackgroundListBox");
         private Color _ResultForegroundListBox = (Color)Application.Current.TryFindResource("ResultForegroundListBox");
         private Color _ResultBorderBrushListBox = (Color)Application.Current.TryFindResource("ResultBorderBrushListBox");
@@ -169,122 +173,23 @@ namespace Project_Settings.ViewModels
             get => _ResultBorderBrushListBox;
             set => Set(ref _ResultBorderBrushListBox, value);
         }
-
-        private void ChangeTheames()
-        {
-
-            ResultBackground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackBackground") : CurrApp.TryFindResource("WhiteBackground"));
-            ResultForeground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackForeground") : CurrApp.TryFindResource("WhiteForeground"));
-            ResultkMenuItemBackground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackMenuItemBackground") : CurrApp.TryFindResource("WhitekMenuItemBackground"));
-            ResultMenuItemForeground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackMenuItemForeground") : CurrApp.TryFindResource("WhiteMenuItemForeground"));
-            ResultBorderBrush = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackBorderBrush") : CurrApp.TryFindResource("WhiteBorderBrush"));
-            ResultTreeViewItemBackground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackTreeViewItemBackground") : CurrApp.TryFindResource("WhiteTreeViewItemBackground"));
-            ResultTreeViewItemForeground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackTreeViewItemForeground") : CurrApp.TryFindResource("WhiteTreeViewItemForeground"));
-            ResultBackgroundListBox = (Color)(flBlackTheames ? CurrApp.TryFindResource("BlackBackgroundListBox") : CurrApp.TryFindResource("WhiteBackgroundListBox"));
-            ResultForegroundListBox = (Color)(flBlackTheames ? CurrApp.TryFindResource("BlackForegroundListBox") : CurrApp.TryFindResource("WhiteForegroundListBox"));
-            ResultBorderBrushListBox = (Color)(flBlackTheames ? CurrApp.TryFindResource("BlackBorderBrushListBox") : CurrApp.TryFindResource("WhiteBorderBrushListBox"));
-
-            CurrApp.Resources["ResultBackground"] = ResultBackground;
-            CurrApp.Resources["ResultForeground"] = ResultForeground;
-            CurrApp.Resources["ResultkMenuItemBackground"] = ResultkMenuItemBackground;
-            CurrApp.Resources["ResultMenuItemForeground"] = ResultMenuItemForeground;
-            CurrApp.Resources["ResultBorderBrush"] = ResultBorderBrush;
-            CurrApp.Resources["ResultTreeViewItemBackground"] = ResultTreeViewItemBackground;
-            CurrApp.Resources["ResultTreeViewItemForeground"] = ResultTreeViewItemForeground;
-            CurrApp.Resources["ResultBackgroundListBox"] = ResultBackgroundListBox;
-            CurrApp.Resources["ResultForegroundListBox"] = ResultForegroundListBox;
-            CurrApp.Resources["ResultBorderBrushListBox"] = ResultBorderBrushListBox;
-        }
+        #endregion
         #endregion
 
         #region Команды
 
-        
+
         public ICommand CmdCreateNewList { get; }
         private bool CanCmdCreateNewListExecute(object p) => true;
-        private void OnCmdCreateNewListExecuted(object p)
+        private async void OnCmdCreateNewListExecuted(object p)
         {
-            //DefaultConfig = new();
+            if (!File.Exists(MyPath)) return;
 
-
+            using (FileStream fs = new FileStream(MyPath, FileMode.OpenOrCreate))
+            {
+                JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
+            };
             CreateNewList();
-            
-
-            //var _MapData = new MapData
-            //{
-            //    Sheet = new ObservableCollection<MapSheets>(MyMapSheets)
-            //};
-            //MyMapData.Add(_MapData);
-
-            //foreach (var Project in DefaultConfig.Project)
-            //{
-            //    foreach (var Sheet in Project.Sheet)
-            //    {
-            //        var _DataProject = new MapData
-            //        {
-            //            Sheet = Project.Sheet
-            //        };
-
-            //        MyDataProject.Project.Add(_DataProject);
-            //    }
-
-
-            //    //    var _DataProject = new DataProject
-            //    //{
-            //    //    Project = DefaultConfig.Project
-            //    //};
-
-                
-            //}
-
-                //DataProject _DataProject = DefaultConfig.Project;
-
-
-            //    var _DataProject = new DataProject
-            //{
-            //    Project = DefaultConfig.Project
-            //};
-
-
-            
-            //foreach (var Project in DefaultConfig.Project)
-            //{
-            //    foreach (var Sheet in Project.Sheet)
-            //    {
-            //        foreach (var Column in Sheet.Columns)
-            //        {
-            //            Sheet.DataTables.Columns.Add(Column.Item);
-            //        }
-
-
-
-
-            //        for (int i = 0; i < Sheet.Columns.Count; i++)
-            //        {
-                        
-            //        }
-
-
-
-            //        var _MapSheets = new MapSheets
-            //        {
-                        
-            //        };
-            //    }
-            //}
-
-            
-
-
-
-            //MyMapSheets.Add
-
-
-            //SelectedSheets = new();
-            //MyMapSheets = new();
-            //MyDataProject = new();
-            //MyPath = "";
-            //MyTitle = "";
         }
 
 
@@ -466,39 +371,15 @@ namespace Project_Settings.ViewModels
         //}
         #endregion
 
-        #region Инициализация данных
-        public MainWindowsViewModel()
+        #region События
+        private void CreateNewList()
         {
-            // Команды
-            CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
-            CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
-            CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
-            CmdCreateNewList = new RelayCommand(OnCmdCreateNewListExecuted, CanCmdCreateNewListExecute);
-
-            
-        }
-
-        async void CreateNewList()
-        {
-            Thread myThread100 = new(CreateNewList);
-            myThread100.Start();
-            DefaultConfig = new();
-            if (string.IsNullOrEmpty(Environment.CurrentDirectory)) return;
-            string FilePath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
-
-            //Thread myThread1 = new(Print);
-
-            using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate))
-            {
-                DefaultConfig = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
-            };
-
-            DataRow _row;
-            foreach (var Project in DefaultConfig.Project)
+            foreach (var Project in JsonData.Project)
             {
                 foreach (var Sheet in Project.Sheet)
                 {
                     DataTable _DataTable = new();
+                    DataRow _row;
                     foreach (var Column in Sheet.Columns)
                     {
                         _DataTable.Columns.Add(Column.Item);
@@ -533,6 +414,31 @@ namespace Project_Settings.ViewModels
                     MyMapSheets.Add(_MapSheets);
                 }
             }
+        }
+
+        private void ChangeTheames()
+        {
+            ResultBackground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackBackground") : CurrApp.TryFindResource("WhiteBackground"));
+            ResultForeground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackForeground") : CurrApp.TryFindResource("WhiteForeground"));
+            ResultkMenuItemBackground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackMenuItemBackground") : CurrApp.TryFindResource("WhitekMenuItemBackground"));
+            ResultMenuItemForeground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackMenuItemForeground") : CurrApp.TryFindResource("WhiteMenuItemForeground"));
+            ResultBorderBrush = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackBorderBrush") : CurrApp.TryFindResource("WhiteBorderBrush"));
+            ResultTreeViewItemBackground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackTreeViewItemBackground") : CurrApp.TryFindResource("WhiteTreeViewItemBackground"));
+            ResultTreeViewItemForeground = (SolidColorBrush)(flBlackTheames ? CurrApp.TryFindResource("BlackTreeViewItemForeground") : CurrApp.TryFindResource("WhiteTreeViewItemForeground"));
+            ResultBackgroundListBox = (Color)(flBlackTheames ? CurrApp.TryFindResource("BlackBackgroundListBox") : CurrApp.TryFindResource("WhiteBackgroundListBox"));
+            ResultForegroundListBox = (Color)(flBlackTheames ? CurrApp.TryFindResource("BlackForegroundListBox") : CurrApp.TryFindResource("WhiteForegroundListBox"));
+            ResultBorderBrushListBox = (Color)(flBlackTheames ? CurrApp.TryFindResource("BlackBorderBrushListBox") : CurrApp.TryFindResource("WhiteBorderBrushListBox"));
+
+            CurrApp.Resources["ResultBackground"] = ResultBackground;
+            CurrApp.Resources["ResultForeground"] = ResultForeground;
+            CurrApp.Resources["ResultkMenuItemBackground"] = ResultkMenuItemBackground;
+            CurrApp.Resources["ResultMenuItemForeground"] = ResultMenuItemForeground;
+            CurrApp.Resources["ResultBorderBrush"] = ResultBorderBrush;
+            CurrApp.Resources["ResultTreeViewItemBackground"] = ResultTreeViewItemBackground;
+            CurrApp.Resources["ResultTreeViewItemForeground"] = ResultTreeViewItemForeground;
+            CurrApp.Resources["ResultBackgroundListBox"] = ResultBackgroundListBox;
+            CurrApp.Resources["ResultForegroundListBox"] = ResultForegroundListBox;
+            CurrApp.Resources["ResultBorderBrushListBox"] = ResultBorderBrushListBox;
         }
         #endregion
     }

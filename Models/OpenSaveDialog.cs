@@ -14,8 +14,6 @@ namespace Project_Settings.Models
 {
     public class OpenSaveDialog : Freezable
     {
-        public delegate void ThreadStart();
-
         protected override Freezable CreateInstanceCore()
         {
             return new OpenSaveDialog();
@@ -29,6 +27,9 @@ namespace Project_Settings.Models
         }
 
         #region Свойства
+        public static readonly DependencyProperty JsonDataProperty = DependencyProperty.Register(
+            nameof(JsonData), typeof(DataProject), typeof(OpenSaveDialog), new PropertyMetadata(default(DataProject)));
+
         public static readonly DependencyProperty TitleOpenProperty = DependencyProperty.Register(
             nameof(TitleOpen), typeof(string), typeof(OpenSaveDialog), new PropertyMetadata(default(string)));
 
@@ -59,6 +60,7 @@ namespace Project_Settings.Models
         public static readonly DependencyProperty flWhiteTheamesProperty = DependencyProperty.Register(
            nameof(flWhiteTheames), typeof(bool), typeof(OpenSaveDialog), new PropertyMetadata(default(bool)));
 
+        public DataProject JsonData { get => (DataProject)GetValue(JsonDataProperty); set => SetValue(JsonDataProperty, value); }
         public string TitleOpen { get => (string)GetValue(TitleOpenProperty); set => SetValue(TitleOpenProperty, value); }
         public string TitleSave { get => (string)GetValue(TitleSaveProperty); set => SetValue(TitleSaveProperty, value); }
         public string Filter { get => (string)GetValue(FilterProperty); set => SetValue(FilterProperty, value); }
@@ -73,30 +75,52 @@ namespace Project_Settings.Models
         public MapSheets SelectedSheets { get => (MapSheets)GetValue(SelectedSheetsProperty); set => SetValue(SelectedSheetsProperty, value); }
         public bool flBlackTheames { get => (bool)GetValue(flBlackTheamesProperty); set => SetValue(flBlackTheamesProperty, value); }
         public bool flWhiteTheames { get => (bool)GetValue(flWhiteTheamesProperty); set => SetValue(flWhiteTheamesProperty, value); }
+
+        public bool flNeedOpenFileAfterSave { get; set; }
         #endregion
 
         #region Команды
         public ICommand CmdCreateNewProject { get; }
         private bool CanCmdCreateNewProjectExecute(object p) => true;
-        private void OnCmdCreateNewProjectExecuted(object p)
+        private async void OnCmdCreateNewProjectExecuted(object p)
         {
+            string FilePath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
+            if (!File.Exists(FilePath)) return;
+            using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate))
+            {
+                JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
+            };
+            string[] subs = FilePath.Split('\\');
+            TitleWindowsProject = subs[subs.Length - 1];
             CreateNewConfig();
         }
 
         public ICommand CmdOpenFileDialog { get; }
         private bool CanCmdOpenFileDialogExecute(object p) => true;
-        private void OnCmdOpenFileDialogExecuted(object p)
+        private async void OnCmdOpenFileDialogExecuted(object p)
         {
-            var dialog = new OpenFileDialog
+            string flAfterSave = p as string;
+            if (string.IsNullOrEmpty(flAfterSave))
             {
-                Title = TitleOpen,
-                Filter = Filter,
-                RestoreDirectory = true,
-                InitialDirectory = Environment.CurrentDirectory
+                var dialog = new OpenFileDialog
+                {
+                    Title = TitleOpen,
+                    Filter = Filter,
+                    RestoreDirectory = true,
+                    InitialDirectory = Environment.CurrentDirectory
+                };
+
+                if ((dialog.ShowDialog() != true) || (!File.Exists(dialog.FileName))) return;
+                flAfterSave = dialog.FileName;
+            }
+
+            using (FileStream fs = new FileStream(flAfterSave, FileMode.OpenOrCreate))
+            {
+                JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
             };
-            if (dialog.ShowDialog() != true) return;
-            SelectedFile = dialog.FileName;
-            ReadMappingFileGridSheets(SelectedFile);
+            SelectedFile = flAfterSave;
+            flNeedOpenFileAfterSave = false;
+            ReadMappingFileGridSheets();
         }
 
         public ICommand CmdSaveFileDialog { get; }
@@ -104,7 +128,7 @@ namespace Project_Settings.Models
         private void OnCmdSaveFileDialogExecuted(object p)
         {
             SelectedFile = p as string;
-            bool NeedOpenFileAfterSave = (SelectedFile == null);
+            flNeedOpenFileAfterSave = (SelectedFile == null);
             if (string.IsNullOrEmpty(SelectedFile))
             {
                 var dialog = new SaveFileDialog
@@ -117,7 +141,7 @@ namespace Project_Settings.Models
                 if (dialog.ShowDialog() != true) return;
                 SelectedFile = dialog.FileName;
             }
-            WriteMappingFileGridSheets(SelectedFile, MyDataProject, NeedOpenFileAfterSave);
+            WriteMappingFileGridSheets();
         }
         #endregion
 
@@ -129,35 +153,19 @@ namespace Project_Settings.Models
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        private async void ReadMappingFileGridSheets(string FilePath)
+        private void ReadMappingFileGridSheets()
         {
-            //string FilePath = _FilePath as string;
-            //Thread myThread1 = new(new ParameterizedThreadStart(ReadMappingFileGridSheets));
-            //myThread1.Start();
-
             MyMapSheets = new();
             MyDataProject = new();
-            DataProject JsonData = new();
-            string file_path;
-            if (string.IsNullOrEmpty(FilePath)) return;
-
-            using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate))
-            {
-                JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
-                file_path = fs.Name;
-            };
-
-            string[] subs = file_path.Split('\\');
+            string[] subs = SelectedFile.Split('\\');
             TitleWindowsProject = subs[subs.Length - 1];
-
-            DataRow _row;
-            ObservableCollection<MapData> MyMapData = new();
 
             foreach (var Project in JsonData.Project)
             {
                 foreach (var Sheet in Project.Sheet)
                 {
                     DataTable _DataTable = new();
+                    DataRow _row;
                     foreach (var Column in Sheet.Columns)
                     {
                         _DataTable.Columns.Add(Column.Item);
@@ -193,6 +201,7 @@ namespace Project_Settings.Models
                 }
             }
 
+            ObservableCollection<MapData> MyMapData = new();
             var _MapData = new MapData
             {
                 Sheet = new ObservableCollection<MapSheets>(MyMapSheets)
@@ -221,58 +230,24 @@ namespace Project_Settings.Models
         /// </summary>
         /// <param name = "fileName" ></ param >
         /// < param name="dt"></param>
-        private async void WriteMappingFileGridSheets(object _FilePath, object _dataProject, bool NeedOpenFileAfterSave)
+        private async void WriteMappingFileGridSheets()
         {
-            DataProject _DataProject = _dataProject as DataProject;
-            string FilePath = _FilePath as string;
-            //Thread myThread2 = new(new ParameterizedThreadStart(WriteMappingFileGridSheets));
-            //myThread2.Start();
-
-
-
-            DataProject dataProject = new();
+            DataProject _DataProject = new();
             ObservableCollection<MapData> myMapData = new();
             ObservableCollection<MapSheets> myMapSheets = new();
-            foreach (var _Project in _DataProject.Project)
+
+            foreach (var Sheets in MyMapSheets)
             {
-                foreach (var Sheet in _Project.Sheet)
+                var _MapData = new MapSheets
                 {
-                    List<MapColumns> myMapColumn = new();
-                    List<MapRow> myMapRow = new();
-                    int ColumnCount = Sheet.DataTables.Columns.Count;
-                    int RowCount = Sheet.DataTables.Rows.Count;
-
-                    for (int i = 0; i < ColumnCount; i++)
-                    {
-                        string column = Sheet.DataTables.Columns[i].ColumnName;
-                        var mapColumns = new MapColumns
-                        {
-                            Item = column
-                        };
-                        myMapColumn.Add(mapColumns);
-                        for (int j = 0; j < RowCount; j++)
-                        {
-                            string value = Sheet.DataTables.Rows[j].ItemArray[i].ToString();
-                            var mapRow = new MapRow
-                            {
-                                Column = column,
-                                Value = value
-                            };
-                            myMapRow.Add(mapRow);
-                        }
-                    }
-
-                    var _MapData = new MapSheets
-                    {
-                        Name = Sheet.Name,
-                        NameMsg = Sheet.NameMsg,
-                        DataTables = null,
-                        CountRow = Sheet.DataTables.Rows.Count,
-                        Columns = myMapColumn,
-                        Rows = myMapRow
-                    };
-                    myMapSheets.Add(_MapData);
-                }
+                    Name = Sheets.Name,
+                    NameMsg = Sheets.NameMsg,
+                    DataTables = null,
+                    CountRow = Sheets.DataTables.Rows.Count,
+                    Columns = Sheets.Columns,
+                    Rows = Sheets.Rows
+                };
+                myMapSheets.Add(_MapData);
             }
 
             var _myMapData = new MapData
@@ -285,61 +260,43 @@ namespace Project_Settings.Models
             {
                 Project = new ObservableCollection<MapData>(myMapData)
             };
-            dataProject.Project = _myDataProject.Project;
-            dataProject.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
-            dataProject.flWhiteTheames = flWhiteTheames;
-            dataProject.flBlackTheames = flBlackTheames;
+            _DataProject.Project = _myDataProject.Project;
+            _DataProject.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
+            _DataProject.flWhiteTheames = flWhiteTheames;
+            _DataProject.flBlackTheames = flBlackTheames;
 
             var option = new JsonSerializerOptions
             {
                 WriteIndented = true
             };
 
-            using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.Write))
+            using (FileStream fs = new FileStream(SelectedFile, FileMode.OpenOrCreate, FileAccess.Write))
             {
-                byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes<DataProject>(dataProject, option);
-                await fs.WriteAsync(jsonUtf8Bytes).ConfigureAwait(NeedOpenFileAfterSave);
+                byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes<DataProject>(_DataProject, option);
+                await fs.WriteAsync(jsonUtf8Bytes).ConfigureAwait(flNeedOpenFileAfterSave);
             }
 
-            if (NeedOpenFileAfterSave) ReadMappingFileGridSheets(SelectedFile);
+            if (flNeedOpenFileAfterSave) OnCmdOpenFileDialogExecuted(SelectedFile);
         }
         #endregion
         #region Создаем конфиг
         /// <summary>
         /// Создаем новую конфигурацию
         /// </summary>
-        private async void CreateNewConfig()
+        private void CreateNewConfig()
         {
-            Thread myThread3 = new(CreateNewConfig);
-            myThread3.Start();
-            //SelectedSheets = new();
-            //MyMapSheets = new();
-            //MyDataProject = new();
-            //SelectedFile = "";
-            //TitleWindowsProject = "";
-            //flBlackTheames = false;
-            //flWhiteTheames = false;
-
-            DataProject JsonData = new();
-            string FilePath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
-            if (string.IsNullOrEmpty(FilePath)) return;
-
-            using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate))
-            {
-                JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
-            };
-
-            string[] subs = FilePath.Split('\\');
-            TitleWindowsProject = subs[subs.Length - 1];
-
-            DataRow _row;
-            ObservableCollection<MapData> MyMapData = new();
+            MyDataProject = new();
+            MyMapSheets = new();
+            SelectedSheets = new();
+            flBlackTheames = new();
+            flWhiteTheames = new();
 
             foreach (var Project in JsonData.Project)
             {
                 foreach (var Sheet in Project.Sheet)
                 {
                     DataTable _DataTable = new();
+                    DataRow _row;
                     foreach (var Column in Sheet.Columns)
                     {
                         _DataTable.Columns.Add(Column.Item);
@@ -375,6 +332,7 @@ namespace Project_Settings.Models
                 }
             }
 
+            ObservableCollection<MapData> MyMapData = new();
             var _MapData = new MapData
             {
                 Sheet = new ObservableCollection<MapSheets>(MyMapSheets)
