@@ -1,15 +1,9 @@
-﻿using Microsoft.Win32;
-using Project_Settings.Infrastructure.Commands;
+﻿using Project_Settings.Infrastructure.Commands;
 using Project_Settings.ViewModels.Default;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.IO;
 using System.Reflection;
-using System.Text.Json;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -17,7 +11,6 @@ namespace Project_Settings.ViewModels
 {
     public class MainWindowsViewModel : ViewModel
     {
-
         private readonly Application CurrApp = Application.Current;
 
         #region Контроль состояний
@@ -49,14 +42,12 @@ namespace Project_Settings.ViewModels
             set => Set(ref _NewSelectedSheetName, value);
         }
 
-
         private bool _ChangeApllication;
         public bool ChangeApllication
         {
             get => _ChangeApllication;
             set => Set(ref _ChangeApllication, value);
         }
-
 
         private string _myPath = Environment.CurrentDirectory;
         public string MyPath
@@ -390,251 +381,22 @@ namespace Project_Settings.ViewModels
         }
         #endregion
 
-        #region Набор данных для DataGrid
-
-        /// <summary>
-        /// Данные проекта
-        /// </summary>
-       
-        //public ObservableCollection<MapData> MyMapData { get; }
-
-        /// <summary>
-        /// Коллекция данных листов
-        /// </summary>
-        //public ObservableCollection<MapSheets> MyMapSheets { get; set; }
-        
-        /// <summary>
-        /// Данные выбранного листа
-        /// </summary>
-        
-
-        ///// <summary>
-        ///// Сохраняем данные
-        ///// </summary>
-        ///// <param name="fileName"></param>
-        ///// <param name="dt"></param>
-        //private async void WriteMappingFileGridSheets(string FilePath, DataProject _DataProject)
-        //{
-        //    if (string.IsNullOrEmpty(FilePath))
-        //    {
-        //        var dialog = new SaveFileDialog
-        //        {
-        //            Title = "Сохранение конфигурации",
-        //            Filter = "Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*",
-        //            InitialDirectory = Environment.CurrentDirectory,
-        //            RestoreDirectory = true
-        //        };
-        //        if (dialog.ShowDialog() != true) return;
-        //        FilePath = dialog.FileName;
-        //    }
-
-        //    if (!File.Exists(FilePath))
-        //    {
-        //        if (MessageBox.Show("Файл не найдет. Проверьте путь", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
-        //    }
-
-
-        //    DataProject dataProject = new();
-        //    ObservableCollection<MapData> myMapData = new();
-        //    ObservableCollection<MapSheets> myMapSheets = new();
-
-        //    foreach (var _Project in _DataProject.Project)
-        //    {
-        //        foreach (var Sheet in _Project.Sheet)
-        //        {
-        //            List<MapColumns> myMapColumn = new();
-        //            List<MapRow> myMapRow = new();
-        //            int ColumnCount = Sheet.DataTables.Columns.Count;
-        //            int RowCount = Sheet.DataTables.Rows.Count;
-
-        //            for (int i = 0; i < ColumnCount; i++)
-        //            {
-        //                string column = Sheet.DataTables.Columns[i].ColumnName;
-        //                var mapColumns = new MapColumns
-        //                {
-        //                    Item = column
-        //                };
-        //                myMapColumn.Add(mapColumns);
-        //                for (int j = 0; j < RowCount; j++)
-        //                {
-        //                    string value = Sheet.DataTables.Rows[j].ItemArray[i].ToString();
-        //                    var mapRow = new MapRow
-        //                    {
-        //                        Column = column,
-        //                        Value = value
-        //                    };
-        //                    myMapRow.Add(mapRow);
-        //                }
-        //            }
-
-        //            var _MapData = new MapSheets
-        //            {
-        //                Name = Sheet.Name,
-        //                NameMsg = Sheet.NameMsg,
-        //                DataTables = null,
-        //                CountRow = Sheet.DataTables.Rows.Count,
-        //                Columns = myMapColumn,
-        //                Rows = myMapRow
-        //            };
-        //            myMapSheets.Add(_MapData);
-        //        }
-        //    }
-
-        //    var _myMapData = new MapData
-        //    {
-        //        Sheet = new ObservableCollection<MapSheets>(myMapSheets)
-        //    };
-        //    myMapData.Add(_myMapData);
-        //    var _myDataProject = new DataProject
-        //    {
-        //        Project = new ObservableCollection<MapData>(myMapData)
-        //    };
-        //    dataProject.Project = _myDataProject.Project;
-        //    dataProject.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
-
-        //    dataProject.flWhiteTheames = flWhiteTheames;
-        //    dataProject.flBlackTheames = flBlackTheames;
-
-            
-        //    using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.Write))
-        //    {
-        //        byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(dataProject);
-        //        await fs.WriteAsync(jsonUtf8Bytes).ConfigureAwait(false);
-        //    }
-        //    //MyPath = FilePath;
-
-        //    //var options = new JsonSerializerOptions
-        //    //{
-        //    //    AllowTrailingCommas = true,
-        //    //    WriteIndented = true
-        //    //};
-        //    //byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(dataProject);
-        //    //File.WriteAllBytesAsync(FilePath, jsonUtf8Bytes);
-
-        //}
-
-        ///// <summary>
-        ///// Получаем данные
-        ///// </summary>
-        ///// <param name="fileName"></param>
-        ///// <returns></returns>
-        //private async void ReadMappingFileGridSheets(string FilePath)
-        //{
-        //    if (string.IsNullOrEmpty(FilePath)) return;
-        //    //if (!File.Exists(FilePath))
-        //    //{
-        //    //    var dialog = new OpenFileDialog
-        //    //    {
-        //    //        Title = "Загрузить конфигурацию",
-        //    //        Filter = "Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*",
-        //    //        InitialDirectory = Environment.CurrentDirectory,
-        //    //        RestoreDirectory = true
-        //    //    };
-        //    //    if (dialog.ShowDialog() != true) return;
-        //    //    FilePath = dialog.FileName;
-        //    //}
-        //    //MyPath = FilePath;
-
-
-        //    using FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate);
-        //    DataProject JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
-
-        //    //byte[] jsonUtf8Bytes = File.ReadAllBytes(FilePath);
-        //    //var readOnlySpan = new ReadOnlySpan<byte>(jsonUtf8Bytes);
-        //    //DataProject JsonData = JsonSerializer.Deserialize<DataProject>(readOnlySpan);
-
-        //    string[] subs = fs.Name.Split('\\');
-        //    MyTitle = subs[subs.Length-1];
-
-        //    DataRow _row;
-
-        //    foreach (var Project in JsonData.Project)
-        //    {
-        //        foreach (var Sheet in Project.Sheet)
-        //        {
-        //            DataTable _DataTable = new();
-        //            foreach (var Column in Sheet.Columns)
-        //            {
-        //                _DataTable.Columns.Add(Column.Item);
-        //            }
-
-        //            for (int i = 0; i < Sheet.CountRow; i++)
-        //            {
-        //                _row = _DataTable.NewRow();
-        //                _DataTable.Rows.Add(_row);
-        //            }
-
-        //            int j = 0;
-        //            string column = "";
-        //            foreach (var Row in Sheet.Rows)
-        //            {
-        //                if (column != Row.Column) { j = 0; }
-        //                column = Row.Column;
-
-        //                _row = _DataTable.Rows[j];
-        //                _row[column] = Row.Value;
-        //                j++;
-        //            }
-
-        //            var _MapSheets = new MapSheets
-        //            {
-        //                Columns = Sheet.Columns,
-        //                CountRow = Sheet.CountRow,
-        //                DataTables = _DataTable,
-        //                Name = Sheet.Name,
-        //                NameMsg = Sheet.NameMsg,
-        //                Rows = Sheet.Rows
-        //            };
-        //            MyMapSheets.Add(_MapSheets);
-        //        }
-        //    }
-        //    var _MapData = new MapData
-        //    {
-        //        Sheet = new ObservableCollection<MapSheets>(MyMapSheets)
-        //    };
-        //    MyMapData.Add(_MapData);
-        //    var _DataProject = new DataProject
-        //    {
-        //        Project = new ObservableCollection<MapData>(MyMapData),
-        //        SheetLastSelectedIntex = JsonData.SheetLastSelectedIntex,
-        //        flWhiteTheames = JsonData.flWhiteTheames,
-        //        flBlackTheames = JsonData.flBlackTheames
-
-        //    };
-        //    MyDataProject.Project = _DataProject.Project;
-        //    MyDataProject.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
-        //    MyDataProject.flWhiteTheames = _DataProject.flWhiteTheames;
-        //    MyDataProject.flBlackTheames = _DataProject.flBlackTheames;
-
-        //    SelectedSheets = MyMapSheets[MyDataProject.SheetLastSelectedIntex];
-
-        //    // Устновка темы в ссоотвествии с настройками
-        //    flWhiteTheames = MyDataProject.flWhiteTheames;
-        //    flBlackTheames = MyDataProject.flBlackTheames;
-        //    ChangeTheames();
-        //}
-        #endregion
-
         #region Инициализация данных
         public MainWindowsViewModel()
         {
-            // Чтение данных
+            // Данные проекта
             MyMapSheets = new();
-            //MyMapData = new();
             MyDataProject = new();
-            //ReadMappingFileGridSheets(MyPath);
 
-            // Создание команд
+            // Команды
             CmdSetBlackTheames = new RelayCommand(OnCmdSetBlackTheamesExecuted, CanCmdSetBlackTheamesExecute);
             CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
             CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
             CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
             CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
-            //CmdSaveProject = new RelayCommand(OnCmdSaveProjectExecuted, CanCmdSaveProjectExecute);
             CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
-            //CmdOpenFile = new RelayCommand(OnCmdOpenFileExecuted, CanCmdOpenFileExecute);
             CmdChangeSelectedSheetName = new RelayCommand(OnCmdChangeSelectedSheetNameExecuted, CanCmdChangeSelectedSheetNameExecute);
-            #endregion
         }
+        #endregion
     }
 }

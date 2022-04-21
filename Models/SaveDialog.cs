@@ -4,40 +4,41 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace Project_Settings.Models
 {
-    internal class SaveDialog : Freezable
+    public class SaveDialog : Freezable
     {
-        public static readonly DependencyProperty TitleCloseProperty = DependencyProperty.Register(
-            nameof(TitleClose), typeof(string), typeof(SaveDialog), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty TitleSaveProperty = DependencyProperty.Register(
+            nameof(TitleSave), typeof(string), typeof(SaveDialog), new PropertyMetadata(default(string)));
 
-        public static readonly DependencyProperty FilterCloseProperty = DependencyProperty.Register(
-            nameof(FilterClose), typeof(string), typeof(SaveDialog), new PropertyMetadata("Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*"));
+        public static readonly DependencyProperty FilterSaveProperty = DependencyProperty.Register(
+            nameof(FilterSave), typeof(string), typeof(SaveDialog), new PropertyMetadata("Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*"));
 
-        public static readonly DependencyProperty MyDataProjectCloseProperty = DependencyProperty.Register(
-            nameof(MyDataProjectClose), typeof(DataProject), typeof(SaveDialog), new PropertyMetadata(default(DataProject)));
+        public static readonly DependencyProperty MyDataProjectSaveProperty = DependencyProperty.Register(
+            nameof(MyDataProjectSave), typeof(DataProject), typeof(SaveDialog), new PropertyMetadata(default(DataProject)));
 
-        public static readonly DependencyProperty flBlackTheamesCloseProperty = DependencyProperty.Register(
-           nameof(flBlackTheamesClose), typeof(bool), typeof(SaveDialog), new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty flBlackTheamesSaveProperty = DependencyProperty.Register(
+           nameof(flBlackTheamesSave), typeof(bool), typeof(SaveDialog), new PropertyMetadata(default(bool)));
 
-        public static readonly DependencyProperty flWhiteTheamesCloseProperty = DependencyProperty.Register(
-           nameof(flWhiteTheamesClose), typeof(bool), typeof(SaveDialog), new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty flWhiteTheamesSaveProperty = DependencyProperty.Register(
+           nameof(flWhiteTheamesSave), typeof(bool), typeof(SaveDialog), new PropertyMetadata(default(bool)));
 
-        public string TitleClose { get => (string)GetValue(TitleCloseProperty); set => SetValue(TitleCloseProperty, value); }
-        public string FilterClose { get => (string)GetValue(FilterCloseProperty); set => SetValue(FilterCloseProperty, value); }
-        public DataProject MyDataProjectClose { get => (DataProject)GetValue(MyDataProjectCloseProperty); set => SetValue(MyDataProjectCloseProperty, value); }
-        public bool flBlackTheamesClose { get => (bool)GetValue(flBlackTheamesCloseProperty); set => SetValue(flBlackTheamesCloseProperty, value); }
-        public bool flWhiteTheamesClose { get => (bool)GetValue(flWhiteTheamesCloseProperty); set => SetValue(flWhiteTheamesCloseProperty, value); }
+        public static readonly DependencyProperty SelectedFileSaveProperty = DependencyProperty.Register(
+            nameof(SelectedFileSave), typeof(string), typeof(SaveDialog), new PropertyMetadata(default(string)));
+
+        public string TitleSave { get => (string)GetValue(TitleSaveProperty); set => SetValue(TitleSaveProperty, value); }
+        public string FilterSave { get => (string)GetValue(FilterSaveProperty); set => SetValue(FilterSaveProperty, value); }
+        public DataProject MyDataProjectSave { get => (DataProject)GetValue(MyDataProjectSaveProperty); set => SetValue(MyDataProjectSaveProperty, value); }
+        public bool flBlackTheamesSave { get => (bool)GetValue(flBlackTheamesSaveProperty); set => SetValue(flBlackTheamesSaveProperty, value); }
+        public bool flWhiteTheamesSave { get => (bool)GetValue(flWhiteTheamesSaveProperty); set => SetValue(flWhiteTheamesSaveProperty, value); }
+        public string SelectedFileSave { get => (string)GetValue(SelectedFileSaveProperty); set => SetValue(SelectedFileSaveProperty, value); }
 
         public ICommand CmdSaveFileDialog { get; }
-        private bool CanCmdSaveFileDialogExecute(object p) => true;
+        private bool CanCmdSaveFileDialogExecute(object p) => !string.IsNullOrEmpty(SelectedFileSave);
 
         private void OnCmdSaveFileDialogExecuted(object p)
         {
@@ -46,15 +47,15 @@ namespace Project_Settings.Models
             {
                 var dialog = new SaveFileDialog
                 {
-                    Title = TitleClose,
-                    Filter = FilterClose,
+                    Title = TitleSave,
+                    Filter = FilterSave,
                     RestoreDirectory = true,
                     InitialDirectory = Environment.CurrentDirectory
                 };
                 if (dialog.ShowDialog() != true) return;
                 filePath = dialog.FileName;
             }
-            WriteMappingFileGridSheets(filePath, MyDataProjectClose);
+            WriteMappingFileGridSheets(filePath, MyDataProjectSave);
         }
 
         protected override Freezable CreateInstanceCore()
@@ -64,7 +65,7 @@ namespace Project_Settings.Models
 
         public SaveDialog()
         {
-            MyDataProjectClose = new();
+            MyDataProjectSave = new();
             CmdSaveFileDialog = new RelayCommand(OnCmdSaveFileDialogExecuted, CanCmdSaveFileDialogExecute);
         }
 
@@ -75,29 +76,9 @@ namespace Project_Settings.Models
         /// < param name="dt"></param>
         private async void WriteMappingFileGridSheets(string FilePath, DataProject _DataProject)
         {
-            //if (string.IsNullOrEmpty(FilePath))
-            //{
-            //    var dialog = new SaveFileDialog
-            //    {
-            //        Title = "Сохранение конфигурации",
-            //        Filter = "Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*",
-            //        InitialDirectory = Environment.CurrentDirectory,
-            //        RestoreDirectory = true
-            //    };
-            //    if (dialog.ShowDialog() != true) return;
-            //    FilePath = dialog.FileName;
-            //}
-
-            //if (!File.Exists(FilePath))
-            //{
-            //    if (MessageBox.Show("Файл не найдет. Проверьте путь", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
-            //}
-
-
             DataProject dataProject = new();
             ObservableCollection<MapData> myMapData = new();
             ObservableCollection<MapSheets> myMapSheets = new();
-
             foreach (var _Project in _DataProject.Project)
             {
                 foreach (var Sheet in _Project.Sheet)
@@ -145,33 +126,21 @@ namespace Project_Settings.Models
                 Sheet = new ObservableCollection<MapSheets>(myMapSheets)
             };
             myMapData.Add(_myMapData);
+
             var _myDataProject = new DataProject
             {
                 Project = new ObservableCollection<MapData>(myMapData)
             };
             dataProject.Project = _myDataProject.Project;
             dataProject.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
-
-            dataProject.flWhiteTheames = flWhiteTheamesClose;
-            dataProject.flBlackTheames = flBlackTheamesClose;
-
+            dataProject.flWhiteTheames = flWhiteTheamesSave;
+            dataProject.flBlackTheames = flBlackTheamesSave;
 
             using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(dataProject);
                 await fs.WriteAsync(jsonUtf8Bytes).ConfigureAwait(false);
             }
-            //MyPath = FilePath;
-
-            //var options = new JsonSerializerOptions
-            //{
-            //    AllowTrailingCommas = true,
-            //    WriteIndented = true
-            //};
-            //byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(dataProject);
-            //File.WriteAllBytesAsync(FilePath, jsonUtf8Bytes);
-
-
         }
     }
 }

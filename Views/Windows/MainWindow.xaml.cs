@@ -1,5 +1,4 @@
-﻿using Project_Settings.ViewModels;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 
 namespace Project_Settings
@@ -9,7 +8,6 @@ namespace Project_Settings
         public MainWindow()
         {
             InitializeComponent();
-            //DataContext = new MainWindowsViewModel();
         }
 
         private void Window_Closing(object Sender, CancelEventArgs e)
@@ -20,17 +18,6 @@ namespace Project_Settings
                 e.Cancel = true;
                 return;
             }
-
-            //bool NoSave = MessageBox.Show("Сохранить проект?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes;
-            //if (!NoSave)
-            //{
-
-            //}
-
-            //if (MessageBox.Show("Сохранить проект?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-            //{
-            //    Application.Current.Shutdown();
-            //}
         }
     }
 }

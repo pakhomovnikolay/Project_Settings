@@ -16,7 +16,7 @@
     <Window.Resources>
         <m:OpenDialog x:Key="OpenFileDialog"
                       TitleOpen="Открыть файл"
-                      SelectedFile="{Binding Path=MyPath, Mode=OneWayToSource}"
+                      SelectedFileOpen="{Binding Path=MyPath, Mode=OneWayToSource}"
                       TitleWindowsProject="{Binding Path=MyTitle, Mode=OneWayToSource}"
                       MyDataProjectOpen="{Binding Path=MyDataProject, Mode=OneWayToSource}"
                       MyMapSheets ="{Binding Path=MyMapSheets, Mode=OneWayToSource}"
@@ -25,11 +25,11 @@
                       flWhiteTheamesOpen="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"
                       />
         <m:SaveDialog x:Key="SaveFileDialog"
-                      TitleClose="Сохранить файл"
-                      MyDataProjectClose="{Binding Path=MyDataProject, Mode=OneWay}"
-                      flBlackTheamesClose="{Binding Path=flBlackTheames, Mode=OneWay}"
-                      flWhiteTheamesClose="{Binding Path=flWhiteTheames, Mode=OneWay}"
-
+                      TitleSave="Сохранить файл"
+                      MyDataProjectSave="{Binding Path=MyDataProject, Mode=OneWay}"
+                      flBlackTheamesSave="{Binding Path=flBlackTheames, Mode=OneWay}"
+                      flWhiteTheamesSave="{Binding Path=flWhiteTheames, Mode=OneWay}"
+                      SelectedFileSave="{Binding Path=MyPath, Mode=OneWay}"
                       />
     </Window.Resources>
     

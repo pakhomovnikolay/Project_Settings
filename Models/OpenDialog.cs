@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using Project_Settings.Infrastructure.Commands;
-using Project_Settings.ViewModels.Default;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -11,31 +10,16 @@ using System.Windows.Input;
 
 namespace Project_Settings.Models
 {
-
-    //public DataProject MyDataProject { get; }
-    //// public ObservableCollection<MapData> MyMapData { get; }
-
-    ///// <summary>
-    ///// Коллекция данных листов
-    ///// </summary>
-    //public ObservableCollection<MapSheets> MyMapSheets { get; }
-
-    //private bool _flBlackTheames = false;
-    //private bool _flWhiteTheames = false;
-
-    //public ObservableCollection<MapData> MyMapData { get; }
-
     public class OpenDialog : Freezable
     {
-
         public static readonly DependencyProperty TitleOpenProperty = DependencyProperty.Register(
             nameof(TitleOpen), typeof(string), typeof(OpenDialog), new PropertyMetadata(default(string)));
 
         public static readonly DependencyProperty FilterOpenProperty = DependencyProperty.Register(
             nameof(FilterOpen), typeof(string), typeof(OpenDialog), new PropertyMetadata("Текстовые файлы (*.json)|*.json|Все файлы (*.*)|*.*"));
 
-        public static readonly DependencyProperty SelectedFileProperty = DependencyProperty.Register(
-            nameof(SelectedFile), typeof(string), typeof(OpenDialog), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty SelectedFileOpenProperty = DependencyProperty.Register(
+            nameof(SelectedFileOpen), typeof(string), typeof(OpenDialog), new PropertyMetadata(default(string)));
 
         public static readonly DependencyProperty TitleWindowsProjectProperty = DependencyProperty.Register(
             nameof(TitleWindowsProject), typeof(string), typeof(OpenDialog), new PropertyMetadata(default(string)));
@@ -57,7 +41,7 @@ namespace Project_Settings.Models
 
         public string TitleOpen { get => (string)GetValue(TitleOpenProperty); set => SetValue(TitleOpenProperty, value); }
         public string FilterOpen { get => (string)GetValue(FilterOpenProperty); set => SetValue(FilterOpenProperty, value); }
-        public string SelectedFile { get => (string)GetValue(SelectedFileProperty); set => SetValue(SelectedFileProperty, value); }
+        public string SelectedFileOpen { get => (string)GetValue(SelectedFileOpenProperty); set => SetValue(SelectedFileOpenProperty, value); }
         public string TitleWindowsProject { get => (string)GetValue(TitleWindowsProjectProperty); set => SetValue(TitleWindowsProjectProperty, value); }
         public DataProject MyDataProjectOpen { get => (DataProject)GetValue(MyDataProjectOpenProperty); set => SetValue(MyDataProjectOpenProperty, value); }
 
@@ -71,10 +55,8 @@ namespace Project_Settings.Models
         public bool flBlackTheamesOpen { get => (bool)GetValue(flBlackTheamesOpenProperty); set => SetValue(flBlackTheamesOpenProperty, value); }
         public bool flWhiteTheamesOpen { get => (bool)GetValue(flWhiteTheamesOpenProperty); set => SetValue(flWhiteTheamesOpenProperty, value); }
 
-
         public ICommand CmdOpenFileDialog { get; }
         private bool CanCmdOpenFileDialogExecute(object p) => true;
-
         private void OnCmdOpenFileDialogExecuted(object p)
         {
             var dialog = new OpenFileDialog
@@ -85,8 +67,8 @@ namespace Project_Settings.Models
                 InitialDirectory = Environment.CurrentDirectory
             };
             if (dialog.ShowDialog() != true) return;
-            SelectedFile = dialog.FileName;
-            ReadMappingFileGridSheets(SelectedFile);
+            SelectedFileOpen = dialog.FileName;
+            ReadMappingFileGridSheets(SelectedFileOpen);
         }
 
         protected override Freezable CreateInstanceCore()
@@ -96,7 +78,6 @@ namespace Project_Settings.Models
 
         public OpenDialog()
         {
-            
             CmdOpenFileDialog = new RelayCommand(OnCmdOpenFileDialogExecuted, CanCmdOpenFileDialogExecute);
         }
 
@@ -105,18 +86,22 @@ namespace Project_Settings.Models
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        private async void ReadMappingFileGridSheets(string FilePath)
+        public async void ReadMappingFileGridSheets(string FilePath)
         {
             MyMapSheets = new();
             MyDataProjectOpen = new();
-            //MyMapData = new();
+            DataProject JsonData = new();
+            string file_path;
             if (string.IsNullOrEmpty(FilePath)) return;
+            using (FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate))
+            {
+                JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
+                file_path = fs.Name;
+            };
 
-            using FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate);
-            DataProject JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
-
-            string[] subs = fs.Name.Split('\\');
+            string[] subs = file_path.Split('\\');
             TitleWindowsProject = subs[subs.Length - 1];
+
 
             DataRow _row;
             ObservableCollection<MapData> MyMapData = new();
@@ -161,18 +146,19 @@ namespace Project_Settings.Models
                     MyMapSheets.Add(_MapSheets);
                 }
             }
+
             var _MapData = new MapData
             {
                 Sheet = new ObservableCollection<MapSheets>(MyMapSheets)
             };
             MyMapData.Add(_MapData);
+
             var _DataProject = new DataProject
             {
                 Project = new ObservableCollection<MapData>(MyMapData),
                 SheetLastSelectedIntex = JsonData.SheetLastSelectedIntex,
                 flWhiteTheames = JsonData.flWhiteTheames,
                 flBlackTheames = JsonData.flBlackTheames
-
             };
             MyDataProjectOpen.Project = _DataProject.Project;
             MyDataProjectOpen.SheetLastSelectedIntex = _DataProject.SheetLastSelectedIntex;
@@ -183,4 +169,5 @@ namespace Project_Settings.Models
             flBlackTheamesOpen = MyDataProjectOpen.flBlackTheames;
         }
     }
+
 }
