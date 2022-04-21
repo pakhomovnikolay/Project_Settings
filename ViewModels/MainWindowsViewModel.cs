@@ -1,4 +1,5 @@
 ﻿using Project_Settings.Infrastructure.Commands;
+using Project_Settings.Models;
 using Project_Settings.ViewModels.Default;
 using System;
 using System.Collections.ObjectModel;
@@ -387,11 +388,12 @@ namespace Project_Settings.ViewModels
             CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
             //CmdCreateNewProject = new RelayCommand(OnCmdCreateNewProjectExecuted, CanCmdCreateNewProjectExecute);
 
-            
+
             //CmdMaximized = new RelayCommand(OnCmdMaximizedExecuted, CanCmdMaximizedExecute);
             //CmdMinimized = new RelayCommand(OnCmdMinimizedExecuted, CanCmdMinimizedExecute);
             //CmdAddRow = new RelayCommand(OnCmdAddRowExecuted, CanCmdAddRowExecute);
             //CmdChangeSelectedSheetName = new RelayCommand(OnCmdChangeSelectedSheetNameExecuted, CanCmdChangeSelectedSheetNameExecute);
+
         }
         #endregion
     }
