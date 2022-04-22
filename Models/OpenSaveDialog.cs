@@ -118,8 +118,9 @@ namespace Project_Settings.Models
             using (FileStream fs = new FileStream(flAfterSave, FileMode.OpenOrCreate))
             {
                 JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
+                SelectedFile = fs.Name;
             };
-            SelectedFile = flAfterSave;
+            //SelectedFile = flAfterSave;
             flNeedOpenFileAfterSave = false;
             ReadMappingFileGridSheets();
         }
@@ -129,7 +130,7 @@ namespace Project_Settings.Models
         private void OnCmdSaveFileDialogExecuted(object p)
         {
             SelectedFile = p as string;
-            flNeedOpenFileAfterSave = SelectedFile == Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
+            flNeedOpenFileAfterSave = (SelectedFile == Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json") || string.IsNullOrEmpty(SelectedFile);
             if (string.IsNullOrEmpty(SelectedFile) || flNeedOpenFileAfterSave)
             {
                 var dialog = new SaveFileDialog
@@ -177,28 +178,20 @@ namespace Project_Settings.Models
                         _DataTable.Rows.Add(_row);
                     }
 
-                    //string column = "";
-                    //int j = 0;
-                    //bool flTmp = false;
-                    //foreach (var Column in Sheet.Columns)
-                    //{
-                    //    if (column != Column.Name)
-                    //    {
-                    //        column = Column.Name;
-                    //        j = 0;
-                    //        flTmp = false;
-                    //        for (int i = 0; i < _DataTable.Columns.Count; i++)
-                    //        {
-                    //            if (Column.Name == _DataTable.Columns[i].ColumnName) flTmp = true;
-                    //        }
-                    //    }
-                    //    if (!flTmp) _DataTable.Columns.Add(Column.Name);
-
-                        
-                    //    _row = _DataTable.Rows[j];
-                    //    _row[column] = Column.Value;
-                    //    j++;
-                    //}
+                    string column = "";
+                    int j = 0;
+                    for (int i = 0; i < Sheet.Columns.Count; i++)
+                    {
+                        if (column != Sheet.Columns[i].Name)
+                        {
+                            j = 0;
+                            column = Sheet.Columns[i].Name;
+                            _DataTable.Columns.Add(column);
+                        }
+                        _row = _DataTable.Rows[j];
+                        _row[column] = Sheet.Columns[i].Value;
+                        j++;
+                    }
 
                     var _MapSheets = new MapSheets
                     {
@@ -233,21 +226,19 @@ namespace Project_Settings.Models
 
             foreach (var Sheets in MyMapSheets)
             {
-                for (int i = 0; i < Sheets.DataTables.Rows.Count; i++)
+                for (int i = 0; i < Sheets.DataTables.Columns.Count; i++)
                 {
-                    int j = 0;
-                    foreach (var ItemArray in Sheets.DataTables.Rows[i].ItemArray)
+                    for (int j = 0; j < Sheets.DataTables.Rows.Count; j++)
                     {
                         var _MapColumns = new MapColumns
                         {
-                            Name = Sheets.Columns[j].Name,
-                            Value = ItemArray.ToString()
+                            Name = Sheets.DataTables.Columns[i].ColumnName,
+                            Value = Sheets.DataTables.Rows[j].ItemArray[i].ToString()
                         };
                         myMapColumns.Add(_MapColumns);
-                        j++;
                     }
-
                 }
+
                 var _MapData = new MapSheets
                 {
                     Name = Sheets.Name,
@@ -279,13 +270,15 @@ namespace Project_Settings.Models
                 WriteIndented = true
             };
 
+            bool _flNeedOpenFileAfterSave = flNeedOpenFileAfterSave;
+            string _SelectedFile = SelectedFile;
             using (FileStream fs = new FileStream(SelectedFile, FileMode.Create, FileAccess.Write))
             {
                 byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes<DataProject>(_DataProject, option);
                 await fs.WriteAsync(jsonUtf8Bytes).ConfigureAwait(flNeedOpenFileAfterSave);
             }
 
-            if (flNeedOpenFileAfterSave) OnCmdOpenFileDialogExecuted(SelectedFile);
+            if (_flNeedOpenFileAfterSave) OnCmdOpenFileDialogExecuted(_SelectedFile);
         }
         #endregion
 
