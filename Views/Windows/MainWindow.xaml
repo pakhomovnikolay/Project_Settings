@@ -47,7 +47,6 @@
                 <MenuItem Header="Сохранить" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}" CommandParameter="{Binding Path=MyPath}"/>
                 <!--<MenuItem Header="Сохранить" Command="{Binding Path=CmdSaveProject}" CommandParameter="{Binding Path=MyPath}"/>-->
                 <MenuItem Header="Сохранить как" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}"/>
-                <MenuItem Header="Добавить строку" IsEnabled="False"/>
                 <Separator/>
                 <MenuItem Header="Настройки" IsEnabled="False"/>
             </MenuItem>
@@ -91,19 +90,19 @@
                 </Grid.ColumnDefinitions>
                 <GroupBox Grid.Column="0" DockPanel.Dock="Left" Header="Список листов" BorderBrush="{DynamicResource ResultBorderBrush}">
                     <DockPanel>
-                        <Grid DockPanel.Dock="Bottom" Height="25">
+                        <Grid DockPanel.Dock="Bottom" Height="30">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="120"/>
                             </Grid.ColumnDefinitions>
-                            <Button Width="115" Content="Добавить вкладку" Command="{Binding Path=CmdCreateNewList}">
+                            <Button Width="115" Height="25" Margin="0,5,0,0" Content="Добавить вкладку" Command="{Binding Path=CmdCreateNewList}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="2"/>
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Width="115" Grid.Column="1" Margin="0,0,5,0" Content="Удалить вкладку">
+                            <Button Width="115" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="Удалить вкладку" Command="{Binding Path=CmdRemoveSelectedList}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="2"/>
@@ -111,10 +110,12 @@
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        <ListBox ItemsSource="{Binding Path=MyMapSheets}" SelectedItem="{Binding Path=SelectedSheets}" SelectedIndex="{Binding Path=MyDataProject.SheetLastSelectedIntex}">
+                        <ListBox ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=MyMapSheets}"
+                                 SelectedItem="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets}"
+                                 SelectedIndex="{Binding Path=MyDataProject.SheetLastSelectedIntex}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name, Mode=TwoWay}"/>
+                                    <TextBlock Text="{Binding Path=Name}"/>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -125,12 +126,42 @@
                     <GroupBox.Header>
                         <TextBlock Text="{Binding Path=SelectedSheets.Name, StringFormat=Выбраный лист - {0}, FallbackValue='Данные листа', TargetNullValue='Группа не выбрана'}"/>
                     </GroupBox.Header>
-                    <DataGrid x:Name="MyDataGrid" IsReadOnly="False"
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Bottom" Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="120"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Width="115" Height="25" Margin="0,5,0,0"  Content="Добавить строку" Command="{Binding Path=CmdAddRowList}">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="2"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <Button Width="115" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="Удалить строку" Command="{Binding Path=CmdRemoveSelectedRowList}">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="2"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                        </Grid>
+                        <DataGrid x:Name="MyDataGrid"
+                                  ItemsSource="{Binding AsyncState=SelectedSheets.DataTables, IsAsync=True, Path=SelectedSheets.DataTables}"
                                   BorderBrush="{DynamicResource ResultBorderBrush}"
                                   Background="{DynamicResource ResultBackground}"
-                                  AutoGenerateColumns="True"
-                                  ItemsSource="{Binding Path=SelectedSheets.DataTables}">
-                    </DataGrid>
+                                  BorderThickness="0"
+                                  EnableRowVirtualization="True"
+                                  EnableColumnVirtualization="True"
+                                  VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                                  VirtualizingPanel.IsContainerVirtualizable="True"
+                                  VirtualizingPanel.ScrollUnit="Pixel"
+                                  VirtualizingPanel.VirtualizationMode="Recycling"
+                                  VirtualizingPanel.IsVirtualizing="True"
+                                  ScrollViewer.CanContentScroll="True">
+                        </DataGrid>
+                    </DockPanel>
                 </GroupBox>
             </Grid>
         </DockPanel>

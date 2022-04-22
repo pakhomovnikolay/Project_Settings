@@ -7,7 +7,10 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -24,9 +27,19 @@ namespace Project_Settings.ViewModels
             CmdSetWhiteTheames = new RelayCommand(OnCmdSetWhiteTheamesExecuted, CanCmdSetWhiteTheamesExecute);
             CmdCloseApp = new RelayCommand(OnCmdCloseAppExecuted, CanCmdCloseAppExecute);
             CmdCreateNewList = new RelayCommand(OnCmdCreateNewListExecuted, CanCmdCreateNewListExecute);
+            CmdRemoveSelectedList = new RelayCommand(OnCmdRemoveSelectedListExecuted, CanCmdRemoveSelectedListExecute);
+            CmdAddRowList = new RelayCommand(OnCmdAddRowListExecuted, CanCmdAddRowListExecute);
+            CmdRemoveSelectedRowList = new RelayCommand(OnCmdRemoveSelectedRowListExecuted, CanCmdRemoveSelectedRowListExecute);
         }
 
         #region Параметры
+        private DataGrid _MyDataGrid = new();
+        public DataGrid MyDataGrid
+        {
+            get => _MyDataGrid;
+            set => Set(ref _MyDataGrid, value);
+        }
+
         private MapSheets _SelectedSheets = new();
         public MapSheets SelectedSheets
         {
@@ -57,7 +70,7 @@ namespace Project_Settings.ViewModels
         }
 
 
-        private string _myPath = Environment.CurrentDirectory;
+        private string _myPath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
         public string MyPath
         {
             get => _myPath;
@@ -177,34 +190,97 @@ namespace Project_Settings.ViewModels
         #endregion
 
         #region Команды
-
-
+        /// <summary>
+        /// Команда на содание новой вкладке в текущем проектк
+        /// </summary>
         public ICommand CmdCreateNewList { get; }
-        private bool CanCmdCreateNewListExecute(object p) => true;
+        private bool CanCmdCreateNewListExecute(object p) => !string.IsNullOrEmpty(MyPath);
         private async void OnCmdCreateNewListExecuted(object p)
         {
-            if (!File.Exists(MyPath)) return;
-
-            using (FileStream fs = new FileStream(MyPath, FileMode.OpenOrCreate))
+            string DefaultPath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
+            using (FileStream fs = new FileStream(DefaultPath, FileMode.OpenOrCreate))
             {
                 JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
             };
             CreateNewList();
         }
 
+        /// <summary>
+        /// Команда на удаление выделеной вкладки текущего проекта
+        /// </summary>
+        public ICommand CmdRemoveSelectedList { get; }
+        private bool CanCmdRemoveSelectedListExecute(object p) => !string.IsNullOrEmpty(MyPath);
+        private void OnCmdRemoveSelectedListExecuted(object p)
+        {
+            int index = MyMapSheets.IndexOf(SelectedSheets);
+            if (!File.Exists(MyPath) || (index < 0)) return;
+            MyMapSheets.Remove(SelectedSheets);
 
+            if (index > 0) index -= 1;
+            if (MyMapSheets.Count > 0) SelectedSheets = MyMapSheets[index];
+        }
 
         /// <summary>
-        /// Команда добавить строку
+        /// Команда добавления новых строк (3 строки за одну команду)
         /// </summary>
-        //public ICommand CmdChangeSelectedSheetName { get; }
+        public ICommand CmdAddRowList { get; }
+        private bool CanCmdAddRowListExecute(object p) => !string.IsNullOrEmpty(MyPath);
+        private void OnCmdAddRowListExecuted(object p)
+        {
+            int index = MyMapSheets.IndexOf(SelectedSheets);
+            if (index > 0)
+            {
+                DataRow _row;
+                for (int i = 0; i < 3; i++)
+                {
+                    _row = SelectedSheets.DataTables.NewRow();
+                    SelectedSheets.DataTables.Rows.Add(_row);
+                }
 
-        //private bool CanCmdChangeSelectedSheetNameExecute(object p) => true;
+                for (int i = 0; i < SelectedSheets.DataTables.Columns.Count; i++)
+                {
+                    var _MapColumns = new MapColumns
+                    {
+                        Name = SelectedSheets.DataTables.Columns[i].ColumnName,
+                        Value = ""
+                    };
+                    SelectedSheets.Columns.Add(_MapColumns);
+                }
+            }
 
-        //private void OnCmdChangeSelectedSheetNameExecuted(object p)
-        //{
-        //    //SelectedSheets.Name = NewSelectedSheetName;
-        //}
+            
+        }
+
+        /// <summary>
+        /// Команда удаления выделынных строк
+        /// </summary>
+        public ICommand CmdRemoveSelectedRowList { get; }
+        private bool CanCmdRemoveSelectedRowListExecute(object p) => true;
+        private void OnCmdRemoveSelectedRowListExecuted(object p)
+        {
+            //var dg = MyDataGrid;
+
+            //SelectedSheets.DataTables.DataSet;
+
+
+
+            //DataRow _row;
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    _row = SelectedSheets.DataTables.NewRow();
+            //    SelectedSheets.DataTables.Rows.Add(_row);
+            //}
+
+            //for (int i = 0; i < SelectedSheets.DataTables.Columns.Count; i++)
+            //{
+            //    var _MapColumns = new MapColumns
+            //    {
+            //        Name = SelectedSheets.DataTables.Columns[i].ColumnName,
+            //        Value = ""
+            //    };
+            //    SelectedSheets.Columns.Add(_MapColumns);
+            //}
+        }
 
 
 
@@ -269,36 +345,6 @@ namespace Project_Settings.ViewModels
         //    //MyDataGridItems[index] = SelectedSheets;
         //    //SelectedSheets = MyDataGridItems[index];
         //    //MySheetsConfig.Sheet[index] = SelectedSheets;
-        //}
-
-        /// <summary>
-        /// Команда сохранить проект
-        /// </summary>
-        //public ICommand CmdSaveProject { get; }
-
-        //private bool CanCmdSaveProjectExecute(object p) => !string.IsNullOrEmpty(MyPath);
-
-        //private void OnCmdSaveProjectExecuted(object p)
-        //{
-        //    WriteMappingFileGridSheets(MyPath, MyDataProject);
-        //}
-
-        /// <summary>
-        /// Команда октрыть проект
-        /// </summary>
-        //public ICommand CmdOpenFile { get; }
-
-        //private bool CanCmdOpenFileExecute(object p) => true;
-
-        //private void OnCmdOpenFileExecuted(object p)
-        //{
-        //    if (MyDataProject.Project != null)
-        //    {
-        //        MyDataProject.Project.Clear();
-        //        MyMapSheets.Clear();
-        //        MyMapData.Clear();
-        //    }
-        //    ReadMappingFileGridSheets(MyPath);
         //}
 
 
@@ -380,25 +426,21 @@ namespace Project_Settings.ViewModels
                 {
                     DataTable _DataTable = new();
                     DataRow _row;
-                    foreach (var Column in Sheet.Columns)
-                    {
-                        _DataTable.Columns.Add(Column.Item);
-                    }
-
                     for (int i = 0; i < Sheet.CountRow; i++)
                     {
                         _row = _DataTable.NewRow();
                         _DataTable.Rows.Add(_row);
                     }
 
-                    int j = 0;
+
                     string column = "";
-                    foreach (var Row in Sheet.Rows)
+                    int j = 0;
+                    foreach (var Column in Sheet.Columns)
                     {
-                        if (column != Row.Column) { j = 0; }
-                        column = Row.Column;
+                        if (column != Column.Name) { _DataTable.Columns.Add(Column.Name); j = 0; }
+                        column = Column.Name;
                         _row = _DataTable.Rows[j];
-                        _row[column] = Row.Value;
+                        _row[column] = Column.Value;
                         j++;
                     }
 
@@ -409,11 +451,11 @@ namespace Project_Settings.ViewModels
                         DataTables = _DataTable,
                         Name = Sheet.Name + (MyMapSheets.Count + 1).ToString(),
                         NameMsg = Sheet.NameMsg,
-                        Rows = Sheet.Rows
                     };
                     MyMapSheets.Add(_MapSheets);
                 }
             }
+            SelectedSheets = MyMapSheets[MyMapSheets.Count - 1];
         }
 
         private void ChangeTheames()

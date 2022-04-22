@@ -29,17 +29,11 @@ namespace Project_Settings.Models
         public int CountRow { get; set; }
         public DataTable DataTables { get; set; }
         public IList<MapColumns> Columns { get; set; }
-        public IList<MapRow> Rows { get; set; }
 
     }
     public class MapColumns
     {
-        public string Item { get; set; }
-    }
-
-    public class MapRow
-    {
-        public string Column { get; set; }
+        public string Name { get; set; }
         public string Value { get; set; }
     }
 }
