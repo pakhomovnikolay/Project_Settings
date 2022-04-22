@@ -90,6 +90,7 @@ namespace Project_Settings.ViewModels
             get => _myTitle;
             set => Set(ref _myTitle, value);
         }
+        #endregion
 
         #region Смена темы
         private bool _flBlackTheames = false;
@@ -185,8 +186,7 @@ namespace Project_Settings.ViewModels
             set => Set(ref _ResultBorderBrushListBox, value);
         }
         #endregion
-        #endregion
-
+        
         #region Команды
         /// <summary>
         /// Команда на содание новой вкладке в текущем проектк
@@ -427,7 +427,6 @@ namespace Project_Settings.ViewModels
                         _row = _DataTable.NewRow();
                         _DataTable.Rows.Add(_row);
                     }
-
 
                     string column = "";
                     int j = 0;

@@ -118,9 +118,8 @@ namespace Project_Settings.Models
             using (FileStream fs = new FileStream(flAfterSave, FileMode.OpenOrCreate))
             {
                 JsonData = await JsonSerializer.DeserializeAsync<DataProject>(fs).ConfigureAwait(true);
-                SelectedFile = fs.Name;
             };
-            //SelectedFile = flAfterSave;
+            SelectedFile = flAfterSave;
             flNeedOpenFileAfterSave = false;
             ReadMappingFileGridSheets();
         }
