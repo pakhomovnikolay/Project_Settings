@@ -177,16 +177,28 @@ namespace Project_Settings.Models
                         _DataTable.Rows.Add(_row);
                     }
 
-                    string column = "";
-                    int j = 0;
-                    foreach (var Column in Sheet.Columns)
-                    {
-                        if (column != Column.Name) { _DataTable.Columns.Add(Column.Name); j = 0; }
-                        column = Column.Name;
-                        _row = _DataTable.Rows[j];
-                        _row[column] = Column.Value;
-                        j++;
-                    }
+                    //string column = "";
+                    //int j = 0;
+                    //bool flTmp = false;
+                    //foreach (var Column in Sheet.Columns)
+                    //{
+                    //    if (column != Column.Name)
+                    //    {
+                    //        column = Column.Name;
+                    //        j = 0;
+                    //        flTmp = false;
+                    //        for (int i = 0; i < _DataTable.Columns.Count; i++)
+                    //        {
+                    //            if (Column.Name == _DataTable.Columns[i].ColumnName) flTmp = true;
+                    //        }
+                    //    }
+                    //    if (!flTmp) _DataTable.Columns.Add(Column.Name);
+
+                        
+                    //    _row = _DataTable.Rows[j];
+                    //    _row[column] = Column.Value;
+                    //    j++;
+                    //}
 
                     var _MapSheets = new MapSheets
                     {
@@ -217,16 +229,32 @@ namespace Project_Settings.Models
             DataProject _DataProject = new();
             ObservableCollection<MapData> myMapData = new();
             ObservableCollection<MapSheets> myMapSheets = new();
+            ObservableCollection<MapColumns> myMapColumns = new();
 
             foreach (var Sheets in MyMapSheets)
             {
+                for (int i = 0; i < Sheets.DataTables.Rows.Count; i++)
+                {
+                    int j = 0;
+                    foreach (var ItemArray in Sheets.DataTables.Rows[i].ItemArray)
+                    {
+                        var _MapColumns = new MapColumns
+                        {
+                            Name = Sheets.Columns[j].Name,
+                            Value = ItemArray.ToString()
+                        };
+                        myMapColumns.Add(_MapColumns);
+                        j++;
+                    }
+
+                }
                 var _MapData = new MapSheets
                 {
                     Name = Sheets.Name,
                     NameMsg = Sheets.NameMsg,
                     DataTables = null,
                     CountRow = Sheets.DataTables.Rows.Count,
-                    Columns = Sheets.Columns,
+                    Columns = new ObservableCollection<MapColumns>(myMapColumns)
                 };
                 myMapSheets.Add(_MapData);
             }

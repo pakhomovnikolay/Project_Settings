@@ -7,8 +7,6 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -212,12 +210,12 @@ namespace Project_Settings.ViewModels
         private bool CanCmdRemoveSelectedListExecute(object p) => !string.IsNullOrEmpty(MyPath);
         private void OnCmdRemoveSelectedListExecuted(object p)
         {
+            int count = MyMapSheets.Count;
             int index = MyMapSheets.IndexOf(SelectedSheets);
-            if (!File.Exists(MyPath) || (index < 0)) return;
-            MyMapSheets.Remove(SelectedSheets);
-
+            if (!File.Exists(MyPath) || (count < 2)) return;
             if (index > 0) index -= 1;
-            if (MyMapSheets.Count > 0) SelectedSheets = MyMapSheets[index];
+            MyMapSheets.Remove(SelectedSheets);
+            SelectedSheets = MyMapSheets[index];
         }
 
         /// <summary>
@@ -228,27 +226,25 @@ namespace Project_Settings.ViewModels
         private void OnCmdAddRowListExecuted(object p)
         {
             int index = MyMapSheets.IndexOf(SelectedSheets);
-            if (index > 0)
+            if (index < 0) return;
+            DataRow _row;
+            for (int i = 0; i < 3; i++)
             {
-                DataRow _row;
-                for (int i = 0; i < 3; i++)
-                {
-                    _row = SelectedSheets.DataTables.NewRow();
-                    SelectedSheets.DataTables.Rows.Add(_row);
-                }
-
-                for (int i = 0; i < SelectedSheets.DataTables.Columns.Count; i++)
-                {
-                    var _MapColumns = new MapColumns
-                    {
-                        Name = SelectedSheets.DataTables.Columns[i].ColumnName,
-                        Value = ""
-                    };
-                    SelectedSheets.Columns.Add(_MapColumns);
-                }
+                _row = SelectedSheets.DataTables.NewRow();
+                SelectedSheets.DataTables.Rows.Add(_row);
             }
 
-            
+            for (int i = 0; i < SelectedSheets.DataTables.Columns.Count; i++)
+            {
+                var _MapColumns = new MapColumns
+                {
+                    Name = SelectedSheets.DataTables.Columns[i].ColumnName,
+                    Value = ""
+                };
+                SelectedSheets.Columns.Add(_MapColumns);
+            }
+            MyMapSheets[index] = SelectedSheets;
+            SelectedSheets = MyMapSheets[index];
         }
 
         /// <summary>

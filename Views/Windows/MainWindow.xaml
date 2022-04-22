@@ -20,7 +20,7 @@
                           SelectedFile="{Binding Path=MyPath, Mode=OneWayToSource}"
                           TitleWindowsProject="{Binding Path=MyTitle, Mode=OneWayToSource}"
                           MyDataProject="{Binding Path=MyDataProject, Mode=OneWayToSource}"
-                          MyMapSheets="{Binding Path=MyMapSheets, Mode=OneWayToSource}"
+                          MyMapSheets="{Binding Path=MyMapSheets, Mode=TwoWay}"
                           SelectedSheets="{Binding Path=SelectedSheets, Mode=OneWayToSource}"
                           flBlackTheames="{Binding Path=flBlackTheames, Mode=OneWayToSource}"
                           flWhiteTheames="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"/>
@@ -92,20 +92,20 @@
                     <DockPanel>
                         <Grid DockPanel.Dock="Bottom" Height="30">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="120"/>
-                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="30"/>
                             </Grid.ColumnDefinitions>
-                            <Button Width="115" Height="25" Margin="0,5,0,0" Content="Добавить вкладку" Command="{Binding Path=CmdCreateNewList}">
+                            <Button Width="25" Height="25" Margin="0,5,0,0" Content="+" Command="{Binding Path=CmdCreateNewList}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="2"/>
+                                        <Setter Property="CornerRadius" Value="50"/>
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Width="115" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="Удалить вкладку" Command="{Binding Path=CmdRemoveSelectedList}">
+                            <Button Width="25" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="-" Command="{Binding Path=CmdRemoveSelectedList}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="2"/>
+                                        <Setter Property="CornerRadius" Value="50"/>
                                     </Style>
                                 </Button.Resources>
                             </Button>
@@ -148,7 +148,7 @@
                             </Button>
                         </Grid>
                         <DataGrid x:Name="MyDataGrid"
-                                  ItemsSource="{Binding AsyncState=SelectedSheets.DataTables, IsAsync=True, Path=SelectedSheets.DataTables}"
+                                  ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
                                   BorderBrush="{DynamicResource ResultBorderBrush}"
                                   Background="{DynamicResource ResultBackground}"
                                   BorderThickness="0"
