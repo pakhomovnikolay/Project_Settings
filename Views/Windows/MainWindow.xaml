@@ -45,7 +45,6 @@
                 <Separator/>
                 <MenuItem Header="Открыть" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdOpenFileDialog}"/>
                 <MenuItem Header="Сохранить" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}" CommandParameter="{Binding Path=MyPath}"/>
-                <!--<MenuItem Header="Сохранить" Command="{Binding Path=CmdSaveProject}" CommandParameter="{Binding Path=MyPath}"/>-->
                 <MenuItem Header="Сохранить как" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}"/>
                 <Separator/>
                 <MenuItem Header="Настройки" IsEnabled="False"/>
@@ -151,6 +150,7 @@
                                   ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
                                   BorderBrush="{DynamicResource ResultBorderBrush}"
                                   Background="{DynamicResource ResultBackground}"
+                                  SelectedItem="{Binding Path=SelectedItems}"
                                   BorderThickness="0"
                                   EnableRowVirtualization="True"
                                   EnableColumnVirtualization="True"

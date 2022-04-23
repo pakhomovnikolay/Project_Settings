@@ -31,12 +31,22 @@ namespace Project_Settings.ViewModels
         }
 
         #region Параметры
-        private DataGrid _MyDataGrid = new();
-        public DataGrid MyDataGrid
-        {
-            get => _MyDataGrid;
-            set => Set(ref _MyDataGrid, value);
-        }
+        //private ObservableCollection<DataRowView> _MySelectedItems = new();
+
+
+        //private DataRowView _SelectedItems;
+        //public DataRowView SelectedItems
+        //{
+
+        //    get => _SelectedItems;
+        //    set
+        //    {
+        //        if (Set(ref _SelectedItems, value))
+        //        {
+        //            _MySelectedItems.Add(SelectedItems);
+        //        }
+        //    }
+        //}
 
         private MapSheets _SelectedSheets = new();
         public MapSheets SelectedSheets
@@ -243,8 +253,8 @@ namespace Project_Settings.ViewModels
                 };
                 SelectedSheets.Columns.Add(_MapColumns);
             }
-            MyMapSheets[index] = SelectedSheets;
-            SelectedSheets = MyMapSheets[index];
+            //MyMapSheets[index] = SelectedSheets;
+            //SelectedSheets = MyMapSheets[index];
         }
 
         /// <summary>
@@ -254,6 +264,20 @@ namespace Project_Settings.ViewModels
         private bool CanCmdRemoveSelectedRowListExecute(object p) => true;
         private void OnCmdRemoveSelectedRowListExecuted(object p)
         {
+            //if (SelectedItems != null) SelectedItems.Delete();
+
+            //foreach (var item in _MySelectedItems.)
+            //{
+            //    item.Delete();
+            //}
+
+            //SelectedSheets.DataTables.
+
+            //SelectedItems.Delete();
+
+            //SelectedItems.DataView.
+            //    SelectedItems.
+
             //var dg = MyDataGrid;
 
             //SelectedSheets.DataTables.DataSet;
