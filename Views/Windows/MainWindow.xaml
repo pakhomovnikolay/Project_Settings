@@ -24,6 +24,7 @@
                           SelectedSheets="{Binding Path=SelectedSheets, Mode=OneWayToSource}"
                           flBlackTheames="{Binding Path=flBlackTheames, Mode=OneWayToSource}"
                           flWhiteTheames="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"/>
+        
     </Window.Resources>
     
     <Window.DataContext>
@@ -35,8 +36,9 @@
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}"  CommandParameter="{Binding Path=MyPath}"/>
         <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}" />
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdOpenFileDialog}"/>
+        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdCreateNewProject}"/>
     </Window.InputBindings>
-    
+
     <DockPanel>
         <!-- ===================================================== Меню ===================================================== -->
         <Menu DockPanel.Dock="Top">
@@ -71,6 +73,14 @@
                   Foreground="{Binding Path=ResultMenuItemForeground}"
                   IsChecked="{Binding flWhiteTheames}"
                   Command="{Binding CmdSetWhiteTheames}"/>
+
+            <Button x:Name="BtnColorSelect"  Width="20" Command="{Binding Path=CmdSelectColorList}"/>
+            <!--<Rectangle Width="20" Fill="Black">
+                <
+                <Rectangle.InputBindings>
+                    <MouseBinding Command="{Binding Path=CmdSelectColorList}"/>
+                </Rectangle.InputBindings>
+            </Rectangle>-->
         </Menu>
 
         <!-- ===================================================== Панель инструментов ===================================================== -->
@@ -151,6 +161,7 @@
                                   BorderBrush="{DynamicResource ResultBorderBrush}"
                                   Background="{DynamicResource ResultBackground}"
                                   SelectedItem="{Binding Path=SelectedItems}"
+                                  CanUserAddRows="False"
                                   BorderThickness="0"
                                   EnableRowVirtualization="True"
                                   EnableColumnVirtualization="True"

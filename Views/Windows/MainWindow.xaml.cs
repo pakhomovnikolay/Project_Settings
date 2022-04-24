@@ -1,10 +1,16 @@
-﻿using System.ComponentModel;
+﻿using Project_Settings.ViewModels;
+using System;
+using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Project_Settings
 {
     public partial class MainWindow
     {
+
         public MainWindow()
         {
             InitializeComponent();

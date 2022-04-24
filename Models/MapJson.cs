@@ -16,12 +16,10 @@ namespace Project_Settings.Models
         public int SheetLastSelectedIntex { get; set; }
         public IList<MapData> Project { get; set; }
     }
-
     public class MapData
     {
         public IList<MapSheets> Sheet { get; set; }
     }
-
     public class MapSheets
     {
         public string Name { get; set; }

@@ -80,7 +80,7 @@ namespace Project_Settings.Models
 
         public bool flNeedOpenFileAfterSave { get; set; }
         #endregion
-
+   
         #region Команды
         public ICommand CmdCreateNewProject { get; }
         private bool CanCmdCreateNewProjectExecute(object p) => true;
@@ -299,7 +299,6 @@ namespace Project_Settings.Models
                 {
                     DataTable _DataTable = new();
                     DataRow _row;
-
                     for (int i = 0; i < Sheet.CountRow; i++)
                     {
                         _row = _DataTable.NewRow();
@@ -313,8 +312,8 @@ namespace Project_Settings.Models
                         if (column != Column.Name) { _DataTable.Columns.Add(Column.Name); j = 0; }
                         column = Column.Name;
                         _row = _DataTable.Rows[j];
-                        _row[column] = Column.Value;
-                        
+                        _row[column] = Column.Value.Trim();
+
                     }
 
                     var _MapSheets = new MapSheets

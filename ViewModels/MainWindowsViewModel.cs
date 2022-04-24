@@ -1,7 +1,9 @@
 ﻿using Project_Settings.Infrastructure.Commands;
 using Project_Settings.Models;
 using Project_Settings.ViewModels.Default;
+using Project_Settings.Views.Windows;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
@@ -28,25 +30,26 @@ namespace Project_Settings.ViewModels
             CmdRemoveSelectedList = new RelayCommand(OnCmdRemoveSelectedListExecuted, CanCmdRemoveSelectedListExecute);
             CmdAddRowList = new RelayCommand(OnCmdAddRowListExecuted, CanCmdAddRowListExecute);
             CmdRemoveSelectedRowList = new RelayCommand(OnCmdRemoveSelectedRowListExecuted, CanCmdRemoveSelectedRowListExecute);
+            CmdSelectColorList = new RelayCommand(OnCmdSelectColorListExecuted, CanCmdSelectColorListExecute);
         }
 
         #region Параметры
-        //private ObservableCollection<DataRowView> _MySelectedItems = new();
+        private Brush _MySelectedColor;
+        public Brush MySelectedColor
+        {
+
+            get => _MySelectedColor;
+            set => Set(ref _MySelectedColor, value);
+        }
 
 
-        //private DataRowView _SelectedItems;
-        //public DataRowView SelectedItems
-        //{
-
-        //    get => _SelectedItems;
-        //    set
-        //    {
-        //        if (Set(ref _SelectedItems, value))
-        //        {
-        //            _MySelectedItems.Add(SelectedItems);
-        //        }
-        //    }
-        //}
+        private DataRowView _SelectedItems;
+        public DataRowView SelectedItems
+        {
+            
+            get => _SelectedItems;
+            set => Set(ref _SelectedItems, value);
+        }
 
         private MapSheets _SelectedSheets = new();
         public MapSheets SelectedSheets
@@ -76,7 +79,6 @@ namespace Project_Settings.ViewModels
             get => _JsonData;
             set => Set(ref _JsonData, value);
         }
-
 
         private string _myPath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
         public string MyPath
@@ -202,7 +204,7 @@ namespace Project_Settings.ViewModels
         /// Команда на содание новой вкладке в текущем проектк
         /// </summary>
         public ICommand CmdCreateNewList { get; }
-        private bool CanCmdCreateNewListExecute(object p) => !string.IsNullOrEmpty(MyPath);
+        private bool CanCmdCreateNewListExecute(object p) => SelectedSheets != null;
         private async void OnCmdCreateNewListExecuted(object p)
         {
             string DefaultPath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
@@ -217,7 +219,7 @@ namespace Project_Settings.ViewModels
         /// Команда на удаление выделеной вкладки текущего проекта
         /// </summary>
         public ICommand CmdRemoveSelectedList { get; }
-        private bool CanCmdRemoveSelectedListExecute(object p) => !string.IsNullOrEmpty(MyPath);
+        private bool CanCmdRemoveSelectedListExecute(object p) => SelectedSheets != null;
         private void OnCmdRemoveSelectedListExecuted(object p)
         {
             int count = MyMapSheets.Count;
@@ -232,7 +234,7 @@ namespace Project_Settings.ViewModels
         /// Команда добавления новых строк (3 строки за одну команду)
         /// </summary>
         public ICommand CmdAddRowList { get; }
-        private bool CanCmdAddRowListExecute(object p) => !string.IsNullOrEmpty(MyPath);
+        private bool CanCmdAddRowListExecute(object p) => SelectedSheets != null;
         private void OnCmdAddRowListExecuted(object p)
         {
             int index = MyMapSheets.IndexOf(SelectedSheets);
@@ -253,54 +255,43 @@ namespace Project_Settings.ViewModels
                 };
                 SelectedSheets.Columns.Add(_MapColumns);
             }
-            //MyMapSheets[index] = SelectedSheets;
-            //SelectedSheets = MyMapSheets[index];
         }
 
         /// <summary>
         /// Команда удаления выделынных строк
         /// </summary>
         public ICommand CmdRemoveSelectedRowList { get; }
-        private bool CanCmdRemoveSelectedRowListExecute(object p) => true;
+        private bool CanCmdRemoveSelectedRowListExecute(object p) => SelectedItems != null;
         private void OnCmdRemoveSelectedRowListExecuted(object p)
         {
-            //if (SelectedItems != null) SelectedItems.Delete();
-
-            //foreach (var item in _MySelectedItems.)
-            //{
-            //    item.Delete();
-            //}
-
-            //SelectedSheets.DataTables.
-
-            //SelectedItems.Delete();
-
-            //SelectedItems.DataView.
-            //    SelectedItems.
-
-            //var dg = MyDataGrid;
-
-            //SelectedSheets.DataTables.DataSet;
-
-
-
-            //DataRow _row;
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    _row = SelectedSheets.DataTables.NewRow();
-            //    SelectedSheets.DataTables.Rows.Add(_row);
-            //}
-
-            //for (int i = 0; i < SelectedSheets.DataTables.Columns.Count; i++)
-            //{
-            //    var _MapColumns = new MapColumns
-            //    {
-            //        Name = SelectedSheets.DataTables.Columns[i].ColumnName,
-            //        Value = ""
-            //    };
-            //    SelectedSheets.Columns.Add(_MapColumns);
-            //}
+            SelectedItems.Delete();
         }
+
+
+        /// <summary>
+        /// Команда удаления выделынных строк
+        /// </summary>
+        public ICommand CmdSelectColorList { get; }
+        private bool CanCmdSelectColorListExecute(object p) => true;
+        private void OnCmdSelectColorListExecuted(object p)
+        {
+            colorList.Show();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -410,7 +401,7 @@ namespace Project_Settings.ViewModels
         }
 
         /// <summary>
-        /// Коамнда развернуть приложение
+        /// Команда развернуть приложение
         /// </summary>
         //public ICommand CmdMaximized { get; }
         //private bool CanCmdMaximizedExecute(object p) => true;
@@ -426,7 +417,7 @@ namespace Project_Settings.ViewModels
         //}
 
         /// <summary>
-        /// Коамнда свернуть приложение
+        /// Команда свернуть приложение
         /// </summary>
         //public ICommand CmdMinimized { get; }
         //private bool CanCmdMinimizedExecute(object p) => true;
