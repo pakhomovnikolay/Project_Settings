@@ -26,14 +26,6 @@ namespace Project_Settings.Views.Windows
         public ColorListWindow()
         {
             InitializeComponent();
-            //ColorList.ItemsSource = typeof(Brushes).GetProperties();
         }
-
-        //private void ColorList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    Brush SelectedColor = (Brush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-        //    MainWindowsViewModel mainWindowsViewModel = new();
-        //    mainWindowsViewModel.SetColor(SelectedColor);
-        //}
     }
 }

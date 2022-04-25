@@ -24,6 +24,11 @@
                           SelectedSheets="{Binding Path=SelectedSheets, Mode=OneWayToSource}"
                           flBlackTheames="{Binding Path=flBlackTheames, Mode=OneWayToSource}"
                           flWhiteTheames="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"/>
+
+        <m:SetColor x:Key="MySetColor"
+                    SelectedColor="{Binding Path=SelectedColor, Mode=OneWayToSource}"
+                                     
+                      />
     </Window.Resources>
     <Window.DataContext>
         <vm:MainWindowsViewModel/>
@@ -74,7 +79,7 @@
             <Button Command="{Binding Path=CmdSelectColorList}">
                 <WrapPanel>
                     <TextBlock Text="{Binding Path=ColorButton}" Width="6" FontSize="3" FontWeight="Bold"/>
-                    <Rectangle Width="15" Height="14" Stroke="Black" Fill="{Binding Path=MySelectedColor}"/>
+                    <Rectangle Width="15" Height="14" Stroke="Black" Fill="{Binding Source={StaticResource MySetColor}, Path=SelectedColor}"/>
                 </WrapPanel>
                 
                 

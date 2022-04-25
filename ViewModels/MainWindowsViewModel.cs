@@ -42,11 +42,11 @@ namespace Project_Settings.ViewModels
             set => Set(ref _ColorButton, value);
         }
 
-        private Brush _MySelectedColor;
-        public Brush MySelectedColor
+        private SolidColorBrush _SelectedColor;
+        public SolidColorBrush SelectedColor
         {
-            get => _MySelectedColor;
-            set => Set(ref _MySelectedColor, value);
+            get => _SelectedColor;
+            set => Set(ref _SelectedColor, value);
         }
 
         private DataRowView _SelectedItems;
@@ -419,10 +419,10 @@ namespace Project_Settings.ViewModels
         #endregion
 
         #region События
-        public void SetColor(Brush brush)
-        {
-            MySelectedColor = brush;
-        }
+        //public void SetColor(Brush brush)
+        //{
+        //    MySelectedColor = brush;
+        //}
 
         private void CreateNewList()
         {
