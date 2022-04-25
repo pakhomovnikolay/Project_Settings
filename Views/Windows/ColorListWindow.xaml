@@ -6,22 +6,31 @@
         xmlns:local="clr-namespace:Project_Settings.Views.Windows"
         xmlns:vm="clr-namespace:Project_Settings.ViewModels"
         mc:Ignorable="d"
-        Title="ColorListWindow" Height="150" Width="300" WindowStyle="None">
+        Title="ColorListWindow" Height="235" Width="305" WindowStyle="None" ResizeMode="NoResize">
     <Window.DataContext>
-        <vm:MainWindowsViewModel/>
+        <vm:ColorListWindowViewModel/>
     </Window.DataContext>
+
+    <Window.Resources>
+        <vm:ColorListWindowViewModel x:Key="MyColorListWindowViewModel"/>
+    </Window.Resources>
+    
     <Grid>
-        <ListBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="ColorList" SelectionChanged="ColorList_SelectionChanged">
-            <ListBox.ItemsPanel>
+        <ListView ItemsSource="{Binding Path=MyListViewColor.ItemsSource}" SelectedItem="{Binding Path=SelectRectangle}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
+                    <WrapPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Rectangle Fill="{Binding Name}" OpacityMask="Black" Width="20" Height="20" StrokeThickness="1" Stroke="Black" />
+                    <Rectangle  Fill="{Binding Name}" Width="15" Height="15" StrokeThickness="1" Stroke="Black">
+                        <Rectangle.InputBindings>
+                            <MouseBinding MouseAction="LeftClick" Command="{Binding Source={StaticResource MyColorListWindowViewModel}, Path=CmdSelectColor}" CommandParameter="{Binding Name}"/>
+                        </Rectangle.InputBindings>
+                    </Rectangle>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Window>

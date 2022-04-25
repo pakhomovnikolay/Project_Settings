@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -25,24 +26,14 @@ namespace Project_Settings.Views.Windows
         public ColorListWindow()
         {
             InitializeComponent();
-            ColorList.ItemsSource = typeof(Brushes).GetProperties();
+            //ColorList.ItemsSource = typeof(Brushes).GetProperties();
         }
 
-        //private void Window_Loaded_1(object sender, RoutedEventArgs e)
+        //private void ColorList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
-        //    ColorList.ItemsSource = typeof(Brushes).GetProperties();
+        //    Brush SelectedColor = (Brush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+        //    MainWindowsViewModel mainWindowsViewModel = new();
+        //    mainWindowsViewModel.SetColor(SelectedColor);
         //}
-
-        private void ColorList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            SelectedColor = (Brush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-
-            //RectColor.Fill = SelectedColor;
-
-
-            //SelectedColor
-
-            Close();
-        }
     }
 }

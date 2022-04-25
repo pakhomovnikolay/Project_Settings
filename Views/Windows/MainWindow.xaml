@@ -24,13 +24,10 @@
                           SelectedSheets="{Binding Path=SelectedSheets, Mode=OneWayToSource}"
                           flBlackTheames="{Binding Path=flBlackTheames, Mode=OneWayToSource}"
                           flWhiteTheames="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"/>
-        
     </Window.Resources>
-    
     <Window.DataContext>
         <vm:MainWindowsViewModel/>
     </Window.DataContext>
-
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="Q" Command="{Binding Path=CmdCloseApp}"/>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}"  CommandParameter="{Binding Path=MyPath}"/>
@@ -38,7 +35,6 @@
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdOpenFileDialog}"/>
         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdCreateNewProject}"/>
     </Window.InputBindings>
-
     <DockPanel>
         <!-- ===================================================== Меню ===================================================== -->
         <Menu DockPanel.Dock="Top">
@@ -51,6 +47,7 @@
                 <Separator/>
                 <MenuItem Header="Настройки" IsEnabled="False"/>
             </MenuItem>
+            
             <MenuItem Header="Надстройки" IsEnabled="False">
             </MenuItem>
 
@@ -74,11 +71,22 @@
                   IsChecked="{Binding flWhiteTheames}"
                   Command="{Binding CmdSetWhiteTheames}"/>
 
-            <Button x:Name="BtnColorSelect"  Width="20" Command="{Binding Path=CmdSelectColorList}"/>
-            <!--<Rectangle Width="20" Fill="Black">
-                <
+            <Button Command="{Binding Path=CmdSelectColorList}">
+                <WrapPanel>
+                    <TextBlock Text="{Binding Path=ColorButton}" Width="6" FontSize="3" FontWeight="Bold"/>
+                    <Rectangle Width="15" Height="14" Stroke="Black" Fill="{Binding Path=MySelectedColor}"/>
+                </WrapPanel>
+                
+                
+                
+                
+            </Button>
+            <!--<Rectangle >
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="{Binding Path=MySelectedColor, Mode=TwoWay}"/>
+                </Rectangle.Fill>
                 <Rectangle.InputBindings>
-                    <MouseBinding Command="{Binding Path=CmdSelectColorList}"/>
+                    <MouseBinding MouseAction="LeftClick" Command="{Binding Path=CmdSelectColorList}"/>
                 </Rectangle.InputBindings>
             </Rectangle>-->
         </Menu>

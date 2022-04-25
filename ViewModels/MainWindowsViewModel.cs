@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+//using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
@@ -34,14 +35,19 @@ namespace Project_Settings.ViewModels
         }
 
         #region Параметры
+        private string _ColorButton = ".\n.\n.";
+        public string ColorButton
+        {
+            get => _ColorButton;
+            set => Set(ref _ColorButton, value);
+        }
+
         private Brush _MySelectedColor;
         public Brush MySelectedColor
         {
-
             get => _MySelectedColor;
             set => Set(ref _MySelectedColor, value);
         }
-
 
         private DataRowView _SelectedItems;
         public DataRowView SelectedItems
@@ -267,7 +273,6 @@ namespace Project_Settings.ViewModels
             SelectedItems.Delete();
         }
 
-
         /// <summary>
         /// Команда удаления выделынных строк
         /// </summary>
@@ -275,25 +280,11 @@ namespace Project_Settings.ViewModels
         private bool CanCmdSelectColorListExecute(object p) => true;
         private void OnCmdSelectColorListExecuted(object p)
         {
-            colorList.Show();
+            ColorListWindow colorListWindow = new();
+            colorListWindow.Owner = CurrApp.MainWindow;
+            colorListWindow.Show();
+            colorListWindow.Focus();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         /// <summary>
         /// Команда добавить строку
@@ -357,7 +348,6 @@ namespace Project_Settings.ViewModels
         //    //SelectedSheets = MyDataGridItems[index];
         //    //MySheetsConfig.Sheet[index] = SelectedSheets;
         //}
-
 
         /// <summary>
         /// Команда на смену светлой темы
@@ -429,6 +419,11 @@ namespace Project_Settings.ViewModels
         #endregion
 
         #region События
+        public void SetColor(Brush brush)
+        {
+            MySelectedColor = brush;
+        }
+
         private void CreateNewList()
         {
             foreach (var Project in JsonData.Project)
