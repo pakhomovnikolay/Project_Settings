@@ -1,16 +1,12 @@
 ﻿using Microsoft.Win32;
 using Project_Settings.Infrastructure.Commands;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace Project_Settings.Models
 {
@@ -80,7 +76,7 @@ namespace Project_Settings.Models
 
         public bool flNeedOpenFileAfterSave { get; set; }
         #endregion
-   
+
         #region Команды
         public ICommand CmdCreateNewProject { get; }
         private bool CanCmdCreateNewProjectExecute(object p) => true;

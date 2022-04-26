@@ -26,8 +26,8 @@
                           flWhiteTheames="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"/>
 
         <m:SetColor x:Key="MySetColor"
-                    SelectedColor="{Binding Path=SelectedColor, Mode=OneWayToSource}"
-                                     
+                    SelectedColor="{Binding Path=MySelectedColor, Mode=OneWayToSource}"
+                    
                       />
     </Window.Resources>
     <Window.DataContext>
@@ -76,24 +76,32 @@
                   IsChecked="{Binding flWhiteTheames}"
                   Command="{Binding CmdSetWhiteTheames}"/>
 
-            <Button Command="{Binding Path=CmdSelectColorList}">
-                <WrapPanel>
-                    <TextBlock Text="{Binding Path=ColorButton}" Width="6" FontSize="3" FontWeight="Bold"/>
-                    <Rectangle Width="15" Height="14" Stroke="Black" Fill="{Binding Source={StaticResource MySetColor}, Path=SelectedColor}"/>
-                </WrapPanel>
-                
-                
-                
-                
-            </Button>
-            <!--<Rectangle >
-                <Rectangle.Fill>
-                    <SolidColorBrush Color="{Binding Path=MySelectedColor, Mode=TwoWay}"/>
-                </Rectangle.Fill>
-                <Rectangle.InputBindings>
-                    <MouseBinding MouseAction="LeftClick" Command="{Binding Path=CmdSelectColorList}"/>
-                </Rectangle.InputBindings>
-            </Rectangle>-->
+            <WrapPanel>
+                <Button Width="20" Background="{Binding Path=MySelectedColor}"/>
+                <ComboBox Width="15" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ComboBoxItem>
+                        <ListView ItemsSource="{Binding Path=MyListViewColor.ItemsSource}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="235" Width="305">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle  Fill="{Binding Name}" Width="15" Height="15" StrokeThickness="1" Stroke="Black">
+                                        <Rectangle.InputBindings>
+                                            <MouseBinding MouseAction="LeftClick" Command="{Binding Source={StaticResource MySetColor}, Path=CmdSelectColor}" CommandParameter="{Binding Name}"/>
+                                        </Rectangle.InputBindings>
+                                    </Rectangle>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ComboBoxItem>
+                </ComboBox>
+            </WrapPanel>
+            
+            
+            
         </Menu>
 
         <!-- ===================================================== Панель инструментов ===================================================== -->

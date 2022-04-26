@@ -1,12 +1,9 @@
 ﻿using Project_Settings.Infrastructure.Commands;
 using Project_Settings.Models;
 using Project_Settings.ViewModels.Default;
-using Project_Settings.Views.Windows;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-//using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
@@ -31,28 +28,30 @@ namespace Project_Settings.ViewModels
             CmdRemoveSelectedList = new RelayCommand(OnCmdRemoveSelectedListExecuted, CanCmdRemoveSelectedListExecute);
             CmdAddRowList = new RelayCommand(OnCmdAddRowListExecuted, CanCmdAddRowListExecute);
             CmdRemoveSelectedRowList = new RelayCommand(OnCmdRemoveSelectedRowListExecuted, CanCmdRemoveSelectedRowListExecute);
-            CmdSelectColorList = new RelayCommand(OnCmdSelectColorListExecuted, CanCmdSelectColorListExecute);
+            CmdSetColorRow = new RelayCommand(OnCmdSetColorRowExecuted, CanCmdSetColorRowExecute);
+            MyListViewColor = new();
+            MyListViewColor.ItemsSource = typeof(Brushes).GetProperties();
         }
 
         #region Параметры
-        private string _ColorButton = ".\n.\n.";
-        public string ColorButton
+        private ListView _MyListViewColor;
+        public ListView MyListViewColor
         {
-            get => _ColorButton;
-            set => Set(ref _ColorButton, value);
+            get => _MyListViewColor;
+            set => Set(ref _MyListViewColor, value);
         }
 
-        private SolidColorBrush _SelectedColor;
-        public SolidColorBrush SelectedColor
+        private SolidColorBrush _MySelectedColor;
+        public SolidColorBrush MySelectedColor
         {
-            get => _SelectedColor;
-            set => Set(ref _SelectedColor, value);
+            get => _MySelectedColor;
+            set => Set(ref _MySelectedColor, value);
         }
 
         private DataRowView _SelectedItems;
         public DataRowView SelectedItems
         {
-            
+
             get => _SelectedItems;
             set => Set(ref _SelectedItems, value);
         }
@@ -204,8 +203,21 @@ namespace Project_Settings.ViewModels
             set => Set(ref _ResultBorderBrushListBox, value);
         }
         #endregion
-        
+
         #region Команды
+        public ICommand CmdSetColorRow { get; }
+        private bool CanCmdSetColorRowExecute(object p) => SelectedSheets != null;
+        private void OnCmdSetColorRowExecuted(object p)
+        {
+            //SelectedItems.Row.set
+        }
+
+
+        
+
+
+
+
         /// <summary>
         /// Команда на содание новой вкладке в текущем проектк
         /// </summary>
@@ -274,82 +286,6 @@ namespace Project_Settings.ViewModels
         }
 
         /// <summary>
-        /// Команда удаления выделынных строк
-        /// </summary>
-        public ICommand CmdSelectColorList { get; }
-        private bool CanCmdSelectColorListExecute(object p) => true;
-        private void OnCmdSelectColorListExecuted(object p)
-        {
-            ColorListWindow colorListWindow = new();
-            colorListWindow.Owner = CurrApp.MainWindow;
-            colorListWindow.Show();
-            colorListWindow.Focus();
-        }
-
-        /// <summary>
-        /// Команда добавить строку
-        /// </summary>
-        //public ICommand CmdAddRow { get; }
-
-        //private bool CanCmdAddRowExecute(object p) => true;
-
-        //private void OnCmdAddRowExecuted(object p)
-        //{
-
-        //    //var index = MyDataGridItems.IndexOf(SelectedSheets);
-        //    //if (SelectedSheets.DataTables == null)
-        //    //{
-        //    //    SelectedSheets.DataTables = new();
-        //    //}
-
-        //    //SelectedSheets.DataTables.Columns.Add("Номер\nкоризны");
-        //    //SelectedSheets.DataTables.Columns.Add("Название шкафа\nНомер шкафа");
-        //    //SelectedSheets.DataTables.Columns.Add("Номер\nкорзины\nв шкафу");
-        //    //SelectedSheets.DataTables.Columns.Add("Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным.");
-
-        //    //DataRow row = SelectedSheets.DataTables.NewRow();
-        //    //row["Номер\nкоризны"] = "A";
-        //    //row["Название шкафа\nНомер шкафа"] = "A";
-        //    //row["Номер\nкорзины\nв шкафу"] = "A";
-        //    //row["Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным."] = "B";
-
-        //    //SelectedSheets.DataTables.Rows.Add(row);
-
-
-        //    //var index = MyDataGridItems.IndexOf(SelectedSheets);
-
-
-        //    //if (SelectedSheets.DataTables == null)
-        //    //{
-        //    //    SelectedSheets.DataTables = new();
-        //    //}
-        //    //SelectedSheets.DataTables.Columns.Add("Номер\nкоризны");
-        //    //SelectedSheets.DataTables.Columns.Add("Название шкафа\nНомер шкафа");
-        //    //SelectedSheets.DataTables.Columns.Add("Номер\nкорзины\nв шкафу");
-        //    //SelectedSheets.DataTables.Columns.Add("Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным.");
-        //    //SelectedSheets.DataTables.Rows.Add();
-
-
-        //    ////for (int i = 0; i < 3; i++)
-        //    ////{
-        //    ////    if (SelectedSheets.DataTables == null)
-        //    ////    {
-        //    ////        SelectedSheets.DataTables = new();
-        //    ////        SelectedSheets.DataTables.Columns.Add();
-        //    ////        SelectedSheets.DataTables.NewRow();
-        //    ////    }
-        //    ////    else
-        //    ////    {
-        //    ////        SelectedSheets.DataTables.Columns.Add();
-        //    ////        SelectedSheets.DataTables.Rows.Add();
-        //    ////    }
-        //    ////}
-        //    //MyDataGridItems[index] = SelectedSheets;
-        //    //SelectedSheets = MyDataGridItems[index];
-        //    //MySheetsConfig.Sheet[index] = SelectedSheets;
-        //}
-
-        /// <summary>
         /// Команда на смену светлой темы
         /// </summary>
         public ICommand CmdSetBlackTheames { get; }
@@ -390,39 +326,9 @@ namespace Project_Settings.ViewModels
             CurrApp.Shutdown();
         }
 
-        /// <summary>
-        /// Команда развернуть приложение
-        /// </summary>
-        //public ICommand CmdMaximized { get; }
-        //private bool CanCmdMaximizedExecute(object p) => true;
-
-        //private void OnCmdMaximizedExecuted(object p)
-        //{
-        //    if (CurrApp.MainWindow.WindowState == WindowState.Maximized)
-        //    {
-        //        CurrApp.MainWindow.WindowState = WindowState.Normal;
-        //        return;
-        //    }
-        //    CurrApp.MainWindow.WindowState = WindowState.Maximized;
-        //}
-
-        /// <summary>
-        /// Команда свернуть приложение
-        /// </summary>
-        //public ICommand CmdMinimized { get; }
-        //private bool CanCmdMinimizedExecute(object p) => true;
-
-        //private void OnCmdMinimizedExecuted(object p)
-        //{
-        //    CurrApp.MainWindow.WindowState = WindowState.Minimized;
-        //}
         #endregion
 
         #region События
-        //public void SetColor(Brush brush)
-        //{
-        //    MySelectedColor = brush;
-        //}
 
         private void CreateNewList()
         {
