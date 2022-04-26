@@ -9,7 +9,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Menu">
-                    <Border x:Name="BD" Height="30" BorderThickness="1" BorderBrush="{DynamicResource ResultBorderBrush}">
+                    <Border x:Name="BD" Height="25" BorderThickness="1" BorderBrush="{DynamicResource ResultBorderBrush}">
                         <StackPanel ClipToBounds="True" Orientation="Horizontal" Focusable="True" IsItemsHost="True"/>
                     </Border>
                 </ControlTemplate>
@@ -23,7 +23,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="MenuItem">
                     <Grid>
-                        <Border x:Name="BD" Padding="10,0,10,0" BorderThickness="1" Height="20">
+                        <Border x:Name="BD" Padding="5,0,5,0" BorderThickness="1" Height="19">
                             <ContentPresenter ContentSource="Header" x:Name="HeaderHost" RecognizesAccessKey="True" />
                         </Border>
                         <Popup Name="Popup" IsOpen="{TemplateBinding IsSubmenuOpen}" AllowsTransparency="True" PopupAnimation="Fade" MinWidth="200">

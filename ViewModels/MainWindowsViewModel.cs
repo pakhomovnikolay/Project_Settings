@@ -290,7 +290,7 @@ namespace Project_Settings.ViewModels
         /// </summary>
         public ICommand CmdSetBlackTheames { get; }
 
-        private bool CanCmdSetBlackTheamesExecute(object p) => true;
+        private bool CanCmdSetBlackTheamesExecute(object p) => SelectedSheets != null;
 
         private void OnCmdSetBlackTheamesExecuted(object p)
         {
@@ -303,7 +303,7 @@ namespace Project_Settings.ViewModels
         /// </summary>
         public ICommand CmdSetWhiteTheames { get; }
 
-        private bool CanCmdSetWhiteTheamesExecute(object p) => true;
+        private bool CanCmdSetWhiteTheamesExecute(object p) => SelectedSheets != null;
 
         private void OnCmdSetWhiteTheamesExecuted(object p)
         {

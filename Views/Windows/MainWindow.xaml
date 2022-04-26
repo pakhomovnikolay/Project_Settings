@@ -13,6 +13,8 @@
         Height="auto" Width="auto" MinHeight="400" MinWidth="800"
         WindowState="Maximized" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
+
+    <!-- ================================================================= Ресурсы ================================================================= -->
     <Window.Resources>
         <m:OpenSaveDialog x:Key="OpenSaveFileDialog"
                           TitleOpen="Открыть файл"
@@ -26,13 +28,13 @@
                           flWhiteTheames="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"/>
 
         <m:SetColor x:Key="MySetColor"
-                    SelectedColor="{Binding Path=MySelectedColor, Mode=OneWayToSource}"
-                    
-                      />
+                    SelectedColor="{Binding Path=MySelectedColor, Mode=OneWayToSource}"/>
     </Window.Resources>
+    
     <Window.DataContext>
         <vm:MainWindowsViewModel/>
     </Window.DataContext>
+    
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="Q" Command="{Binding Path=CmdCloseApp}"/>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}"  CommandParameter="{Binding Path=MyPath}"/>
@@ -40,6 +42,7 @@
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdOpenFileDialog}"/>
         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdCreateNewProject}"/>
     </Window.InputBindings>
+
     <DockPanel>
         <!-- ===================================================== Меню ===================================================== -->
         <Menu DockPanel.Dock="Top">
@@ -62,7 +65,7 @@
 
             <CheckBox x:Name="CBoxBlackTheames"
                   Content="Установить темную тему"
-                  Width="200" Height="15" IsEnabled="{Binding flWhiteTheames}"
+                  Width="160" Height="15" IsEnabled="{Binding flWhiteTheames}"
                   IsThreeState="False"
                   Foreground="{Binding Path=ResultMenuItemForeground}"
                   IsChecked="{Binding flBlackTheames}"
@@ -70,15 +73,21 @@
 
             <CheckBox x:Name="CBoxWhiteTheames"
                   Content="Установить светлую тему"
-                  Width="200" Height="15" IsEnabled="{Binding flBlackTheames}"
+                  Width="160" Height="15" IsEnabled="{Binding flBlackTheames}"
                   IsThreeState="False"
                   Foreground="{Binding Path=ResultMenuItemForeground}"
                   IsChecked="{Binding flWhiteTheames}"
                   Command="{Binding CmdSetWhiteTheames}"/>
+        </Menu>
 
-            <WrapPanel>
-                <Button Width="20" Background="{Binding Path=MySelectedColor}"/>
-                <ComboBox Width="15" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <Grid DockPanel.Dock="Top" Height="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <WrapPanel Grid.Column="1" Margin="0,3,0,0">
+                <Button Width="25" Background="{Binding Path=MySelectedColor}" Height="25"/>
+                <ComboBox Width="17" Height="25" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="-1,0,0,0">
                     <ComboBoxItem>
                         <ListView ItemsSource="{Binding Path=MyListViewColor.ItemsSource}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="235" Width="305">
                             <ListView.ItemsPanel>
@@ -99,10 +108,7 @@
                     </ComboBoxItem>
                 </ComboBox>
             </WrapPanel>
-            
-            
-            
-        </Menu>
+        </Grid>
 
         <!-- ===================================================== Панель инструментов ===================================================== -->
         <ToolBarPanel DockPanel.Dock="Bottom" Height="30">
