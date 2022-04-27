@@ -2,6 +2,7 @@
 using Project_Settings.Models;
 using Project_Settings.ViewModels.Default;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
@@ -209,7 +210,7 @@ namespace Project_Settings.ViewModels
         private bool CanCmdSetColorRowExecute(object p) => SelectedSheets != null;
         private void OnCmdSetColorRowExecuted(object p)
         {
-            //SelectedItems.Row.set
+            ;
         }
 
 
@@ -339,22 +340,38 @@ namespace Project_Settings.ViewModels
                     DataTable _DataTable = new();
                     DataRow _row;
                     DataView dataView = new();
+                    DataGrid dataGrid = new();
                     for (int i = 0; i < Sheet.CountRow; i++)
                     {
                         _row = _DataTable.NewRow();
                         _DataTable.Rows.Add(_row);
+
+                        dataGrid.Items.Add(_row);
                     }
 
                     string column = "";
                     int j = 0;
                     foreach (var Column in Sheet.Columns)
                     {
-                        if (column != Column.Name) { _DataTable.Columns.Add(Column.Name); j = 0; }
+                        DataGridTextColumn _DataGridTextColumn = new();
+                        //_DataGridTextColumn.Width = 50;
+                        _DataGridTextColumn.Header = Column.Name;
+
+
+                        if (column != Column.Name)
+                        {
+                            _DataTable.Columns.Add(Column.Name);
+                            dataGrid.Columns.Add(_DataGridTextColumn);
+                            j = 0;
+                            
+                        }
                         column = Column.Name;
                         _row = _DataTable.Rows[j];
                         _row[column] = Column.Value;
                         j++;
                     }
+
+                    //dataGrid.ItemsSource = _DataTable;
 
                     var _MapSheets = new MapSheets
                     {
