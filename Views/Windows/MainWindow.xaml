@@ -183,7 +183,10 @@
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        <DataGrid x:Name="MyDataGrid"
+                        <Grid>
+                            
+                        </Grid>
+                        <!--<DataGrid x:Name="MyDataGrid"
                                   ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
                                   BorderBrush="{DynamicResource ResultBorderBrush}"
                                   Background="{DynamicResource ResultBackground}"
@@ -207,7 +210,7 @@
                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                 </Style>
                             </DataGrid.ColumnHeaderStyle>
-                        </DataGrid>
+                        </DataGrid>-->
                     </DockPanel>
                 </GroupBox>
             </Grid>
