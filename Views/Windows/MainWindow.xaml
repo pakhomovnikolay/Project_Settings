@@ -80,14 +80,14 @@
                   Command="{Binding CmdSetWhiteTheames}"/>
         </Menu>
 
-        <Grid DockPanel.Dock="Top" Height="30">
+        <Grid DockPanel.Dock="Top" Height="25">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250" />
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <WrapPanel Grid.Column="1" Margin="0,3,0,0">
-                <Button Width="25" Background="{Binding Path=MySelectedColor}" Height="25"/>
-                <ComboBox Width="17" Height="25" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="-1,0,0,0">
+                <Button Width="20" Background="{Binding Path=MySelectedColor}"/>
+                <ComboBox Width="17" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="-1,0,0,0">
                     <ComboBoxItem>
                         <ListView ItemsSource="{Binding Path=MyListViewColor.ItemsSource}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="235" Width="305">
                             <ListView.ItemsPanel>
@@ -188,16 +188,25 @@
                                   BorderBrush="{DynamicResource ResultBorderBrush}"
                                   Background="{DynamicResource ResultBackground}"
                                   SelectedItem="{Binding Path=SelectedItems}"
+                                  LoadingRow="MyDataGrid_LoadingRow" 
                                   CanUserAddRows="False"
                                   BorderThickness="0"
+                                  MinRowHeight="15"
+                                  MinColumnWidth="50"
                                   EnableRowVirtualization="True"
                                   EnableColumnVirtualization="True"
+                                  AutoGenerateColumns="True"
                                   VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                                   VirtualizingPanel.IsContainerVirtualizable="True"
                                   VirtualizingPanel.ScrollUnit="Pixel"
                                   VirtualizingPanel.VirtualizationMode="Recycling"
                                   VirtualizingPanel.IsVirtualizing="True"
                                   ScrollViewer.CanContentScroll="True">
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
                         </DataGrid>
                     </DockPanel>
                 </GroupBox>

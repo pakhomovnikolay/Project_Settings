@@ -8,7 +8,7 @@
         {
           "Name": "\u041B\u0438\u0441\u0442 ",
           "NameMsg": "",
-          "CountRow": 45,
+          "CountRow": 40,
           "DataTables": null,
           "Columns": [
             { "Name": "A", "Value": "" },

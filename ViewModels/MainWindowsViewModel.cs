@@ -219,7 +219,7 @@ namespace Project_Settings.ViewModels
 
 
         /// <summary>
-        /// Команда на содание новой вкладке в текущем проектк
+        /// Команда на содание новой вкладке в текущем проекте
         /// </summary>
         public ICommand CmdCreateNewList { get; }
         private bool CanCmdCreateNewListExecute(object p) => SelectedSheets != null;
@@ -338,6 +338,7 @@ namespace Project_Settings.ViewModels
                 {
                     DataTable _DataTable = new();
                     DataRow _row;
+                    DataView dataView = new();
                     for (int i = 0; i < Sheet.CountRow; i++)
                     {
                         _row = _DataTable.NewRow();
