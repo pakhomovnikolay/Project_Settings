@@ -209,14 +209,8 @@ namespace Project_Settings.ViewModels
         private bool CanCmdSetColorRowExecute(object p) => SelectedSheets != null;
         private void OnCmdSetColorRowExecuted(object p)
         {
-            //SelectedItems.Row.set
+            //SelectedItems.
         }
-
-
-        
-
-
-
 
         /// <summary>
         /// Команда на содание новой вкладке в текущем проекте
@@ -283,13 +277,15 @@ namespace Project_Settings.ViewModels
         private void OnCmdRemoveSelectedRowListExecuted(object p)
         {
             SelectedItems.Delete();
+            int Index = MyMapSheets.IndexOf(SelectedSheets);
+            MyMapSheets[Index] = SelectedSheets;
+            SelectedSheets = MyMapSheets[Index];
         }
 
         /// <summary>
         /// Команда на смену светлой темы
         /// </summary>
         public ICommand CmdSetBlackTheames { get; }
-
         private bool CanCmdSetBlackTheamesExecute(object p) => SelectedSheets != null;
 
         private void OnCmdSetBlackTheamesExecuted(object p)
@@ -302,7 +298,6 @@ namespace Project_Settings.ViewModels
         /// Команда на смену темной темы
         /// </summary>
         public ICommand CmdSetWhiteTheames { get; }
-
         private bool CanCmdSetWhiteTheamesExecute(object p) => SelectedSheets != null;
 
         private void OnCmdSetWhiteTheamesExecuted(object p)
