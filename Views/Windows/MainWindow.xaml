@@ -187,7 +187,7 @@
                                   ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
                                   
                                   SelectedItem="{Binding Path=SelectedItems}"
-                                  GridLinesVisibility="All"
+                                  GridLinesVisibility="None"
                                   LoadingRow="MyDataGrid_LoadingRow" 
                                   CanUserAddRows="False"
                                   MinRowHeight="15"
@@ -206,7 +206,7 @@
                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                 </Style>
                             </DataGrid.ColumnHeaderStyle>
-                            <DataGrid.CellStyle>
+                            <!--<DataGrid.CellStyle>
                                 <Style TargetType="{x:Type DataGridCell}">
                                     <Setter Property="Background" Value="{DynamicResource ColorDataGridItems }"/>
                                     
@@ -231,7 +231,7 @@
                                     </Setter>
                                 </Style>
                                 
-                            </DataGrid.CellStyle>
+                            </DataGrid.CellStyle>-->
                             
                             <!--<DataGridCell>
                                 <DataGridCell.Style>
