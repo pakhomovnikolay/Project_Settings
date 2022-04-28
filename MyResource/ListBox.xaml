@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vm="clr-namespace:Project_Settings.ViewModels">
 
-    <Style x:Key="{x:Type ListBox}" TargetType="ListBox">
+    <Style x:Key="MyListBox" TargetType="ListBox">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
@@ -46,7 +46,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
+    <Style x:Key="MyListBoxItem" TargetType="ListBoxItem">
         <Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
         <Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
         <Setter Property="Background" Value="{DynamicResource ResultkMenuItemBackground}"/>

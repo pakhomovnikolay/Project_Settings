@@ -1,11 +1,13 @@
 ﻿using Microsoft.Win32;
 using Project_Settings.Infrastructure.Commands;
+using Project_Settings.Pages;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Project_Settings.Models
@@ -312,6 +314,9 @@ namespace Project_Settings.Models
 
                     }
 
+                    Page _MyPage = new Page1();
+                    _MyPage.Title = "Страница " + (MyMapSheets.Count + 1).ToString();
+
                     var _MapSheets = new MapSheets
                     {
                         Columns = Sheet.Columns,
@@ -319,6 +324,7 @@ namespace Project_Settings.Models
                         DataTables = _DataTable,
                         Name = Sheet.Name + (MyMapSheets.Count + 1).ToString(),
                         NameMsg = Sheet.NameMsg,
+                        MyPage = _MyPage
                     };
                     MyMapSheets.Add(_MapSheets);
                 }

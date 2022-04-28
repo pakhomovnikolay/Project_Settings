@@ -26,6 +26,7 @@ namespace Project_Settings.Models
         public string NameMsg { get; set; }
         public int CountRow { get; set; }
         public DataTable DataTables { get; set; }
+        public Page MyPage { get; set; }
         public IList<MapColumns> Columns { get; set; }
 
     }

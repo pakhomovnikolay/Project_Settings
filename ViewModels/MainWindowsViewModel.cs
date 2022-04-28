@@ -1,5 +1,6 @@
 ﻿using Project_Settings.Infrastructure.Commands;
 using Project_Settings.Models;
+using Project_Settings.Pages;
 using Project_Settings.ViewModels.Default;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace Project_Settings.ViewModels
     {
         private readonly Application CurrApp = Application.Current;
 
+        public Page MyPage = new Page1();
+
         public MainWindowsViewModel()
         {
             // Команды
@@ -35,6 +38,13 @@ namespace Project_Settings.ViewModels
         }
 
         #region Параметры
+        //private Page _CurrentPage;
+        //public Page CurrentPage
+        //{
+        //    get => _CurrentPage;
+        //    set => Set(ref _CurrentPage, value);
+        //}
+
         private ListView _MyListViewColor;
         public ListView MyListViewColor
         {
@@ -347,31 +357,21 @@ namespace Project_Settings.ViewModels
                 {
                     DataTable _DataTable = new();
                     DataRow _row;
-                    DataView dataView = new();
-                    DataGrid dataGrid = new();
+
                     for (int i = 0; i < Sheet.CountRow; i++)
                     {
                         _row = _DataTable.NewRow();
                         _DataTable.Rows.Add(_row);
-
-                        dataGrid.Items.Add(_row);
                     }
 
                     string column = "";
                     int j = 0;
                     foreach (var Column in Sheet.Columns)
                     {
-                        DataGridTextColumn _DataGridTextColumn = new();
-                        //_DataGridTextColumn.Width = 50;
-                        _DataGridTextColumn.Header = Column.Name;
-
-
                         if (column != Column.Name)
                         {
                             _DataTable.Columns.Add(Column.Name);
-                            dataGrid.Columns.Add(_DataGridTextColumn);
                             j = 0;
-                            
                         }
                         column = Column.Name;
                         _row = _DataTable.Rows[j];
@@ -379,7 +379,8 @@ namespace Project_Settings.ViewModels
                         j++;
                     }
 
-                    //dataGrid.ItemsSource = _DataTable;
+                    //Page _MyPage = new Page1();
+                    MyPage.Title = "Страница " + (MyMapSheets.Count + 1).ToString();
 
                     var _MapSheets = new MapSheets
                     {
@@ -388,6 +389,7 @@ namespace Project_Settings.ViewModels
                         DataTables = _DataTable,
                         Name = Sheet.Name + (MyMapSheets.Count + 1).ToString(),
                         NameMsg = Sheet.NameMsg,
+                        MyPage = MyPage
                     };
                     MyMapSheets.Add(_MapSheets);
                 }

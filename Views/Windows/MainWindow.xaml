@@ -30,11 +30,13 @@
         <m:SetColor x:Key="MySetColor"
                     SelectedColor="{Binding Path=MySelectedColor, Mode=OneWayToSource}"/>
     </Window.Resources>
-    
+
+    <!-- ============================================================= Источники данных ============================================================ -->
     <Window.DataContext>
         <vm:MainWindowsViewModel/>
     </Window.DataContext>
-    
+
+    <!-- ======================================================== Настройки входныхх данных ======================================================== -->
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="Q" Command="{Binding Path=CmdCloseApp}"/>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdSaveFileDialog}"  CommandParameter="{Binding Path=MyPath}"/>
@@ -43,8 +45,9 @@
         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdCreateNewProject}"/>
     </Window.InputBindings>
 
+    <!-- ======================================================== Основная визуальная часть ======================================================== -->
     <DockPanel>
-        <!-- ===================================================== Меню ===================================================== -->
+        <!-- ================================================================= Меню ================================================================ -->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
                 <MenuItem Header="Создать" Command="{Binding Source={StaticResource OpenSaveFileDialog}, Path=CmdCreateNewProject}"/>
@@ -80,6 +83,7 @@
                   Command="{Binding CmdSetWhiteTheames}"/>
         </Menu>
 
+        <!-- ===================================================== Верхняя Панель инструментов ===================================================== -->
         <Grid DockPanel.Dock="Top" Height="25">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250" />
@@ -87,43 +91,71 @@
             </Grid.ColumnDefinitions>
             <WrapPanel Grid.Column="1" Margin="0,3,0,0">
                 <Button Name="btnMyColor" Width="20" Background="{Binding Path=MySelectedColor}" Click="btnMyColor_Click"/>
-                <ComboBox Width="17" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="-1,0,0,0">
-                    <ComboBoxItem>
-                        <ListView ItemsSource="{Binding Path=MyListViewColor.ItemsSource}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="235" Width="305">
-                            <ListView.ItemsPanel>
+                <ComboBox Width="17" Margin="-1,0,0,0">
+                    <ComboBoxItem >
+                        <ComboBoxItem.Style>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Background" Value="LightGray"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                                            <Border Margin="{TemplateBinding Margin}"
+                                                     Background="{TemplateBinding Background}" 
+                                                     BorderBrush="{TemplateBinding BorderBrush}" 
+                                                     BorderThickness="{TemplateBinding BorderThickness}"
+                                                     Padding="{TemplateBinding Padding}">
+                                                
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ComboBoxItem.Style>
+                        <ListBox ItemsSource="{Binding Path=MyListViewColor.ItemsSource}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 Height="190" Width="223"
+                                 BorderThickness="0"
+                                 Background="Transparent">
+                            <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.ItemTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Rectangle  Fill="{Binding Name}" Width="15" Height="15" StrokeThickness="1" Stroke="Black">
+                                    <Rectangle Fill="{Binding Name}" Width="15" Height="15" Margin="-4,-1,-4,-1" StrokeThickness="1" Stroke="Black">
                                         <Rectangle.InputBindings>
                                             <MouseBinding MouseAction="LeftClick" Command="{Binding Source={StaticResource MySetColor}, Path=CmdSelectColor}" CommandParameter="{Binding Name}"/>
                                         </Rectangle.InputBindings>
                                     </Rectangle>
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </ComboBoxItem>
                 </ComboBox>
             </WrapPanel>
         </Grid>
 
-        <!-- ===================================================== Панель инструментов ===================================================== -->
+        <!-- ====================================================== Нижняя Панель инструментов ===================================================== -->
         <ToolBarPanel DockPanel.Dock="Bottom" Height="30">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Left" Text="{Binding MyVersion}" Margin="5,0,0,0"/>
             </DockPanel>
         </ToolBarPanel>
 
-        <!-- ===================================================== Данные ===================================================== -->
+        <!-- ====================================================== Списки листов и их данные ====================================================== -->
         <DockPanel DockPanel.Dock="Left">
+
+            <!-- ============================================================== Сетки ============================================================== -->
             <Grid DockPanel.Dock="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition MinWidth="250" Width="250" MaxWidth="500"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+
+                <!-- ======================================================== Группа листов ======================================================== -->
                 <GroupBox Grid.Column="0" DockPanel.Dock="Left" Header="Список листов" BorderBrush="{DynamicResource ResultBorderBrush}">
                     <DockPanel>
                         <Grid DockPanel.Dock="Bottom" Height="30">
@@ -148,7 +180,11 @@
                         </Grid>
                         <ListBox ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=MyMapSheets}"
                                  SelectedItem="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets}"
-                                 SelectedIndex="{Binding Path=MyDataProject.SheetLastSelectedIntex}">
+                                 SelectedIndex="{Binding Path=MyDataProject.SheetLastSelectedIntex}"
+                                 Style="{DynamicResource MyListBox}"
+                                 ItemContainerStyle="{DynamicResource MyListBoxItem}"
+                                 
+                                 >
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=Name}"/>
@@ -158,6 +194,8 @@
                     </DockPanel>
                 </GroupBox>
                 <GridSplitter Width="2" Background="Transparent"/>
+
+                <!-- ================================================== Группа отображения данных ================================================== -->
                 <GroupBox Grid.Column="1" BorderBrush="{DynamicResource ResultBorderBrush}">
                     <GroupBox.Header>
                         <TextBlock Text="{Binding Path=SelectedSheets.Name, StringFormat=Выбраный лист - {0}, FallbackValue='Данные листа', TargetNullValue='Группа не выбрана'}"/>
@@ -183,7 +221,9 @@
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        <DataGrid x:Name="MyDataGrid"
+                        <Frame Content="{Binding Path=SelectedSheets.MyPage}" NavigationUIVisibility="Hidden">
+                        </Frame>
+                        <!--<DataGrid x:Name="MyDataGrid"
                                   ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
                                   
                                   SelectedItem="{Binding Path=SelectedItems}"
@@ -206,7 +246,7 @@
                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                 </Style>
                             </DataGrid.ColumnHeaderStyle>
-                            <!--<DataGrid.CellStyle>
+                            --><!--<DataGrid.CellStyle>
                                 <Style TargetType="{x:Type DataGridCell}">
                                     <Setter Property="Background" Value="{DynamicResource ColorDataGridItems }"/>
                                     
@@ -247,9 +287,9 @@
                                         <Setter Property="TextBlock.Background" Value="{Binding Source={StaticResource ColorDataGridItems}, Path=Color}"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>-->
+                            </DataGridTextColumn>--><!--
                             
-                        </DataGrid>
+                        </DataGrid>-->
                     </DockPanel>
                 </GroupBox>
             </Grid>
