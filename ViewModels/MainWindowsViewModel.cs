@@ -46,7 +46,15 @@ namespace Project_Settings.ViewModels
         public SolidColorBrush MySelectedColor
         {
             get => _MySelectedColor;
-            set => Set(ref _MySelectedColor, value);
+            set
+            {
+                if (Set(ref _MySelectedColor, value))
+                {
+                    CurrApp.Resources["ColorDataGridItems"] = MySelectedColor;
+                }
+            }
+            
+            //set => Set(ref _MySelectedColor, value);
         }
 
         private DataRowView _SelectedItems;

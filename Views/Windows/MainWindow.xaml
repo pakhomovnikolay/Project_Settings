@@ -86,7 +86,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <WrapPanel Grid.Column="1" Margin="0,3,0,0">
-                <Button Width="25" Background="{Binding Path=MySelectedColor}"/>
+                <Button Name="btnMyColor" Width="20" Background="{Binding Path=MySelectedColor}" Click="btnMyColor_Click"/>
                 <ComboBox Width="17" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="-1,0,0,0">
                     <ComboBoxItem>
                         <ListView ItemsSource="{Binding Path=MyListViewColor.ItemsSource}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="235" Width="305">
@@ -184,13 +184,12 @@
                             </Button>
                         </Grid>
                         <DataGrid x:Name="MyDataGrid"
-                            ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
-                                  BorderBrush="{DynamicResource ResultBorderBrush}"
-                                  Background="{DynamicResource ResultBackground}"
+                                  ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
+                                  
                                   SelectedItem="{Binding Path=SelectedItems}"
+                                  GridLinesVisibility="All"
                                   LoadingRow="MyDataGrid_LoadingRow" 
                                   CanUserAddRows="False"
-                                  BorderThickness="0"
                                   MinRowHeight="15"
                                   MinColumnWidth="50"
                                   EnableRowVirtualization="True"
@@ -200,13 +199,56 @@
                                   VirtualizingPanel.IsContainerVirtualizable="True"
                                   VirtualizingPanel.ScrollUnit="Pixel"
                                   VirtualizingPanel.VirtualizationMode="Recycling"
-                                  VirtualizingPanel.IsVirtualizing="True"
+                                  VirtualizingPanel.IsVirtualizing="True"                                  
                                   ScrollViewer.CanContentScroll="True">
                             <DataGrid.ColumnHeaderStyle>
                                 <Style TargetType="{x:Type DataGridColumnHeader}">
                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                 </Style>
                             </DataGrid.ColumnHeaderStyle>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <Setter Property="Background" Value="{DynamicResource ColorDataGridItems }"/>
+                                    
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                                <Grid>
+                                                    <Border x:Name="BD">
+                                                        
+                                                    </Border>
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="BorderThickness" TargetName="BD" Value="0"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="False">
+                                                        <Setter Property="BorderThickness" TargetName="BD" Value="1"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                
+                            </DataGrid.CellStyle>
+                            
+                            <!--<DataGridCell>
+                                <DataGridCell.Style>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Background" Value="{Binding Source={DynamicResource ColorDataGridItems}, Path=Color}"/>
+                                    </Style>
+                                </DataGridCell.Style>
+                            </DataGridCell>-->
+
+                            <!--<DataGridTextColumn>
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextBlock.Background" Value="{Binding Source={StaticResource ColorDataGridItems}, Path=Color}"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>-->
+                            
                         </DataGrid>
                     </DockPanel>
                 </GroupBox>

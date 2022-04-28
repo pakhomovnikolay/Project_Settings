@@ -49,4 +49,6 @@
     <Color x:Key="ResultForegroundListBox">White</Color>
     <Color x:Key="ResultBorderBrushListBox">Black</Color>
 
+    <SolidColorBrush x:Key="ColorDataGridItems" Color="White"></SolidColorBrush>
+
 </ResourceDictionary>
