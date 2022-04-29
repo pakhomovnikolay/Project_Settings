@@ -22,7 +22,7 @@
                           SelectedFile="{Binding Path=MyPath, Mode=OneWayToSource}"
                           TitleWindowsProject="{Binding Path=MyTitle, Mode=OneWayToSource}"
                           MyDataProject="{Binding Path=MyDataProject, Mode=OneWayToSource}"
-                          MyMapSheets="{Binding Path=MyMapSheets, Mode=TwoWay}"
+                          MyMapSheets="{Binding Path=MyMapSheets, Mode=OneWayToSource}"
                           SelectedSheets="{Binding Path=SelectedSheets, Mode=OneWayToSource}"
                           flBlackTheames="{Binding Path=flBlackTheames, Mode=OneWayToSource}"
                           flWhiteTheames="{Binding Path=flWhiteTheames, Mode=OneWayToSource}"/>
@@ -209,20 +209,19 @@
                             <Button Width="115" Height="25" Margin="0,5,0,0"  Content="Добавить строку" Command="{Binding Path=CmdAddRowList}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="2"/>
+                                        <Setter Property="CornerRadius" Value="3"/>
                                     </Style>
                                 </Button.Resources>
                             </Button>
                             <Button Width="115" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="Удалить строку" Command="{Binding Path=CmdRemoveSelectedRowList}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="2"/>
+                                        <Setter Property="CornerRadius" Value="3"/>
                                     </Style>
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        <Frame Content="{Binding Path=SelectedSheets.MyPage}" NavigationUIVisibility="Hidden">
-                        </Frame>
+                        <Frame Content="{Binding Path=SelectedSheets.MyPage}" NavigationUIVisibility="Hidden"/>
                         <!--<DataGrid x:Name="MyDataGrid"
                                   ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
                                   

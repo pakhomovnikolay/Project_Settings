@@ -10,16 +10,16 @@ namespace Project_Settings.ViewModels.Pages
 {
     public class PageViewModel : ViewModel
     {
-        public PageViewModel()
-        {
-            SelectedSheets = new();
-        }
-
-        private MapSheets _SelectedSheets = new();
+        private MapSheets _SelectedSheets;
         public MapSheets SelectedSheets
         {
             get => _SelectedSheets;
             set => Set(ref _SelectedSheets, value);
+        }
+
+        public PageViewModel()
+        {
+
         }
     }
 }

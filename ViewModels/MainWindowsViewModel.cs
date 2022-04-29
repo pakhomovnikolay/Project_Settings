@@ -9,6 +9,7 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -38,13 +39,6 @@ namespace Project_Settings.ViewModels
         }
 
         #region Параметры
-        //private Page _CurrentPage;
-        //public Page CurrentPage
-        //{
-        //    get => _CurrentPage;
-        //    set => Set(ref _CurrentPage, value);
-        //}
-
         private ListView _MyListViewColor;
         public ListView MyListViewColor
         {
@@ -63,8 +57,6 @@ namespace Project_Settings.ViewModels
                     CurrApp.Resources["ColorDataGridItems"] = MySelectedColor;
                 }
             }
-            
-            //set => Set(ref _MySelectedColor, value);
         }
 
         private DataRowView _SelectedItems;
@@ -231,17 +223,11 @@ namespace Project_Settings.ViewModels
             ;
         }
 
-
-        
-
-
-
-
         /// <summary>
         /// Команда на содание новой вкладке в текущем проекте
         /// </summary>
         public ICommand CmdCreateNewList { get; }
-        private bool CanCmdCreateNewListExecute(object p) => SelectedSheets != null;
+        private bool CanCmdCreateNewListExecute(object p) => !string.IsNullOrEmpty(MyPath);
         private async void OnCmdCreateNewListExecuted(object p)
         {
             string DefaultPath = Environment.CurrentDirectory + "/MyResource/Jsons/GridDefualt.json";
@@ -260,10 +246,14 @@ namespace Project_Settings.ViewModels
         private void OnCmdRemoveSelectedListExecuted(object p)
         {
             int count = MyMapSheets.Count;
+            if (count < 2)
+            {
+                MessageBox.Show("Невозможно удалить последнюю страницу", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             int index = MyMapSheets.IndexOf(SelectedSheets);
-            if (!File.Exists(MyPath) || (count < 2)) return;
-            if (index > 0) index -= 1;
             MyMapSheets.Remove(SelectedSheets);
+            if (index > 0) index--;
             SelectedSheets = MyMapSheets[index];
         }
 
@@ -379,8 +369,10 @@ namespace Project_Settings.ViewModels
                         j++;
                     }
 
-                    //Page _MyPage = new Page1();
-                    MyPage.Title = "Страница " + (MyMapSheets.Count + 1).ToString();
+                    Page _MyPage = new Page1
+                    {
+                        Title = "Страница " + (MyMapSheets.Count + 1).ToString()
+                    };
 
                     var _MapSheets = new MapSheets
                     {
@@ -389,12 +381,12 @@ namespace Project_Settings.ViewModels
                         DataTables = _DataTable,
                         Name = Sheet.Name + (MyMapSheets.Count + 1).ToString(),
                         NameMsg = Sheet.NameMsg,
-                        MyPage = MyPage
+                        MyPage = _MyPage
                     };
                     MyMapSheets.Add(_MapSheets);
                 }
             }
-            SelectedSheets = MyMapSheets[MyMapSheets.Count - 1];
+            SelectedSheets = MyMapSheets[^1];
         }
 
         private void ChangeTheames()

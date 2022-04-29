@@ -5,26 +5,23 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:m="clr-namespace:Project_Settings.Models"
       xmlns:vm="clr-namespace:Project_Settings.ViewModels.Pages"
-      xmlns:local="clr-namespace:Project_Settings.Pages"
+      xmlns:l="clr-namespace:Project_Settings.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Page1" Background="AliceBlue">
+
+    <Page.Resources>
+        <m:OpenSaveDialog x:Key="MyOpenSaveDialog"
+                          SelectedSheets="{Binding SelectedSheets, Mode=OneWayToSource}"/>
+    </Page.Resources>
 
     <Page.DataContext>
         <vm:PageViewModel/>
     </Page.DataContext>
 
-
-    <Page.Resources>
-        <m:OpenSaveDialog x:Key="MainViewModel"
-                          SelectedSheets="{Binding Path=SelectedSheets, Mode=OneWayToSource}"/>
-    </Page.Resources>
-
-    
-
     <DockPanel>
         <DataGrid x:Name="MyDataGrid"
-                  ItemsSource="{Binding AsyncState=True, IsAsync=True, Path=SelectedSheets.DataTables}"
+                  ItemsSource="{Binding Path=SelectedSheets.DataTables}"
                   GridLinesVisibility="None"
                   LoadingRow="MyDataGrid_LoadingRow"
                   CanUserAddRows="False"

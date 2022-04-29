@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Project_Settings.Infrastructure.Commands;
 using Project_Settings.Pages;
+using Project_Settings.ViewModels.Pages;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -64,7 +65,11 @@ namespace Project_Settings.Models
         public string TitleOpen { get => (string)GetValue(TitleOpenProperty); set => SetValue(TitleOpenProperty, value); }
         public string TitleSave { get => (string)GetValue(TitleSaveProperty); set => SetValue(TitleSaveProperty, value); }
         public string Filter { get => (string)GetValue(FilterProperty); set => SetValue(FilterProperty, value); }
-        public string SelectedFile { get => (string)GetValue(SelectedFileProperty); set => SetValue(SelectedFileProperty, value); }
+        public string SelectedFile
+        {
+            get => (string)GetValue(SelectedFileProperty);
+            set => SetValue(SelectedFileProperty, value);
+        }
         public string TitleWindowsProject { get => (string)GetValue(TitleWindowsProjectProperty); set => SetValue(TitleWindowsProjectProperty, value); }
         public DataProject MyDataProject { get => (DataProject)GetValue(MyDataProjectProperty); set => SetValue(MyDataProjectProperty, value); }
         public ObservableCollection<MapSheets> MyMapSheets
@@ -314,8 +319,10 @@ namespace Project_Settings.Models
 
                     }
 
-                    Page _MyPage = new Page1();
-                    _MyPage.Title = "Страница " + (MyMapSheets.Count + 1).ToString();
+                    Page _MyPage = new Page1
+                    {
+                        Title = "Страница " + (MyMapSheets.Count + 1).ToString()
+                    };
 
                     var _MapSheets = new MapSheets
                     {
