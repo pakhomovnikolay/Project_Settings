@@ -1,6 +1,5 @@
 ﻿using Project_Settings.Infrastructure.Commands;
 using Project_Settings.Models;
-using Project_Settings.Pages;
 using Project_Settings.ViewModels.Default;
 using System;
 using System.Collections;
@@ -22,7 +21,7 @@ namespace Project_Settings.ViewModels
     {
         private readonly Application CurrApp = Application.Current;
 
-        public Page MyPage = new Page1();
+        //public Page MyPage = new Page1();
 
         public MainWindowsViewModel()
         {
@@ -55,18 +54,20 @@ namespace Project_Settings.ViewModels
             set => Set(ref _MyListViewColor, value);
         }
 
+        private SolidColorBrush _MyBorderBrush = Brushes.LightGray;
+        public SolidColorBrush MyBorderBrush
+        {
+            get => _MyBorderBrush;
+            set => Set(ref _MyBorderBrush, value);
+        }
+
         private SolidColorBrush _MySelectedColor = Brushes.Yellow;
         public SolidColorBrush MySelectedColor
         {
             get => _MySelectedColor;
-            set
-            {
-                if (Set(ref _MySelectedColor, value))
-                {
-                    CurrApp.Resources["ColorDataGridItems"] = MySelectedColor;
-                }
-            }
+            set => Set(ref _MySelectedColor, value);
         }
+
 
         private DataRowView _SelectedItems;
         public DataRowView SelectedItems
@@ -232,14 +233,71 @@ namespace Project_Settings.ViewModels
             if (p == null) return;
             DataGrid MyDataGrid = p as DataGrid;
             var row_list = GetDataGridRows(MyDataGrid);
+            bool fl = false;
             foreach (var single_row in row_list)
             {
-                if (single_row.IsSelected == true)
+                if (single_row.IsSelected)
                 {
+                    CurrApp.Resources["ColorDataGridItems"] = MySelectedColor;
                     single_row.Background = MySelectedColor;
-
+                    single_row.BorderBrush = MySelectedColor;
+                    fl = true;
                 }
             }
+            if (fl) return;
+
+            var cell_list = GetDataGridCell(MyDataGrid);
+            foreach (var single_cell in cell_list)
+            {
+                if (single_cell.IsSelected)
+                {
+                    //CurrApp.Resources["ColorDataGridItems"] = MySelectedColor;
+                    single_cell.Background = MySelectedColor;
+                }
+            }
+
+            //foreach (var SelectedCells in MyDataGrid.SelectedCells)
+            //{
+
+            //    SelectedCells
+
+
+
+
+            //    //var asd = SelectedCells as DataGridRow;
+            //    //int selectedColumn = SelectedCells.Column.DisplayIndex;
+            //    //var selectedCell = MyDataGrid.SelectedCells[selectedColumn];
+            //    //var cellContent = selectedCell.Column.GetCellContent(selectedCell.Item);
+            //    //if (cellContent is DataGridCell)
+            //    //{
+            //    //    cellContent.
+            //    //}
+
+
+            //}
+
+            //dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells[dataGridView1.CurrentCell.ColumnIndex].Value.ToString()
+
+
+            //int selectedColumn = MyDataGrid.CurrentCell.Column.DisplayIndex;
+
+            //var cell_list = GetDataGridCell(MyDataGrid);
+            //foreach (var single_cell in cell_list)
+            //{
+
+            //}
+
+
+
+
+            //cell_list.GetEnumerator().Current.Background = MySelectedColor;
+            //foreach (var single_cell in cell_list.GetEnumerator().Current.Background)
+            //{
+            //    if (single_cell.IsSelected)
+            //    {
+            //        single_cell.Background = MySelectedColor;
+            //    }
+            //}
         }
 
         /// <summary>
@@ -264,7 +322,6 @@ namespace Project_Settings.ViewModels
         private bool CanCmdRemoveSelectedListExecute(object p) => SelectedSheets != null;
         private void OnCmdRemoveSelectedListExecuted(object p)
         {
-            ListBox MyListBox = p as ListBox;
             int count = MyMapSheets.Count;
             if (count < 2)
             {
@@ -317,7 +374,7 @@ namespace Project_Settings.ViewModels
                 var row_list = GetDataGridRows(MyDataGrid);
                 foreach (var single_row in row_list)
                 {
-                    if (single_row.IsSelected == true)
+                    if (single_row.IsSelected)
                     {
                         int j = single_row.GetIndex();
                         SelectedSheets.DataTables.Rows.RemoveAt(j);
@@ -373,14 +430,23 @@ namespace Project_Settings.ViewModels
 
         #region События
 
+        private IEnumerable<DataGridCell> GetDataGridCell(DataGrid grid)
+        {
+            var itemsSource = grid.SelectedCells as IEnumerable;
+            if (itemsSource == null) yield return null;
+            foreach (var item in itemsSource)
+            {
+                if (grid.ItemContainerGenerator.ContainerFromItem(item) is DataGridCell row) yield return row;
+            }
+        }
+
         private IEnumerable<DataGridRow> GetDataGridRows(DataGrid grid)
         {
             var itemsSource = grid.ItemsSource as IEnumerable;
             if (itemsSource == null) yield return null;
             foreach (var item in itemsSource)
             {
-                var row = grid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
-                if (row != null) yield return row;
+                if (grid.ItemContainerGenerator.ContainerFromItem(item) is DataGridRow row) yield return row;
             }
         }
 
@@ -414,19 +480,13 @@ namespace Project_Settings.ViewModels
                         j++;
                     }
 
-                    Page _MyPage = new Page1
-                    {
-                        Title = "Страница " + (MyMapSheets.Count + 1).ToString()
-                    };
-
                     var _MapSheets = new MapSheets
                     {
                         Columns = Sheet.Columns,
                         CountRow = Sheet.CountRow,
                         DataTables = _DataTable,
                         Name = Sheet.Name + (MyMapSheets.Count + 1).ToString(),
-                        NameMsg = Sheet.NameMsg,
-                        MyPage = _MyPage
+                        NameMsg = Sheet.NameMsg
                     };
                     MyMapSheets.Add(_MapSheets);
                 }

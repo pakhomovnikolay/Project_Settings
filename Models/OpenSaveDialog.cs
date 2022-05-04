@@ -1,7 +1,5 @@
 ﻿using Microsoft.Win32;
 using Project_Settings.Infrastructure.Commands;
-using Project_Settings.Pages;
-using Project_Settings.ViewModels.Pages;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -319,19 +317,13 @@ namespace Project_Settings.Models
 
                     }
 
-                    Page _MyPage = new Page1
-                    {
-                        Title = "Страница " + (MyMapSheets.Count + 1).ToString()
-                    };
-
                     var _MapSheets = new MapSheets
                     {
                         Columns = Sheet.Columns,
                         CountRow = Sheet.CountRow,
                         DataTables = _DataTable,
                         Name = Sheet.Name + (MyMapSheets.Count + 1).ToString(),
-                        NameMsg = Sheet.NameMsg,
-                        MyPage = _MyPage
+                        NameMsg = Sheet.NameMsg
                     };
                     MyMapSheets.Add(_MapSheets);
                 }

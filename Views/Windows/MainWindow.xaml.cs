@@ -33,12 +33,5 @@ namespace Project_Settings
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
-
-        private void btnMyColor_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        
     }
 }

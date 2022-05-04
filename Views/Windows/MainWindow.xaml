@@ -170,7 +170,7 @@
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Width="25" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="-" Command="{Binding Path=CmdRemoveSelectedList}" CommandParameter="{Binding ElementName=MyListBox}">
+                            <Button Width="25" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="-" Command="{Binding Path=CmdRemoveSelectedList}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="50"/>
@@ -178,7 +178,7 @@
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        <ListBox x:Name="MyListBox" ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=MyMapSheets}"
+                        <ListBox ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=MyMapSheets}"
                                  SelectedItem="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets}"
                                  SelectedIndex="{Binding Path=MyDataProject.SheetLastSelectedIntex}"
                                  Style="{DynamicResource MyListBox}"
@@ -258,13 +258,6 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.CellStyle>
-
-                            <!--<DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Setter Property="MinHeight" Value="100"/>
-                                    <Setter Property="MinWidth" Value="100"/>
-                                </Style>
-                            </DataGrid.RowStyle>-->
                         </DataGrid>
                     </DockPanel>
                 </GroupBox>

@@ -1,5 +1,8 @@
 ﻿using Project_Settings.Infrastructure.Commands;
+using System.Collections;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -34,6 +37,7 @@ namespace Project_Settings.Models
         private void OnCmdSelectColorExecuted(object p)
         {
             string ColorName = p as string;
+            if (string.IsNullOrEmpty(ColorName)) return;
             System.Drawing.Color wfColor = System.Drawing.Color.FromName(ColorName);
             System.Windows.Media.Color Color = System.Windows.Media.Color.FromRgb(wfColor.R, wfColor.G, wfColor.B);
             SelectedColor = new SolidColorBrush(Color);
