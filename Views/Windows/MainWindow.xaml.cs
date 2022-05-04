@@ -36,31 +36,9 @@ namespace Project_Settings
 
         private void btnMyColor_Click(object sender, RoutedEventArgs e)
         {
-            //try
-            //{
-            //    var row_list = GetDataGridRows(MyDataGrid);
-            //    foreach (var single_row in row_list)
-            //    {
-            //        if (single_row.IsSelected == true)
-            //        {
-            //            single_row.Background = btnMyColor.Background;
-            //            //MessageBox.Show("the row no." + (single_row.GetIndex() + 1).ToString() + " is selected!");
-            //        }
-            //    }
-
-            //}
-            //catch { }
+            
         }
 
-        private IEnumerable<DataGridRow> GetDataGridRows(DataGrid grid)
-        {
-            var itemsSource = grid.ItemsSource as IEnumerable;
-            if (itemsSource == null) yield return null;
-            foreach (var item in itemsSource)
-            {
-                var row = grid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
-                if (row != null) yield return row;
-            }
-        }
+        
     }
 }

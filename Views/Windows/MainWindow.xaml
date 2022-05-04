@@ -90,7 +90,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <WrapPanel Grid.Column="1" Margin="0,3,0,0">
-                <Button Name="btnMyColor" Width="20" Background="{Binding Path=MySelectedColor}" Click="btnMyColor_Click"/>
+                <Button Name="btnMyColor" Width="20" Background="{Binding Path=MySelectedColor}" Command="{Binding Path=CmdSetColorRow}" CommandParameter="{Binding ElementName=MyDataGrid}"/>
                 <ComboBox Width="17" Margin="-1,0,0,0">
                     <ComboBoxItem >
                         <ComboBoxItem.Style>
@@ -151,7 +151,7 @@
             <!-- ============================================================== Сетки ============================================================== -->
             <Grid DockPanel.Dock="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="250" Width="250" MaxWidth="500"/>
+                    <ColumnDefinition MinWidth="102" Width="250" MaxWidth="500"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
@@ -170,7 +170,7 @@
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Width="25" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="-" Command="{Binding Path=CmdRemoveSelectedList}">
+                            <Button Width="25" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="-" Command="{Binding Path=CmdRemoveSelectedList}" CommandParameter="{Binding ElementName=MyListBox}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="50"/>
@@ -178,7 +178,7 @@
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        <ListBox ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=MyMapSheets}"
+                        <ListBox x:Name="MyListBox" ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=MyMapSheets}"
                                  SelectedItem="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets}"
                                  SelectedIndex="{Binding Path=MyDataProject.SheetLastSelectedIntex}"
                                  Style="{DynamicResource MyListBox}"
@@ -206,14 +206,14 @@
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="120"/>
                             </Grid.ColumnDefinitions>
-                            <Button Width="115" Height="25" Margin="0,5,0,0"  Content="Добавить строку" Command="{Binding Path=CmdAddRowList}">
+                            <Button Width="115" Height="25" Margin="-5,5,0,0"  Content="Добавить строку" Command="{Binding Path=CmdAddRowList}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="3"/>
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Width="115" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="Удалить строку" Command="{Binding Path=CmdRemoveSelectedRowList}">
+                            <Button Width="115" Height="25" Grid.Column="1" Margin="0,5,5,0" Content="Удалить строку" Command="{Binding Path=CmdRemoveSelectedRowList}" CommandParameter="{Binding ElementName=MyDataGrid}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="3"/>
@@ -221,16 +221,15 @@
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        <Frame Content="{Binding Path=SelectedSheets.MyPage}" NavigationUIVisibility="Hidden"/>
-                        <!--<DataGrid x:Name="MyDataGrid"
+                        <!--<Frame Content="{Binding Path=SelectedSheets.MyPage}" NavigationUIVisibility="Hidden"/>-->
+                        <DataGrid x:Name="MyDataGrid"
                                   ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
-                                  
-                                  SelectedItem="{Binding Path=SelectedItems}"
+                                  SelectionUnit="CellOrRowHeader"
+                                  SelectedItem="{Binding Path=SelectedItems, UpdateSourceTrigger=PropertyChanged}"
                                   GridLinesVisibility="None"
                                   LoadingRow="MyDataGrid_LoadingRow" 
                                   CanUserAddRows="False"
-                                  MinRowHeight="15"
-                                  MinColumnWidth="50"
+                                  CanUserReorderColumns="False"
                                   EnableRowVirtualization="True"
                                   EnableColumnVirtualization="True"
                                   AutoGenerateColumns="True"
@@ -241,54 +240,32 @@
                                   VirtualizingPanel.IsVirtualizing="True"                                  
                                   ScrollViewer.CanContentScroll="True">
                             <DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <Setter Property="MinWidth" Value="75"/>
                                 </Style>
                             </DataGrid.ColumnHeaderStyle>
-                            --><!--<DataGrid.CellStyle>
-                                <Style TargetType="{x:Type DataGridCell}">
-                                    <Setter Property="Background" Value="{DynamicResource ColorDataGridItems }"/>
-                                    
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type DataGridCell}">
-                                                <Grid>
-                                                    <Border x:Name="BD">
-                                                        
-                                                    </Border>
-                                                </Grid>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsSelected" Value="True">
-                                                        <Setter Property="BorderThickness" TargetName="BD" Value="0"/>
-                                                    </Trigger>
-                                                    <Trigger Property="IsSelected" Value="False">
-                                                        <Setter Property="BorderThickness" TargetName="BD" Value="1"/>
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="BorderBrush" Value="LightGray"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Gray"/>
+                                            <Setter Property="Foreground" Value="Black"/>
+                                        </Trigger>
+                                    </Style.Triggers>
                                 </Style>
-                                
-                            </DataGrid.CellStyle>-->
-                            
-                            <!--<DataGridCell>
-                                <DataGridCell.Style>
-                                    <Style TargetType="DataGridCell">
-                                        <Setter Property="Background" Value="{Binding Source={DynamicResource ColorDataGridItems}, Path=Color}"/>
-                                    </Style>
-                                </DataGridCell.Style>
-                            </DataGridCell>-->
+                            </DataGrid.CellStyle>
 
-                            <!--<DataGridTextColumn>
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="TextBlock.Background" Value="{Binding Source={StaticResource ColorDataGridItems}, Path=Color}"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>--><!--
-                            
-                        </DataGrid>-->
+                            <!--<DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="MinHeight" Value="100"/>
+                                    <Setter Property="MinWidth" Value="100"/>
+                                </Style>
+                            </DataGrid.RowStyle>-->
+                        </DataGrid>
                     </DockPanel>
                 </GroupBox>
             </Grid>

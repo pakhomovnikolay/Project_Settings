@@ -3,6 +3,7 @@ using Project_Settings.Models;
 using Project_Settings.Pages;
 using Project_Settings.ViewModels.Default;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -39,6 +40,14 @@ namespace Project_Settings.ViewModels
         }
 
         #region Параметры
+        private DataGrid _MySelectedDataGrid;
+        public DataGrid MySelectedDataGrid
+        {
+            get => _MySelectedDataGrid;
+            set => Set(ref _MySelectedDataGrid, value);
+        }
+
+
         private ListView _MyListViewColor;
         public ListView MyListViewColor
         {
@@ -46,7 +55,7 @@ namespace Project_Settings.ViewModels
             set => Set(ref _MyListViewColor, value);
         }
 
-        private SolidColorBrush _MySelectedColor;
+        private SolidColorBrush _MySelectedColor = Brushes.Yellow;
         public SolidColorBrush MySelectedColor
         {
             get => _MySelectedColor;
@@ -220,7 +229,17 @@ namespace Project_Settings.ViewModels
         private bool CanCmdSetColorRowExecute(object p) => SelectedSheets != null;
         private void OnCmdSetColorRowExecuted(object p)
         {
-            ;
+            if (p == null) return;
+            DataGrid MyDataGrid = p as DataGrid;
+            var row_list = GetDataGridRows(MyDataGrid);
+            foreach (var single_row in row_list)
+            {
+                if (single_row.IsSelected == true)
+                {
+                    single_row.Background = MySelectedColor;
+
+                }
+            }
         }
 
         /// <summary>
@@ -245,6 +264,7 @@ namespace Project_Settings.ViewModels
         private bool CanCmdRemoveSelectedListExecute(object p) => SelectedSheets != null;
         private void OnCmdRemoveSelectedListExecuted(object p)
         {
+            ListBox MyListBox = p as ListBox;
             int count = MyMapSheets.Count;
             if (count < 2)
             {
@@ -291,7 +311,21 @@ namespace Project_Settings.ViewModels
         private bool CanCmdRemoveSelectedRowListExecute(object p) => SelectedItems != null;
         private void OnCmdRemoveSelectedRowListExecuted(object p)
         {
-            SelectedItems.Delete();
+            DataGrid MyDataGrid = p as DataGrid;
+            try
+            {
+                var row_list = GetDataGridRows(MyDataGrid);
+                foreach (var single_row in row_list)
+                {
+                    if (single_row.IsSelected == true)
+                    {
+                        int j = single_row.GetIndex();
+                        SelectedSheets.DataTables.Rows.RemoveAt(j);
+                    }
+                }
+                MyDataGrid.Items.Refresh();
+            }
+            catch { }
         }
 
         /// <summary>
@@ -338,6 +372,17 @@ namespace Project_Settings.ViewModels
         #endregion
 
         #region События
+
+        private IEnumerable<DataGridRow> GetDataGridRows(DataGrid grid)
+        {
+            var itemsSource = grid.ItemsSource as IEnumerable;
+            if (itemsSource == null) yield return null;
+            foreach (var item in itemsSource)
+            {
+                var row = grid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+                if (row != null) yield return row;
+            }
+        }
 
         private void CreateNewList()
         {
