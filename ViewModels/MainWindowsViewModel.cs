@@ -9,7 +9,6 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,9 +19,6 @@ namespace Project_Settings.ViewModels
     public class MainWindowsViewModel : ViewModel
     {
         private readonly Application CurrApp = Application.Current;
-
-        //public Page MyPage = new Page1();
-
         public MainWindowsViewModel()
         {
             // Команды
@@ -39,26 +35,12 @@ namespace Project_Settings.ViewModels
         }
 
         #region Параметры
-        private DataGrid _MySelectedDataGrid;
-        public DataGrid MySelectedDataGrid
-        {
-            get => _MySelectedDataGrid;
-            set => Set(ref _MySelectedDataGrid, value);
-        }
-
 
         private ListView _MyListViewColor;
         public ListView MyListViewColor
         {
             get => _MyListViewColor;
             set => Set(ref _MyListViewColor, value);
-        }
-
-        private SolidColorBrush _MyBorderBrush = Brushes.LightGray;
-        public SolidColorBrush MyBorderBrush
-        {
-            get => _MyBorderBrush;
-            set => Set(ref _MyBorderBrush, value);
         }
 
         private SolidColorBrush _MySelectedColor = Brushes.Yellow;
@@ -68,11 +50,9 @@ namespace Project_Settings.ViewModels
             set => Set(ref _MySelectedColor, value);
         }
 
-
         private DataRowView _SelectedItems;
         public DataRowView SelectedItems
         {
-
             get => _SelectedItems;
             set => Set(ref _SelectedItems, value);
         }
@@ -87,7 +67,6 @@ namespace Project_Settings.ViewModels
         private ObservableCollection<MapSheets> _MyMapSheets = new();
         public ObservableCollection<MapSheets> MyMapSheets
         {
-
             get => _MyMapSheets;
             set => Set(ref _MyMapSheets, value);
         }
@@ -114,7 +93,6 @@ namespace Project_Settings.ViewModels
         }
 
         private string _myVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
         public string MyVersion
         {
             get => _myVersion;
@@ -122,7 +100,6 @@ namespace Project_Settings.ViewModels
         }
 
         private string _myTitle = "Конфигуратор проекта";
-
         public string MyTitle
         {
             get => _myTitle;
@@ -231,73 +208,14 @@ namespace Project_Settings.ViewModels
         private void OnCmdSetColorRowExecuted(object p)
         {
             if (p == null) return;
-            DataGrid MyDataGrid = p as DataGrid;
-            var row_list = GetDataGridRows(MyDataGrid);
-            bool fl = false;
+            var row_list = GetDataGridRows(p as DataGrid);
             foreach (var single_row in row_list)
             {
                 if (single_row.IsSelected)
                 {
-                    CurrApp.Resources["ColorDataGridItems"] = MySelectedColor;
                     single_row.Background = MySelectedColor;
-                    single_row.BorderBrush = MySelectedColor;
-                    fl = true;
                 }
             }
-            if (fl) return;
-
-            var cell_list = GetDataGridCell(MyDataGrid);
-            foreach (var single_cell in cell_list)
-            {
-                if (single_cell.IsSelected)
-                {
-                    //CurrApp.Resources["ColorDataGridItems"] = MySelectedColor;
-                    single_cell.Background = MySelectedColor;
-                }
-            }
-
-            //foreach (var SelectedCells in MyDataGrid.SelectedCells)
-            //{
-
-            //    SelectedCells
-
-
-
-
-            //    //var asd = SelectedCells as DataGridRow;
-            //    //int selectedColumn = SelectedCells.Column.DisplayIndex;
-            //    //var selectedCell = MyDataGrid.SelectedCells[selectedColumn];
-            //    //var cellContent = selectedCell.Column.GetCellContent(selectedCell.Item);
-            //    //if (cellContent is DataGridCell)
-            //    //{
-            //    //    cellContent.
-            //    //}
-
-
-            //}
-
-            //dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells[dataGridView1.CurrentCell.ColumnIndex].Value.ToString()
-
-
-            //int selectedColumn = MyDataGrid.CurrentCell.Column.DisplayIndex;
-
-            //var cell_list = GetDataGridCell(MyDataGrid);
-            //foreach (var single_cell in cell_list)
-            //{
-
-            //}
-
-
-
-
-            //cell_list.GetEnumerator().Current.Background = MySelectedColor;
-            //foreach (var single_cell in cell_list.GetEnumerator().Current.Background)
-            //{
-            //    if (single_cell.IsSelected)
-            //    {
-            //        single_cell.Background = MySelectedColor;
-            //    }
-            //}
         }
 
         /// <summary>
@@ -429,16 +347,6 @@ namespace Project_Settings.ViewModels
         #endregion
 
         #region События
-
-        private IEnumerable<DataGridCell> GetDataGridCell(DataGrid grid)
-        {
-            var itemsSource = grid.SelectedCells as IEnumerable;
-            if (itemsSource == null) yield return null;
-            foreach (var item in itemsSource)
-            {
-                if (grid.ItemContainerGenerator.ContainerFromItem(item) is DataGridCell row) yield return row;
-            }
-        }
 
         private IEnumerable<DataGridRow> GetDataGridRows(DataGrid grid)
         {
