@@ -226,6 +226,7 @@
                                   ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
                                   SelectionUnit="CellOrRowHeader"
                                   SelectedItem="{Binding Path=SelectedItems, UpdateSourceTrigger=PropertyChanged}"
+                                  CanUserSortColumns="False"
                                   GridLinesVisibility="None"
                                   LoadingRow="MyDataGrid_LoadingRow" 
                                   CanUserAddRows="False"
