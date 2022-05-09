@@ -223,30 +223,17 @@
                         </Grid>
                         <!--<Frame Content="{Binding Path=SelectedSheets.MyPage}" NavigationUIVisibility="Hidden"/>-->
                         <DataGrid x:Name="MyDataGrid"
+                                  Style="{DynamicResource DataGridTemplate}"
                                   ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
-                                  SelectionUnit="CellOrRowHeader"
                                   SelectedItem="{Binding Path=SelectedItems, UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserSortColumns="False"
-                                  GridLinesVisibility="None"
-                                  LoadingRow="MyDataGrid_LoadingRow" 
-                                  CanUserAddRows="False"
-                                  CanUserReorderColumns="False"
-                                  EnableRowVirtualization="True"
-                                  EnableColumnVirtualization="True"
-                                  AutoGenerateColumns="True"
-                                  VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                                  VirtualizingPanel.IsContainerVirtualizable="True"
-                                  VirtualizingPanel.ScrollUnit="Pixel"
-                                  VirtualizingPanel.VirtualizationMode="Recycling"
-                                  VirtualizingPanel.IsVirtualizing="True"                                  
-                                  ScrollViewer.CanContentScroll="True">
-                            <DataGrid.ColumnHeaderStyle>
+                                  LoadingRow="MyDataGrid_LoadingRow">
+                            <!--<DataGrid.ColumnHeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                     <Setter Property="MinWidth" Value="75"/>
                                 </Style>
-                            </DataGrid.ColumnHeaderStyle>
-                            <DataGrid.CellStyle>
+                            </DataGrid.ColumnHeaderStyle>-->
+                            <!--<DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Setter Property="BorderBrush" Value="LightGray"/>
                                     <Setter Property="BorderThickness" Value="1"/>
@@ -258,7 +245,7 @@
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.CellStyle>-->
                         </DataGrid>
                     </DockPanel>
                 </GroupBox>

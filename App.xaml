@@ -10,6 +10,9 @@
                 <ResourceDictionary Source="\MyResource\Menu.xaml"/>
                 <ResourceDictionary Source="\MyResource\TreeView.xaml"/>
                 <ResourceDictionary Source="\MyResource\ListBox.xaml"/>
+                <ResourceDictionary Source="\MyResource\DataGridTemplate.xaml"/>
+
+                
                 <!--<ResourceDictionary Source="\ResourceDictionary\GroupBox.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
