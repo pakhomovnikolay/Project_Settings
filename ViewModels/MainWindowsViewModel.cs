@@ -35,7 +35,6 @@ namespace Project_Settings.ViewModels
         }
 
         #region Параметры
-
         private ListView _MyListViewColor;
         public ListView MyListViewColor
         {
@@ -207,15 +206,18 @@ namespace Project_Settings.ViewModels
         private bool CanCmdSetColorRowExecute(object p) => SelectedSheets != null;
         private void OnCmdSetColorRowExecuted(object p)
         {
-            if (p == null) return;
-            var row_list = GetDataGridRows(p as DataGrid);
+            if (p is not DataGrid MyDataGrid) return;
+            var row_list = GetDataGridRows(MyDataGrid);
+            bool fl = false;
             foreach (var single_row in row_list)
             {
                 if (single_row.IsSelected)
                 {
-                    single_row.Background = MySelectedColor;
+                    GetDataGridCells(MyDataGrid);
+                    fl = true;
                 }
             }
+            if (!fl) GetDataGridCells(MyDataGrid);
         }
 
         /// <summary>
@@ -286,21 +288,17 @@ namespace Project_Settings.ViewModels
         private bool CanCmdRemoveSelectedRowListExecute(object p) => SelectedItems != null;
         private void OnCmdRemoveSelectedRowListExecuted(object p)
         {
-            DataGrid MyDataGrid = p as DataGrid;
-            try
+            if (p is not DataGrid MyDataGrid) return;
+            var row_list = GetDataGridRows(MyDataGrid);
+            foreach (var single_row in row_list)
             {
-                var row_list = GetDataGridRows(MyDataGrid);
-                foreach (var single_row in row_list)
+                if (single_row.IsSelected)
                 {
-                    if (single_row.IsSelected)
-                    {
-                        int j = single_row.GetIndex();
-                        SelectedSheets.DataTables.Rows.RemoveAt(j);
-                    }
+                    int j = single_row.GetIndex();
+                    SelectedSheets.DataTables.Rows.RemoveAt(j);
                 }
-                MyDataGrid.Items.Refresh();
             }
-            catch { }
+            MyDataGrid.Items.Refresh();
         }
 
         /// <summary>
@@ -348,10 +346,29 @@ namespace Project_Settings.ViewModels
 
         #region События
 
-        private IEnumerable<DataGridRow> GetDataGridRows(DataGrid grid)
+        private void GetDataGridCells(DataGrid grid)
         {
-            var itemsSource = grid.ItemsSource as IEnumerable;
-            if (itemsSource == null) yield return null;
+            if (grid.ItemsSource is not IEnumerable itemsSource) return;
+            foreach (var Items in itemsSource)
+            {
+                if (grid.ItemContainerGenerator.ContainerFromItem(Items) is not DataGridRow firstRow) return;
+                for (int i = 0; i < grid.Columns.Count; i++)
+                {
+                    if (grid.Columns[i].GetCellContent(firstRow.Item) != null)
+                    {
+                        if (grid.Columns[i].GetCellContent(firstRow.Item).Parent is not DataGridCell cell) return;
+                        if (cell.IsSelected)
+                        {
+                            cell.Background = MySelectedColor;
+                        }
+                    }
+                }
+            }
+        }
+
+        private static IEnumerable<DataGridRow> GetDataGridRows(DataGrid grid)
+        {
+            if (grid.ItemsSource is not IEnumerable itemsSource) yield break;
             foreach (var item in itemsSource)
             {
                 if (grid.ItemContainerGenerator.ContainerFromItem(item) is DataGridRow row) yield return row;

@@ -182,9 +182,8 @@
                                  SelectedItem="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets}"
                                  SelectedIndex="{Binding Path=MyDataProject.SheetLastSelectedIntex}"
                                  Style="{DynamicResource MyListBox}"
-                                 ItemContainerStyle="{DynamicResource MyListBoxItem}"
-                                 
-                                 >
+                                 ItemContainerStyle="{DynamicResource MyListBoxItem}">
+                            
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=Name}"/>
@@ -221,31 +220,12 @@
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        <!--<Frame Content="{Binding Path=SelectedSheets.MyPage}" NavigationUIVisibility="Hidden"/>-->
+
                         <DataGrid x:Name="MyDataGrid"
                                   Style="{DynamicResource DataGridTemplate}"
-                                  ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables}"
-                                  SelectedItem="{Binding Path=SelectedItems, UpdateSourceTrigger=PropertyChanged}"
+                                  ItemsSource="{Binding AsyncState=true, IsAsync=True, Path=SelectedSheets.DataTables, Mode=TwoWay}"
+                                  SelectedItem="{Binding Path=SelectedItems}"
                                   LoadingRow="MyDataGrid_LoadingRow">
-                            <!--<DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                    <Setter Property="MinWidth" Value="75"/>
-                                </Style>
-                            </DataGrid.ColumnHeaderStyle>-->
-                            <!--<DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="BorderBrush" Value="LightGray"/>
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="Transparent"/>
-                                            <Setter Property="BorderBrush" Value="Gray"/>
-                                            <Setter Property="Foreground" Value="Black"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.CellStyle>-->
                         </DataGrid>
                     </DockPanel>
                 </GroupBox>
